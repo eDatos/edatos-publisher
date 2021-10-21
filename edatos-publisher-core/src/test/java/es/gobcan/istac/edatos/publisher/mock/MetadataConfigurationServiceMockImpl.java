@@ -27,14 +27,4 @@ public class MetadataConfigurationServiceMockImpl extends ConfigurationServiceMo
     public String retrieveRecaptchaSecretKey() throws EDatosException {
         return retrieveProperty(ExternalUsersConfigurationConstants.CAPTCHA_RECAPTCHA_SECRET_KEY);
     }
-
-    @Override
-    public String retrieveBaseUrl() throws EDatosException {
-        return retrieveProperty(ExternalUsersConfigurationConstants.BASE_URL);
-    }
-
-    @Override
-    public String retrieveCronExpressionSendNoticeJob() throws EDatosException {
-        return retrieveProperty(ExternalUsersConfigurationConstants.CRON_EXPRESSION_SEND_NOTICE_JOB);
-    }
 }

@@ -12,8 +12,4 @@ public interface MetadataConfigurationService extends ConfigurationService {
     String retrieveRecaptchaSiteKey() throws EDatosException;
 
     String retrieveRecaptchaSecretKey() throws EDatosException;
-
-    String retrieveBaseUrl() throws EDatosException;
-
-    String retrieveCronExpressionSendNoticeJob() throws EDatosException;
 }
