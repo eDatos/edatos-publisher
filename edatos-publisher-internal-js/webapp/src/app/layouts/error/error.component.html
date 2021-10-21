@@ -1,0 +1,10 @@
+<div class="no-content">
+    <img src="assets/images/error.png" alt="No tiene permiso para acceder a la página" [alt]="title | translate" />
+    <div class="no-content-text">
+        <div class="title" [translate]="title"></div>
+        <div class="detail" [translate]="detail"></div>
+        <div [hidden]="!errorMessage">
+            <div class="alert alert-danger">{{errorMessage}}</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,793 @@
+{
+    "account": {
+        "form": {
+            "apellido1": "Surname",
+            "apellido1.placeholder": "Your first surname",
+            "apellido2": "Second surname",
+            "apellido2.placeholder": "Your second surname",
+            "button": "Save",
+            "nombre": "First Name",
+            "nombre.placeholder": "Your Name"
+        },
+        "messages": {
+            "error": {
+                "emailexists": "<strong>The email address already exists!</strong> Please choose another.",
+                "fail": "<strong>An error has occurred!</strong> The settings could not be saved."
+            },
+            "success": "<strong>Saved settings!</strong>",
+            "validate": {
+                "apellido1": {
+                    "maxlength": "Your first surname cannot have more than 50 characters",
+                    "minlength": "Your first surname is required to be at least 1 character",
+                    "required": "You are required to enter your first last name."
+                },
+                "apellido2": {
+                    "maxlength": "Your second last name cannot have more than 50 characters",
+                    "minlength": "Your second last name is required to be at least 1 character",
+                    "required": "You are required to enter your second last name."
+                },
+                "nombre": {
+                    "maxlength": "Your name cannot have more than 50 characters",
+                    "minlength": "Your name is required to be at least 1 character",
+                    "required": "You are required to enter your name."
+                }
+            }
+        },
+        "title": "My account"
+    },
+    "app": {
+        "name": {
+            "complete": "EDatos external user manager",
+            "short": "External Users"
+        }
+    },
+    "arte": {
+        "arte-table-count": {
+            "itemCount": "{{itemFirst}} - {{itemLast}} of {{total}}"
+        },
+        "audit-info": {
+            "createdBy": "Created By",
+            "createdDate": "Creation date",
+            "deletedBy": "Removed By",
+            "deletionDate": "Date of deletion",
+            "lastModifiedBy": "Modified by",
+            "lastModifiedDate": "Modification date",
+            "title": "Audit"
+        },
+        "autocomplete": {
+            "createNewItem": "(Add new)",
+            "emptyMessage": "There were no results that meet the search criteria.",
+            "placeholder": "Select one of the available options"
+        },
+        "autocomplete-long-list": {
+            "placeholder": "Start typing to suggest results"
+        },
+        "calendar": {
+            "placeholder": "Select the desired date on the calendar"
+        },
+        "entity-list-empty": {
+            "detail": "There were no results that meet the search criteria.",
+            "sorry": "We are sorry."
+        },
+        "file-upload": {
+            "cancel": "Cancel",
+            "choose": "To choose",
+            "delete": "Remove",
+            "download": "To download",
+            "emptyFileList": "No uploaded files",
+            "filename": "File name",
+            "filesToUpload": "Files to upload",
+            "invalidFileSizeMessageDetail": "the maximum size is {0}.",
+            "invalidFileSizeMessageSummary": "{0}: Wrong size",
+            "invalidFileTypeMessageDetail": "allowed document types: {0}.",
+            "invalidFileTypeMessageSummary": "{0}: Invalid document type,",
+            "maxFileSizeExceeded": "Files larger than {{0}} MB cannot be attached.",
+            "noUploadPending": "No files pending upload",
+            "upload": "Go up"
+        },
+        "form-control-status": {
+            "error-messages": {
+                "ZonedDateTimelocal": "This field must be a date and time.",
+                "datetimelocal": "This field must be a date and time.",
+                "email": "This field does not contain a valid email",
+                "max": "This field cannot be greater than {{max}}.",
+                "maxbytes": "This field cannot be more than {{max}} bytes.",
+                "maxlength": "This field cannot exceed {{max}} characters.",
+                "min": "This field must be greater than {{min}}.",
+                "minbytes": "This field must be at least {{min}} bytes.",
+                "minlength": "This field requires at least {{requiredLength}} characters.",
+                "not-valid": "The value of this field is not valid",
+                "number": "This field must be a number.",
+                "pattern": "This field must follow the pattern {{pattern}}.",
+                "required": "This field is required."
+            }
+        },
+        "input": {
+            "placeholder": "Enter the desired text"
+        },
+        "input-number": {
+            "placeholder": "Enter the desired number"
+        },
+        "input-text": {
+            "placeholder": "Enter the desired text"
+        },
+        "multi-input": {
+            "placeholder": "Type the value and hit enter to add it"
+        },
+        "tri-input-switch": {
+            "no": "DO NOT",
+            "yes": "Yes"
+        }
+    },
+    "audits": {
+        "filter": {
+            "button": {
+                "clear": "Clean",
+                "close": "Close",
+                "today": "Today",
+                "weeks": "Weeks"
+            },
+            "from": "Since",
+            "title": "Filter by date",
+            "to": "Until"
+        },
+        "table": {
+            "data": {
+                "code": "Code:",
+                "remoteAddress": "Remote Address:"
+            },
+            "header": {
+                "data": "Extra data",
+                "date": "Date",
+                "principal": "User",
+                "status": "State"
+            }
+        },
+        "title": "Audit"
+    },
+    "category": {
+        "name": "Topic"
+    },
+    "categoryMasterTree": {
+        "home": {
+            "title": "Edit the category master tree"
+        }
+    },
+    "categorySubscriptions": {
+        "home": {
+            "title": "Thematic subscriptions"
+        }
+    },
+    "configuration": {
+        "filter": "Filter (by prefix)",
+        "spring": "Spring configuration",
+        "table": {
+            "prefix": "prefix",
+            "properties": "Properties"
+        },
+        "title": "Configuration"
+    },
+    "dataProtectionPolicy": {
+        "home": {
+            "title": "Data protection policy"
+        }
+    },
+    "edatosExternalUsersApp": {
+        "rol": {
+            "accion": "Action",
+            "created": "The role {{ param }}has been created",
+            "delete": {
+                "question": "Are you sure you want to delete the role {{ id }}?"
+            },
+            "deleted": "Role {{ param }}has been removed",
+            "nombre": "First Name",
+            "roles": "Roles",
+            "sujeto": "Subject",
+            "updated": "The role {{ param }}has been updated"
+        },
+        "rolesEnum": {
+            "ADMINISTRADOR": "Administrator",
+            "ANY_ROLE_ALLOWED": "Any role allowed",
+            "JEFE_NORMALIZACION": "Head of standardization",
+            "LECTOR": "reader",
+            "TECNICO_APOYO_DIFUSION": "Broadcast Support Technician",
+            "TECNICO_APOYO_NORMALIZACION": "Standardization Support Technician",
+            "TECNICO_APOYO_PLANIFICACION": "Planning Support Technician",
+            "TECNICO_APOYO_PRODUCCION": "Production Support Technician",
+            "TECNICO_DIFUSION": "Diffusion Technician",
+            "TECNICO_NORMALIZACION": "Standardization Technician",
+            "TECNICO_PLANIFICACION": "Planning technician",
+            "TECNICO_PRODUCCION": "Production technician"
+        }
+    },
+    "entity": {
+        "action": {
+            "back": "Return",
+            "cancel": "Cancel",
+            "close": "Close",
+            "confirm": "Confirm",
+            "crear": "Create",
+            "deactivate": "Deactivate",
+            "delete": "Remove",
+            "edit": "EDIT",
+            "eliminar": "Remove",
+            "filtersReset": "Reset filters",
+            "modificar": "modify",
+            "name": "Actions",
+            "open": "Open",
+            "publishExternally": "Publish externally",
+            "publishInternally": "Publish internally",
+            "recuperar": "Recover",
+            "activate": "Activate",
+            "save": "Save",
+            "select": "Select",
+            "view": "Watch"
+        },
+        "audits": {
+            "createdBy": "Created By",
+            "createdDate": "Creation date",
+            "deletedBy": "Removed By",
+            "deletionDate": "Date of deletion",
+            "lastModifiedBy": "Modified by",
+            "lastModifiedDate": "Modification date",
+            "title": "Audit"
+        },
+        "calendar": {
+            "placeholder": "Select the desired date on the calendar"
+        },
+        "code": "Code",
+        "crear": {
+            "title": "Confirm creation"
+        },
+        "currency": {
+            "errors": {
+                "notANumber": "The entered value must be numeric"
+            }
+        },
+        "deactivate": {
+            "title": "Confirm deactivation"
+        },
+        "delete": {
+            "title": "Confirm delete operation"
+        },
+        "disabled": "Disabled",
+        "eliminar": {
+            "title": "Confirm Deletion"
+        },
+        "enabled": "Desactivado",
+        "input": {
+            "placeholder": "Enter the desired text here"
+        },
+        "list": {
+            "empty": {
+                "createNewIitem": "(Add new)",
+                "detail": "There were no results that meet the search criteria.",
+                "multiInput": "Type the value and hit enter to add it",
+                "selectOption": "Select one of the available options",
+                "sorry": "We are sorry.",
+                "writeForSuggestions": "Start typing to suggest results"
+            }
+        },
+        "modificar": {
+            "title": "Confirm modification"
+        },
+        "name": "Name",
+        "publicationDate": "Publication date",
+        "recuperar": {
+            "title": "Confirm recovery"
+        },
+        "activate": {
+            "title": "Confirm activation"
+        },
+        "status": "Status",
+        "validation": {
+            "ZonedDateTimelocal": "This field must be a date and time.",
+            "datetimelocal": "This field must be a date and time.",
+            "max": "This field cannot be greater than {{max}}.",
+            "maxbytes": "This field cannot be more than {{max}} bytes.",
+            "maxlength": "This field cannot exceed {{max}} characters.",
+            "min": "This field must be greater than {{min}}.",
+            "minbytes": "This field must be at least {{min}} bytes.",
+            "minlength": "This field requires at least {{requiredLength}} characters.",
+            "not-valid": "The value of this field is not valid",
+            "number": "This field must be a number.",
+            "pattern": "This field must follow the pattern {{pattern}}.",
+            "required": "This field is required."
+        }
+    },
+    "enum": {
+        "localeToLanguage": {
+            "CA": "Catalan",
+            "DE": "German",
+            "EN": "English",
+            "ES": "Spanish",
+            "FR": "French",
+            "PT": "Portuguese",
+            "RU": "Russian",
+            "ZH": "Chinese"
+        },
+        "procStatus": {
+            "DRAFT": "Eraser",
+            "EXTERNALLY_PUBLISHED": "Externally published",
+            "INTERNALLY_PUBLISHED": "Internally published",
+            "label": "Life cycle status"
+        }
+    },
+    "error": {
+        "403": {
+            "detail": "Sorry, you do not have permissions to access the page.",
+            "title": "Error 403"
+        },
+        "404": {
+            "detail": "Sorry, the page you are looking for does not exist.",
+            "title": "Error 404"
+        },
+        "NotNull": "Field {{0}} cannot be empty!",
+        "Size": "Field {{0}} does not meet the minimum / maximum size requirements!",
+        "accessDenied": "Sorry, you do not have permissions to access the page.",
+        "blockedUser": {
+            "detail": "Sorry, the user you are trying to access with is blocked.",
+            "title": "User error"
+        },
+        "entidad-no-encontrada": "Result of {{0}} not found",
+        "file": {
+            "empty": "Empty file.",
+            "maxFileSize": "Files larger than {{0}} MB cannot be attached.",
+            "notFound": "File not found."
+        },
+        "file-empty": "The file is empty",
+        "id-existe": "A new {{0}} cannot previously have an ID",
+        "internalServerError": "Internal server error",
+        "nonExistingUser": {
+            "detail": "Sorry, the user you are trying to access with has not registered.",
+            "title": "User error"
+        },
+        "query-no-soportada": "Search parameter {{0}} not supported",
+        "rol": {
+            "users-has-role": "Cannot delete a role that is assigned to some users"
+        },
+        "server.not.reachable": "Server not accessible",
+        "title": "Oops, an error occurred!",
+        "url.not.found": "Not found",
+        "userManagement": {
+            "usuario-ldap-no-encontrado": "The specified user was not found"
+        },
+        "usuario-existe": "The username entered is already in use",
+        "quartz": {
+            "jobExecutionError": "Error while running a job Quartz"
+        }
+    },
+    "externalCategoriesTable": {
+        "alreadySelectedCategory": "You cannot select this category because a node already exists that references it.",
+        "columns": {
+            "name": "Name",
+            "nestedCode": "Nested code",
+            "schemaCode": "Schema code",
+            "schemaVersion": "Schema version",
+            "urn": "URN"
+        },
+        "noResourceFound": "No external resource found",
+        "title": "Selected topics"
+    },
+    "externalOperation": {
+        "disabled": "Disabled",
+        "enabled": "Activated"
+    },
+    "externalOperations": {
+        "home": {
+            "title": "Statistical operations"
+        }
+    },
+    "externalUser": {
+        "activado": "Activated",
+        "created": "User {{ param }}has been created",
+        "createdDate": "Registration date",
+        "deactivate": {
+            "question": "Are you sure you want to delete user <strong>{{ email }}</strong>?"
+        },
+        "deleted": "User {{ param }}has been removed",
+        "deletionDate": "Deletion date",
+        "desactivado": "Disabled",
+        "detail": {
+            "title": "User"
+        },
+        "email": "e-mail",
+        "enableEmailNotifications": "Enable email notifications for this user",
+        "filters": {
+            "labels": {
+                "categories": "Thematic subscriptions",
+                "fullname": "Name or surname",
+                "language": "Language",
+                "service": "Service"
+            },
+            "placeholders": {
+                "fullname": "Enter name or surname",
+                "language": "Enter user languages",
+                "noResourceSelected": "No resource selected",
+                "service": "Enter the services used by the user"
+            },
+            "rolEnum": {
+                "label": "Role"
+            },
+            "rolLong": {
+                "label": "Search by role (ac-autocomplete-long-list)",
+                "placeholder": "Enter role (ac-autocomplete-long-list)"
+            },
+            "rolShort": {
+                "label": "Search by role (ac-autocomplete-short-list)",
+                "placeholder": "Enter role (ac-autocomplete-short-list)"
+            },
+            "title": "Filter users"
+        },
+        "home": {
+            "createDeactivatedTooltip": "User creation is deactivated",
+            "createLabel": "Add new user",
+            "createOrEditLabel": "Create or edit a user",
+            "favorites": "Favorites",
+            "filters": "Filters",
+            "includeDeleted": "Include deactivated",
+            "title": "Users"
+        },
+        "language": "Language",
+        "languageEnum": {
+            "CATALAN": "Catalan",
+            "SPANISH": "Spanish"
+        },
+        "login": "Username",
+        "name": "First Name",
+        "permissions": "Permissions",
+        "personalData": "Personal Information",
+        "profiles": "Roles",
+        "activate": {
+            "question": "Are you sure you want to activate user {{ email }}?"
+        },
+        "rol": "Role",
+        "roles": "Roles",
+        "serviceEnum": {
+            "FILTERS": "Filters",
+            "FAVORITES": "Favorites"
+        },
+        "status": {
+            "active": "Active",
+            "deactivated": "Deactivated",
+            "name": "State"
+        },
+        "surname1": "Surname",
+        "surname2": "Second surname",
+        "treatment": "Treatment",
+        "treatmentEnum": {
+            "LADY": "Mrs",
+            "MISTER": "Mister"
+        },
+        "updated": "User {{ param }}has been updated"
+    },
+    "family": {
+        "acronym": {
+            "label": "acronym",
+            "placeholder": "acronym"
+        },
+        "code": {
+            "label": "Code",
+            "placeholder": "Code"
+        },
+        "creationDate": {
+            "label": "Creation date"
+        },
+        "delete": {
+            "question": "Are you sure you want to delete the family <strong>{{title}}</strong>?"
+        },
+        "description": {
+            "label": "Description",
+            "placeholder": "Description"
+        },
+        "home": {
+            "createLabel": "Add new family",
+            "title": "Family statistics"
+        },
+        "internalInventoryDate": {
+            "label": "Internal publication date"
+        },
+        "inventoryDate": {
+            "label": "External publication date"
+        },
+        "section": {
+            "contentDescriptors": "Content descriptors",
+            "diffusionDescriptors": "Diffusion descriptors",
+            "identifiers": "Identifiers",
+            "productionDescriptors": "Production descriptors"
+        },
+        "title": {
+            "label": "title",
+            "placeholder": "Title"
+        },
+        "urn": {
+            "label": "URN",
+            "placeholder": "URN"
+        }
+    },
+    "favorite": {
+        "entity": {
+            "email": "e-mail"
+        },
+        "form": {
+            "cancel": "Cancel",
+            "edit": "Edit favorite",
+            "goBack": "Back to List",
+            "legend": "Favorite details",
+            "new": "Create a new favorite",
+            "save": "Save favorite"
+        },
+        "home": {
+            "createLabel": "Create Favorite",
+            "title": "Favorites"
+        },
+        "name": "Favorite"
+    },
+    "filter": {
+        "entity": {
+            "email": "E-mail",
+            "lastAccessDate": "Last Access Date",
+            "name": "First Name",
+            "notes": "Notes",
+            "owner": "Owner",
+            "permalink": "URL"
+        },
+        "form": {
+            "cancel": "Cancel",
+            "delete": "Delete Custom Query",
+            "edit": "Edit Custom Query",
+            "goBack": "Back to List",
+            "legend": "Custom Query Details",
+            "new": "Create a new custom query",
+            "save": "Save Custom Query"
+        },
+        "home": {
+            "createLabel": "Create Custom Query",
+            "title": "Custom queries"
+        },
+        "name": "Custom query",
+        "search": {
+            "filterExternalUserLabel": "External user name",
+            "filterNameLabel": "Custom query name",
+            "includeFromDeactivatedUsers": "Include disabled user custom queries",
+            "name": "Search custom queries",
+            "placeholder": "Enter user name or email",
+            "placeholderForFilterNameSearch": "",
+            "placeholderForUserSearch": ""
+        }
+    },
+    "global": {
+        "alerts": {
+            "title": {
+                "info": "Information"
+            }
+        },
+        "browsehappy": "You are using an outdated browser <strong></strong>. Please <a href=\"http://browsehappy.com/?locale=en\">update your browser</a> to improve your experience.",
+        "form": {
+            "email": "Email",
+            "email.placeholder": "Your email"
+        },
+        "item-count": "{{first}} - {{second}} of {{total}}",
+        "loading": "Loading",
+        "menu": {
+            "account": {
+                "login": "Log In",
+                "logout": "Log Out",
+                "main": "Account",
+                "myAccount": "My account",
+                "sessions": "Sessions"
+            },
+            "admin": {
+                "apidocs": "API",
+                "audits": "Audit",
+                "categoryMasterTree": "Master category tree",
+                "configuration": "Configuration",
+                "dataProtectionPolicy": "Data protection policy",
+                "externalOperationsList": "Statistical operations",
+                "health": "Health",
+                "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)",
+                "logs": "Logs",
+                "main": "Administration",
+                "metrics": "Metrics",
+                "treeTopicsAdministration": "Manage topics tree",
+                "notifications": "Notifications",
+                "userManagement": "User management"
+            },
+            "administracion": {
+                "main": "Administration"
+            },
+            "entities": {
+                "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+            },
+            "home": "Start",
+            "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)"
+        },
+        "messages": {
+            "validate": {
+                "email": {
+                    "invalid": "Your email is not valid.",
+                    "maxlength": "Your email cannot be longer than 50 characters",
+                    "minlength": "Your email is required to be at least 5 characters long",
+                    "required": "An email is required."
+                }
+            }
+        },
+        "no": "DO NOT",
+        "pageSizeSelector": "Page Size",
+        "title": "eData External Users",
+        "yes": "Yes"
+    },
+    "health": {
+        "details": {
+            "details": "Details",
+            "error": "Error",
+            "name": "First Name",
+            "properties": "Properties",
+            "value": "Value"
+        },
+        "indicator": {
+            "cas": "Cas",
+            "db": "Database",
+            "diskSpace": "Disc space",
+            "ldap": "LDAP",
+            "mail": "e-mail"
+        },
+        "refresh.button": "Refresh",
+        "stacktrace": "Trace",
+        "status": {
+            "DOWN": "FALLEN",
+            "UP": "GOTTEN UP"
+        },
+        "table": {
+            "service": "Service name",
+            "status": "State"
+        },
+        "title": "Health check"
+    },
+    "home": {
+        "detail": "Access the desired section through the navigation menu",
+        "pageTitle": "you are welcome",
+        "title": "Welcome, {{user}}"
+    },
+    "logs": {
+        "filter": "Filter",
+        "nbloggers": "There are {{ total }} records. Records marked with <i class='fa fa-asterisk'></i> do not inherit the value from their parent.",
+        "table": {
+            "button": {
+                "ERROR": "Error",
+                "INFO": "info",
+                "WARN": "warn"
+            },
+            "level": "Level",
+            "name": "First Name"
+        },
+        "title": "Logs"
+    },
+    "metrics": {
+        "cache": {
+            "cachename": "Cache name",
+            "evictions": "Eviction counter",
+            "hits": "Access",
+            "misses": "Faults",
+            "title": "Cache statistics"
+        },
+        "datasource": {
+            "count": "Count",
+            "max": "Max",
+            "mean": "Half",
+            "min": "Min",
+            "name": "Pool use",
+            "p50": "p50",
+            "p75": "p75",
+            "p95": "p95",
+            "p99": "p99",
+            "title": "Data source statistics (time in milliseconds)",
+            "usage": "Use"
+        },
+        "filter": "Filter",
+        "jvm": {
+            "gc": {
+                "marksweepcount": "No. of Sweep brands",
+                "marksweeptime": "Time marks Sweep",
+                "scavengecount": "Scavenge No.",
+                "scavengetime": "Weather Scavenge",
+                "title": "Trash Collections"
+            },
+            "http": {
+                "active": "Active requests:",
+                "code": {
+                    "notfound": "Not found",
+                    "ok": "Okay",
+                    "servererror": "Server error"
+                },
+                "table": {
+                    "average1": "Average (1 min)",
+                    "average15": "Average (15 min)",
+                    "average5": "Average (5 min)",
+                    "code": "Code",
+                    "count": "Count",
+                    "mean": "Half"
+                },
+                "title": "HTTP requests (events per second)",
+                "total": "Total requests:"
+            },
+            "memory": {
+                "heap": "Heap Memory",
+                "nonheap": "Memory no Heap",
+                "title": "Memory",
+                "total": "Total Memory"
+            },
+            "threads": {
+                "all": "All",
+                "blocked": "blocked",
+                "dump": {
+                    "blockedcount": "Counter locked",
+                    "blockedtime": "Time blocked",
+                    "hide": "Hide",
+                    "id": "Id: ",
+                    "lockname": "Lock name",
+                    "show": "To show",
+                    "stacktrace": "Stacktrace",
+                    "title": "Threads",
+                    "waitedcount": "Standby counter",
+                    "waitedtime": "Standby"
+                },
+                "runnable": "Executables",
+                "timedwaiting": "Waiting Time",
+                "title": "Threads",
+                "waiting": "Waiting"
+            },
+            "title": "JVM Metrics"
+        },
+        "refresh.button": "Refresh",
+        "servicesstats": {
+            "table": {
+                "count": "Counter",
+                "max": "Max",
+                "mean": "Half",
+                "min": "Min",
+                "name": "Service name",
+                "p50": "p50",
+                "p75": "p75",
+                "p95": "p95",
+                "p99": "p99"
+            },
+            "title": "Service statistics (time in milliseconds)"
+        },
+        "title": "Application Metrics",
+        "updating": "Updating …"
+    },
+    "operation": {
+        "name": "Statistical operation"
+    },
+    "structuralResourcesTree": {
+        "addNewNode": "Add topic",
+        "editionModal": "Multilanguage edition of the resource name",
+        "externalOperations": "Ascribed categories",
+        "helpMessage": "You can drag the elements to reposition them. You can edit the name of the resource by double cliking on them.",
+        "noRecordsFound": "No topic or operation found",
+        "numberOfFilters": "Custom queries: {{amount}}",
+        "remapModal": "Select topics",
+        "subscribedUsers": "Subscribed users"
+    },
+    "table": {
+        "globalSearchPlaceholder": "Enter search terms",
+        "pageCount": "{{pageFirst}} - {{pageLast}} of {{total}}",
+        "pageReport": "{first}–{last} of {totalRecords}"
+    },
+    "notifications": {
+        "home": {
+            "title": "Notifications"
+        },
+        "form": {
+            "subject": "Subject",
+            "message": "Message",
+            "receivers": "Receivers",
+            "send": "Send"
+        },
+        "message": {
+            "onSuccessSumary": "Notification sent",
+            "onSuccess": "The notification has been sent correctly."
+        }
+    }
+}

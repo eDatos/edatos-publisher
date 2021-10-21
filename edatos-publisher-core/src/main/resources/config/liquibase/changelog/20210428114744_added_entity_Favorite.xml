@@ -1,0 +1,41 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="arte" id="1619606864000-1">
+        <createSequence incrementBy="50" sequenceName="seq_tb_favorites" startValue="1"/>
+    </changeSet>
+    <changeSet author="arte" id="1619606864000-2">
+        <createTable tableName="tb_favorites">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_favoritesPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="opt_lock" type="BIGINT"/>
+            <column name="category_fk" type="BIGINT"/>
+            <column name="external_operation_fk" type="BIGINT"/>
+            <column name="external_user_fk" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arte" id="1619606864000-3">
+        <addUniqueConstraint columnNames="external_user_fk, category_fk" constraintName="UK6ubfpj9qk6ffa0wsgiqtewdn7" tableName="tb_favorites"/>
+    </changeSet>
+    <changeSet author="Francisco Cruz (generated)" id="1621592860040-13">
+        <addUniqueConstraint columnNames="external_user_fk, external_operation_fk" constraintName="UKtqxtkey579s88d8vplk7fvg4k" tableName="tb_favorites"/>
+    </changeSet>
+    <changeSet author="arte" id="1619606864000-5">
+        <addForeignKeyConstraint baseColumnNames="external_user_fk" baseTableName="tb_favorites" constraintName="FKlm71lrp5m3tcq3m6nixx1xmrn" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tb_external_users" validate="true"/>
+    </changeSet>
+    <changeSet author="arte" id="1619606864000-6">
+        <addForeignKeyConstraint baseColumnNames="category_fk" baseTableName="tb_favorites" constraintName="FKqo0wh8cx29bg7gkw8x336g8k7" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tb_categories" validate="true"/>
+    </changeSet>
+    <changeSet author="Francisco Cruz (generated)" id="1621592860040-14">
+        <addForeignKeyConstraint baseColumnNames="external_operation_fk" baseTableName="tb_favorites" constraintName="FK9o6o7i42o09n3t22wkm71xlqf" deferrable="false" initiallyDeferred="false" referencedColumnNames="external_item_fk" referencedTableName="tb_external_operations" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

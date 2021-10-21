@@ -1,0 +1,53 @@
+<fieldset>
+    <h3 translate="arte.audit-info.title"></h3>
+    <div class="row">
+        <dl class="form-field-inline col-md-6">
+            <div class="form-row">
+                <dt class="col-md-4">
+                    <label translate="arte.audit-info.createdBy"></label>
+                </dt>
+                <dd class="col-md-8">{{ entity.createdBy }}</dd>
+            </div>
+        </dl>
+        <dl class="form-field-inline col-md-6">
+            <div class="form-row">
+                <dt class="col-md-4">
+                    <label translate="arte.audit-info.createdDate"></label>
+                </dt>
+                <dd class="col-md-8">{{ entity.createdDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+        </dl>
+        <dl class="form-field-inline col-md-6">
+            <div class="form-row">
+                <dt class="col-md-4">
+                    <label translate="arte.audit-info.lastModifiedBy"></label>
+                </dt>
+                <dd class="col-md-8">{{ entity.lastModifiedBy }}</dd>
+            </div>
+        </dl>
+        <dl class="form-field-inline col-md-6">
+            <div class="form-row">
+                <dt class="col-md-4">
+                    <label translate="arte.audit-info.lastModifiedDate"></label>
+                </dt>
+                <dd class="col-md-8">{{ entity.lastModifiedDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+        </dl>
+        <dl *ngIf="entity.deletedBy" class="form-field-inline col-md-6">
+            <div class="form-row">
+                <dt class="col-md-4">
+                    <label translate="arte.audit-info.deletedBy"></label>
+                </dt>
+                <dd class="col-md-8">{{ entity.deletedBy }}</dd>
+            </div>
+        </dl>
+        <dl *ngIf="entity.deletionDate" class="form-field-inline col-md-6">
+            <div class="form-row">
+                <dt class="col-md-4">
+                    <label translate="arte.audit-info.deletionDate"></label>
+                </dt>
+                <dd class="col-md-8">{{ entity.deletionDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            </div>
+        </dl>
+    </div>
+</fieldset>

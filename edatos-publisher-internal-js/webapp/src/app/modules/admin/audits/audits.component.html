@@ -1,0 +1,57 @@
+<div *ngIf="audits" class="page">
+    <div class="page-header page-header-top has-filters">
+        <h2 class="page-header-title">
+            <span class="page-header-title-text" translate="audits.title"></span>
+        </h2>
+        <button class="btn btn-outline-dark btn-icon-only" (click)="hiddenFilters = !hiddenFilters">
+            <i class="fa fa-filter mr-1" aria-hidden="true"></i>
+            <i class="fa" [ngClass]="{'fa-angle-down': hiddenFilters, 'fa-angle-up': !hiddenFilters}" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="page-filters entity-search audits-search" [hidden]="hiddenFilters">
+        <div class="entity-search-field audit-date-search-field">
+            <label translate="audits.filter.title"></label>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <span translate="audits.filter.from" class="input-group-addon"></span>
+                    <arte-calendar [(ngModel)]="fromDate" name="start" (onSelect)="onDatesChange()"></arte-calendar>
+                </div>
+                <div class="form-group col-md-6">
+                    <span translate="audits.filter.to" class="input-group-addon"></span>
+                    <arte-calendar [(ngModel)]="toDate" name="end" (onSelect)="onDatesChange()" [maxDate]="today"> </arte-calendar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-body">
+        <div class="page-table-container-fluid">
+            <arte-table
+                [columns]="columns"
+                [value]="audits"
+                [rows]="itemsPerPage"
+                [rowsPerPageOptions]="paginatorOptions"
+                [totalRecords]="totalItems"
+                tableStyleClass="page-table"
+                dataKey="timestamp"
+                (onLazyLoad)="loadData($event)"
+            >
+                <ng-template pTemplate="body" let-audit>
+                    <tr>
+                        <td><span>{{audit.timestamp | date: 'dd/MM/yyyy HH:mm'}}</span></td>
+                        <td>{{audit.principal}}</td>
+                        <td>{{audit.type}}</td>
+                        <td>
+                            <span *ngIf="audit.data.message" ng-show="audit.data.message">{{audit.data.message}}</span>
+                            <span *ngIf="audit.data.remoteAddress" ng-show="audit.data.remoteAddress">
+                                <strong> <span translate="audits.table.data.remoteAddress"></span> </strong>&nbsp;{{audit.data.remoteAddress}}
+                            </span>
+                            <span *ngIf="audit.data.code" ng-show="audit.data.code">
+                                <strong> <span translate="audits.table.data.code">Code</span> </strong>&nbsp;{{audit.data.code}}
+                            </span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </arte-table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://tuckey.org/res/dtds/urlrewrite4.0.dtd">
+<urlrewrite use-query-string="true">
+	<rule>
+		<from>/apis/operations-internal/latest</from>
+		<to type="redirect">%{context-path}/apis/operations-internal/v1.0</to>
+	</rule>
+</urlrewrite>

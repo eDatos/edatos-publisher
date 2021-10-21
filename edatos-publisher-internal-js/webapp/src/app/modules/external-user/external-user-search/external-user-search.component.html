@@ -1,0 +1,97 @@
+<div #dialogWrapper></div>
+<div class="page-filters">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label translate="externalUser.filters.labels.fullname"></label>
+            <arte-input
+                [(ngModel)]="filters.fullname"
+                [attr.aria-label]="'externalUser.filters.placeholders.fullname' | translate"
+                name="name"
+                placeholder="externalUser.filters.placeholders.fullname"
+                (keyup)="filter()"
+            ></arte-input>
+        </div>
+        <div class="form-group col-md-4">
+            <label translate="externalUser.filters.labels.language"></label>
+            <arte-autocomplete-enum
+                (onSelect)="filter()"
+                (onUnselect)="filter()"
+                [(ngModel)]="filters.languages"
+                [attr.aria-label]="'externalUser.filters.placeholders.language' | translate"
+                [multiple]="true"
+                [suggestionsEnum]="languageEnum"
+                [translationPath]="'externalUser.languageEnum.'"
+                name="language"
+            ></arte-autocomplete-enum>
+        </div>
+        <div class="form-group col-md-4">
+            <label translate="externalUser.filters.labels.service"></label>
+            <arte-autocomplete-enum
+                (onSelect)="filter()"
+                (onUnselect)="filter()"
+                [(ngModel)]="filters.services"
+                [attr.aria-label]="'externalUser.filters.placeholders.service' | translate"
+                [multiple]="true"
+                [suggestionsEnum]="serviceEnum"
+                [translationPath]="'externalUser.serviceEnum.'"
+                name="services"
+            ></arte-autocomplete-enum>
+        </div>
+        <div class="form-group col-md-8 thematic-subscriptions">
+            <label class="label-selected-resources">{{'externalUser.filters.labels.categories' | translate}}</label>
+            <div class="thematic-subscriptions-input">
+                <div *ngIf="selectedResources?.length !== 0; else noSelectedResources" class="selected-resources-wrapper">
+                    <div class="selected-resources">
+                        <span *ngFor="let resource of selectedResources; trackBy: trackSelectedResource" class="badge badge-primary d-flex align-items-center">
+                            <i class="pi pi-times" aria-hidden="true" (click)="deleteResource(resource)"></i>
+                            {{resource.name.val}}
+                        </span>
+                    </div>
+                </div>
+                <ng-template #noSelectedResources>
+                    <span class="no-selected-resource">{{'externalUser.filters.placeholders.noResourceSelected' | translate}}</span>
+                </ng-template>
+                <button type="button" class="btn btn-secondary btn-sm select-resources-button" (click)="openCategoryModal()">
+                    <i class="fa fa-hand-pointer-o mr-0" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <p-dialog
+                *ngIf="isSelectingResource"
+                [visible]="true"
+                [focusOnShow]="true"
+                [modal]="true"
+                [dismissableMask]="true"
+                [header]="'externalUser.filters.labels.categories' | translate"
+                [resizable]="false"
+                [style]="{width: '80vw'}"
+                [appendTo]="dialogWrapper"
+                styleClass="ui-fluid"
+                [contentStyle]="{padding: '1.5em 2em', overflow: 'visible', 'max-height': '90vh', 'overflow-y': 'auto'}"
+                (visibleChange)="closeCategoryModal()"
+            >
+                <app-structural-resources-tree [disabled]="false" [preselectedResources]="selectedResources" mode="simpleSelect"></app-structural-resources-tree>
+                <p-footer>
+                    <button type="button" class="btn btn-primary" (click)="selectCategories()">
+                        <i class="fa fa-hand-o-up" aria-hidden="true"></i>
+                        <span translate="entity.action.select"></span>
+                    </button>
+                </p-footer>
+            </p-dialog>
+        </div>
+        <div class="ac-ui-unfluid include-deactivated form-group small-form-field">
+            <label translate="externalUser.home.includeDeleted"></label>
+            <div class="">
+                <!-- d-md-inline-block ml-3 -->
+                <arte-tri-input-switch [(ngModel)]="filters.includeDeleted" (onChange)="filter()" [required]="true"></arte-tri-input-switch>
+            </div>
+        </div>
+        <div class="form-group small-form-field">
+            <label class="w-100">&nbsp;</label>
+            <button class="btn btn-light" (click)="resetFilters();">
+                <i class="btn-icon fa fa-times"></i>
+                <span translate="entity.action.filtersReset"></span>
+            </button>
+        </div>
+    </div>
+</div>

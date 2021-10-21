@@ -1,0 +1,39 @@
+:host ::ng-deep arte-table {
+    @media screen and (min-width: 915px) {
+        // Name
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 20%;
+        }
+
+        // Surname
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 16%;
+        }
+
+        // Second surname
+        th:nth-child(3),
+        td:nth-child(3) {
+            width: 16%;
+        }
+
+        // Language
+        th:nth-last-child(3),
+        td:nth-last-child(3) {
+            width: 8%;
+        }
+
+        // Treatment
+        th:nth-last-child(2),
+        td:nth-last-child(2) {
+            width: 8%;
+        }
+
+        // Status
+        th:nth-last-child(1),
+        td:nth-last-child(1) {
+            width: 8%;
+        }
+    }
+}

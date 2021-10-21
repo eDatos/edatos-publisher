@@ -1,0 +1,71 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="arte" id="1614083280000-1">
+        <createSequence incrementBy="50" sequenceName="seq_tb_external_users" startValue="1"/>
+    </changeSet>
+    <changeSet author="arte" id="1614083280000-2">
+        <createTable tableName="tb_external_users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_external_usersPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="opt_lock" type="BIGINT"/>
+            <column name="deleted_by" type="VARCHAR(255)"/>
+            <column name="deletion_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_notifications_enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="language" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organism" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="surname1" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname2" type="VARCHAR(255)"/>
+            <column name="treatment" type="VARCHAR(255)"/>
+
+            <column name="reset_key" type="varchar(255)"/>
+            <column name="reset_date" type="timestamp"/>
+
+        </createTable>
+    </changeSet>
+    <changeSet author="arte" id="1614083280000-3">
+        <createTable tableName="tb_external_users_roles">
+            <column name="external_user_fk" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arte" id="1614083280000-4">
+        <addUniqueConstraint columnNames="email" constraintName="UC_TB_EXTERNAL_USERSEMAIL_COL"
+                             tableName="tb_external_users"/>
+    </changeSet>
+    <changeSet author="arte" id="1614083280000-5">
+        <addForeignKeyConstraint baseColumnNames="external_user_fk" baseTableName="tb_external_users_roles"
+                                 constraintName="FK35rp8qvox3xtpksga7retcytt" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="tb_external_users" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

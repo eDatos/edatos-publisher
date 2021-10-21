@@ -1,0 +1,17 @@
+<arte-table
+    [columns]="filterTableColumns"
+    [value]="filters"
+    [rows]="itemsPerPage"
+    [rowsPerPageOptions]="paginatorOptions"
+    [totalRecords]="filterAmount"
+    tableStyleClass="page-table table-has-pointer-rows"
+    (onLazyLoad)="loadData($event)"
+>
+    <ng-template pTemplate="body" let-filter>
+        <tr [routerLink]="['/filter', filter.id]">
+            <td>{{filter.name}}</td>
+            <td><a href="{{getVisualizerPath() + filter.permalink}}" target="_blan">{{getVisualizerPath() + filter.permalink}}</a></td>
+            <td>{{filter.lastAccessDate | date: 'd/M/yyyy H:mm:ss' }}</td>
+        </tr>
+    </ng-template>
+</arte-table>

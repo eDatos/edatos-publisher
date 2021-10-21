@@ -1,0 +1,28 @@
+# Before execute:
+#   * Download /Recursos/software/BBDD/Oracle/Docker/ora11xe.tgz from NAS
+#   * Execute docker load --input <PATH/ora11xe.tgz>
+# Execute docker-compose -f <THIS_FILE>
+# Connect to local database and create METAMAC_COMMON_METADATA schema
+# See http://confluence.arte-consultores.com/pages/viewpage.action?pageId=4067538 (ORA-01045: user CREATE session privilige; logon denied)
+# Download SQLDeveloper to copy METAMAC_COMMON_METADATA schema of ISTAC Database to local database
+
+version: '2'
+services:
+    istac-oracle:
+        image: sath89/oracle-xe-11g:latest
+        environment:
+            - processes=1000 
+            - sessions=1105
+            - transactions=1215
+        ports:
+            - 1580:8080
+            - 1521:1521
+
+######
+# Connect database with following setting:
+######
+##  hostname: localhost
+##  port: 1521
+##  sid: xe
+##  username: system
+##  password: oracle

@@ -1,0 +1,23 @@
+.language-input-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    .single-language-input {
+        display: inline-grid;
+        grid-template-columns: minmax(5em, 1fr) 9.5fr;
+        grid-column-gap: 1em;
+
+        label {
+            margin: 0;
+            justify-self: right;
+            align-self: center;
+        }
+        input {
+            width: 100%;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
+}

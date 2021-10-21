@@ -1,0 +1,23 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="arte" id="1623134926000-1">
+        <createTable tableName="tb_external_datasets">
+            <column name="recived_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="external_operation_urn" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="external_item_fk" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_external_datasetsPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arte" id="1623134926000-2">
+        <addForeignKeyConstraint baseColumnNames="external_item_fk" baseTableName="tb_external_datasets"
+                                 constraintName="FKdvm5kmajvhukpubdv6bqt6jhs" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="tb_external_items" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,75 @@
+<p-table
+    selectionMode="multiple"
+    [value]="externalCategories"
+    [(selection)]="selectedExternalCategories"
+    [loading]="loading"
+    [rows]="10"
+    [rowsPerPageOptions]="[10,25,50]"
+    [paginator]="true"
+    [showCurrentPageReport]="true"
+    [currentPageReportTemplate]="'table.pageReport' | translate"
+    [totalRecords]="totalItems"
+    [lazy]="true"
+    [rowHover]="true"
+    [filterDelay]="0"
+    [globalFilterFields]="['name.val','nestedCode']"
+    [scrollable]="true"
+    scrollHeight="40vh"
+    dataKey="urn"
+    styleClass="external-categories-table"
+    (onLazyLoad)="lazyLoad($event)"
+>
+    <ng-template pTemplate="caption">
+        <div class="search-wrapper">
+            <input pInputText type="text" (input)="globalSearch.next($event)" [placeholder]="'table.globalSearchPlaceholder' | translate" />
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th scope="col">
+                <p-tableHeaderCheckbox (click)="onSelectAll()"></p-tableHeaderCheckbox>
+            </th>
+            <th scope="col">{{'externalCategoriesTable.columns.schemaCode' | translate}}</th>
+            <th scope="col">{{'externalCategoriesTable.columns.schemaVersion' | translate}}</th>
+            <th scope="col">{{'externalCategoriesTable.columns.name' | translate}}</th>
+            <th scope="col">{{'externalCategoriesTable.columns.nestedCode' | translate}}</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-resource>
+        <tr [class.disabled]="isDisabled(resource)">
+            <td>
+                <i
+                    *ngIf="isDisabled(resource)"
+                    class="disabled-tooltip fa fa-info-circle"
+                    aria-hidden="true"
+                    [pTooltip]="'externalCategoriesTable.alreadySelectedCategory' | translate"
+                    tooltipPosition="top"
+                ></i>
+                <p-tableCheckbox [value]="resource" [disabled]="isDisabled(resource)"></p-tableCheckbox>
+            </td>
+            <td>{{resource.schema.code}}</td>
+            <td>{{resource.schema.version}}</td>
+            <td>{{resource.name.val}}</td>
+            <td>{{resource.nestedCode}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="3">{{'externalCategoriesTable.noResourceFound' | translate}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        <h4 class="summary-title">{{ 'externalCategoriesTable.title' | translate }}</h4>
+        <ng-container *ngIf="selectedExternalCategories?.length !== 0; else nothingSelected">
+            <ul class="summary-list">
+                <li *ngFor="let externalCategory of selectedExternalCategories" class="summary-item">
+                    <span class="text-secondary">({{externalCategory.schema.code}}, {{externalCategory.schema.version}})</span>&nbsp;
+                    <span>{{externalCategory.name.val}}</span>
+                </li>
+            </ul>
+        </ng-container>
+        <ng-template #nothingSelected>
+            <span class="summary-item text-secondary font-italic">No hay ningún tema seleccionado</span>
+        </ng-template>
+    </ng-template>
+</p-table>

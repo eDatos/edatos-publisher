@@ -1,0 +1,27 @@
+<div class="page has-header-fixed">
+    
+    <div class="page-header page-header-top">
+        <h2 class="page-header-title">
+            <span class="page-header-title-text" translate="dataProtectionPolicy.home.title"></span>
+        </h2>
+        <div class="page-header-btns">
+            <button *ngIf="!isEditMode" type="button" class="btn btn-secondary"
+                routerLink="/admin/data-protection-policy/edit">
+                <span class="fa fa-pencil"></span> <span translate="entity.action.edit"></span>
+            </button>
+            <button *ngIf="isEditMode" type="submit" form="data-protection-policy-form" class="btn btn-primary">
+                <span class="fa fa-floppy-o"></span>
+                <span translate="entity.action.save"></span>
+            </button>
+            <button *ngIf="isEditMode" type="button" class="btn btn-secondary" data-dismiss="modal" (click)="clear()">
+                <span class="fa fa-ban"></span>
+                <span translate="entity.action.cancel"></span>
+            </button>
+        </div>
+    </div>
+    <div class="page-body">
+        <form class="page-form page-section" (ngSubmit)="save()" id="data-protection-policy-form" #dataProtectionPolicyForm="ngForm">
+            <app-multi-language-editor [(ngModel)]="dataProtectionPolicy.value" name="dataProtectionPolicyValue" [locales]="locales" [isEditMode]="isEditMode"></app-multi-language-editor>
+        </form>
+    </div>
+</div>

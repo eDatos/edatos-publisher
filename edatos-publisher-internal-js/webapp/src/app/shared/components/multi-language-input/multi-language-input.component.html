@@ -1,0 +1,17 @@
+<div class="language-input-list">
+    <div *ngFor="let locale of locales" class="single-language-input">
+        <label *ngIf="isEditMode || mappedValue[locale]" [for]="locale">{{'enum.localeToLanguage.' + locale.toUpperCase() | translate: {default: locale} }}</label>
+        <input
+            *ngIf="isEditMode || mappedValue[locale]"
+            pInputText
+            type="text"
+            [value]="mappedValue[locale]"
+            [class.readonly-input]="!isEditMode"
+            [readonly]="!isEditMode"
+            [attr.disabled]="isDisabled ? true : null"
+            (input)="onEditorChange($event, locale)"
+            (focus)="onEditorTouched($event)"
+            (keydown.enter)="onEnterKeyDown.emit(value)"
+        />
+    </div>
+</div>

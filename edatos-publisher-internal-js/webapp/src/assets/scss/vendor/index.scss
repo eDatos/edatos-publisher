@@ -1,0 +1,26 @@
+@import './vendor/fontawesome';
+@import './vendor/arte-ng';
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
+
+/**
+ * So... why do we need this two styles? Well, let's see:
+ *
+ * This was first made because a bug related to metamac-navbar. Bootstrap styles used
+ * by this app would collide with the defined ones from metamac-navbar, causing the navbar to
+ * have some bugs (shorter margins, the dropdown pointer was duplicating, that sort of thing).
+ *
+ * That was fixed by "scoping" the Bootstrap styles to a CSS class on the _root_ html element of
+ * the app; meaning all child components will be scoped to that class. That way it would not affect
+ * metamac-navbar.
+ *
+ * On the other hand, the app navbar is not under that _root_ element. That's a problem, because
+ * we need Bootstrap for the app navbar too, so a new specific CSS class was created _ad hoc_ for
+ * this.
+ */
+
+.app {
+    @import 'bootstrap.scss';
+}

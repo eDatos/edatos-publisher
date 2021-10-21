@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2" />
+    <property name="now" value="current_timestamp" dbms="postgresql" />
+
+    <changeSet id="00000000000000" author="arte">
+        <createSequence sequenceName="seq_tb_usuarios" startValue="1" incrementBy="50" />
+        <createSequence sequenceName="seq_admin_audit_event" startValue="1" incrementBy="50" />
+    </changeSet>
+
+    <!-- JHipster core tables. The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it. -->
+    <changeSet id="00000000000001" author="arte">
+
+        <createTable tableName="tb_usuarios">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="opt_lock" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="login" type="varchar(255)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="nombre" type="varchar(255)" />
+            <column name="apellido1" type="varchar(255)" />
+            <column name="apellido2" type="varchar(255)" />
+            <column name="email" type="varchar(255)"/>
+            <column name="deletion_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            <column name="deleted_by" type="varchar(255)" />
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="timestamp" defaultValueDate="${now}">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_modified_by" type="varchar(255)" />
+            <column name="last_modified_date" type="timestamp" />
+        </createTable>
+
+        <createIndex indexName="idx_user_login" tableName="tb_usuarios" unique="true">
+            <column name="login" type="varchar(255)" />
+        </createIndex>
+
+        <createIndex indexName="idx_user_email" tableName="tb_usuarios">
+            <column name="email" type="varchar(255)" />
+        </createIndex>
+
+        <createTable tableName="tb_usuarios_roles">
+            <column name="usuario_fk" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="rol" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addPrimaryKey constraintName="pk_tb_usuarios_roles" columnNames="usuario_fk, rol" tableName="tb_usuarios_roles" />
+
+        <addForeignKeyConstraint baseColumnNames="usuario_fk" baseTableName="tb_usuarios_roles" constraintName="fk_tb_usuarios_roles_tb_usuarios_id"
+            referencedColumnNames="id" referencedTableName="tb_usuarios" />
+
+        <dropDefaultValue tableName="tb_usuarios" columnName="created_date" columnDataType="datetime" />
+
+        <createTable tableName="admin_audit_event">
+            <column name="event_id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="principal" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="event_date" type="timestamp" />
+            <column name="event_type" type="varchar(255)" />
+        </createTable>
+
+        <createTable tableName="admin_audit_event_data">
+            <column name="event_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="value" type="varchar(255)" />
+        </createTable>
+        <addPrimaryKey constraintName="pk_admin_audit_event_data" columnNames="event_id, name" tableName="admin_audit_event_data" />
+
+        <createIndex indexName="idx_persistent_audit_event" tableName="admin_audit_event" unique="false">
+            <column name="principal" type="varchar(50)" />
+            <column name="event_date" type="timestamp" />
+        </createIndex>
+
+        <createIndex indexName="idx_persistent_audit_event_data" tableName="admin_audit_event_data" unique="false">
+            <column name="event_id" type="bigint" />
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="admin_audit_event_data" constraintName="fk_admin_audit_event_data_admin_audit_event_event_id"
+            referencedColumnNames="event_id" referencedTableName="admin_audit_event" />
+
+        <addUniqueConstraint columnNames="login" constraintName="UC_TB_USUARIOSLOGIN_COL" tableName="tb_usuarios" />
+    </changeSet>
+
+</databaseChangeLog>

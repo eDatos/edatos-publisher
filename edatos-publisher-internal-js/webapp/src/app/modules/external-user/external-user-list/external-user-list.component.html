@@ -1,0 +1,52 @@
+<div class="page">
+    <div class="page-header has-filters">
+        <div class="page-header-top">
+            <h2 class="page-header-title">
+                <span class="page-header-title-text" translate="externalUser.home.title"></span>
+            </h2>
+        </div>
+        <app-external-user-search [filters]="filters"></app-external-user-search>
+    </div>
+    <div class="page-body">
+        <ng-container *ngIf="users">
+            <ng-container *ngIf="users.length > 0; else emptyList">
+                <div class="page-table-container-fluid">
+                    <arte-table
+                        [columns]="columns"
+                        [value]="users"
+                        [rows]="itemsPerPage"
+                        [totalRecords]="totalItems"
+                        [rowsPerPageOptions]="paginatorOptions"
+                        tableStyleClass="page-table table-has-pointer-rows"
+                        (onLazyLoad)="loadData($event)"
+                        [tableStatus]="{
+                            rows: itemsPerPage,
+                            sortField: predicate,
+                            sortOrder: reverse ? 1 : -1,
+                            first: (page - 1) * itemsPerPage
+                        }"
+                    >
+                        <ng-template pTemplate="body" let-user>
+                            <tr [ngClass]="{'entity-deleted': !isActivo(user) }" [routerLink]="['../external-users', user.id]">
+                                <td>{{user.name}}</td>
+                                <td>{{user.surname1}}</td>
+                                <td>{{user.surname2}}</td>
+                                <td>{{user.email}}</td>
+                                <td>{{ 'externalUser.languageEnum.' + user.language | translate }}</td>
+                                <td *ngIf="user.treatment">{{ 'externalUser.treatmentEnum.' + user.treatment | translate }}</td>
+                                <td *ngIf="!user.treatment"></td>
+                                <td>
+                                    <span class="badge badge-danger ml-1" *ngIf="user.deletionDate">{{ 'externalUser.status.deactivated' | translate }}</span>
+                                    <span class="badge badge-info ml-1" *ngIf="!user.deletionDate">{{ 'externalUser.status.active' | translate }}</span>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </arte-table>
+                </div>
+            </ng-container>
+            <ng-template #emptyList>
+                <arte-entity-list-empty></arte-entity-list-empty>
+            </ng-template>
+        </ng-container>
+    </div>
+</div>

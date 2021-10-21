@@ -1,0 +1,144 @@
+<div #modalWrapper></div>
+
+<p *ngIf="mode === 'edit'" class="text-secondary">
+    <i class="fa fa-info-circle" aria-hidden="true"></i>
+    {{'structuralResourcesTree.helpMessage' | translate}}.
+</p>
+
+<button (click)="addNode()" *ngIf="mode === 'edit'" class="btn btn-link">
+    <span class="fa fa-plus"></span>
+    <span translate="structuralResourcesTree.addNewNode"></span>
+</button>
+
+<p-tree
+    *ngIf="mode === 'view'"
+    (onNodeSelect)="onSelect($event.node)"
+    (onNodeUnselect)="onUnselect($event.node)"
+    [(selection)]="selectedResources"
+    [loading]="!tree || loading"
+    [selectionMode]="selectionMode"
+    [emptyMessage]="'structuralResourcesTree.noRecordsFound' | translate"
+    [value]="tree"
+>
+    <ng-template let-node pTemplate="default">
+        <span class="label">{{node.label}}</span>&nbsp;
+        <span *ngIf="node.data.favoriteType === 'externalOperation'; else onlySubscribedUsers" class="node-info">
+            ({{'structuralResourcesTree.subscribedUsers' | translate}}: {{node.data.subscribers || 0}}, {{'structuralResourcesTree.numberOfFilters' | translate:{ amount:
+            node.data.numberOfFilters || 0 } }})
+        </span>
+        <ng-template #onlySubscribedUsers>
+            <span class="node-info"> ({{'structuralResourcesTree.subscribedUsers' | translate}}: {{node.data.subscribers || 0}}) </span>
+        </ng-template>
+        <span *ngIf="node.data.favoriteType === 'externalOperation'" class="notifications-switch">
+            <i *ngIf="node.data.notificationsEnabled" aria-hidden="true" class="fa fa-bell notifications-icon"></i>
+            <i *ngIf="!node.data.notificationsEnabled" aria-hidden="true" class="fa fa-bell-slash notifications-icon"></i>
+            <p-inputSwitch (onChange)="updateExternalOperationNotifications(node)" [(ngModel)]="node.data.notificationsEnabled" styleClass="switch"></p-inputSwitch>
+        </span>
+    </ng-template>
+</p-tree>
+
+<p-tree
+    *ngIf="['select', 'simpleSelect'].includes(mode)"
+    (onNodeSelect)="onSelect($event.node)"
+    (onNodeUnselect)="onUnselect($event.node)"
+    [(selection)]="selectedResources"
+    [loading]="!tree || loading"
+    [selectionMode]="selectionMode"
+    [emptyMessage]="'structuralResourcesTree.noRecordsFound' | translate"
+    [value]="tree"
+    [propagateSelectionUp]="propagateSelection"
+    [propagateSelectionDown]="propagateSelection"
+></p-tree>
+
+<p-tree
+    (onNodeDrop)="onNodeDrop($event)"
+    *ngIf="mode === 'edit'"
+    [draggableNodes]="true"
+    [droppableNodes]="true"
+    [emptyMessage]="'structuralResourcesTree.noRecordsFound' | translate"
+    [loading]="!tree || loading"
+    [value]="tree"
+>
+    <ng-template let-node pTemplate="default">
+        <span (dblclick)="editNodeName(node)" class="label mr-2">{{node.label}} </span>
+        <span class="node-info">(</span>
+        <span class="node-info">{{'structuralResourcesTree.subscribedUsers' | translate }}: {{node.data.subscribers || 0}}</span>
+        <span *ngIf="node.data.externalCategories?.length > 0" class="node-info"
+            >, {{'structuralResourcesTree.externalOperations' | translate }}: {{node.data.externalCategories?.length || 0}}</span
+        >
+        <span class="node-info mr-2">)</span>
+        <p-dialog
+            *ngIf="node.editMode === 'name'"
+            [visible]="true"
+            [focusOnShow]="true"
+            [modal]="true"
+            [dismissableMask]="true"
+            [header]="'structuralResourcesTree.editionModal' | translate"
+            [resizable]="false"
+            [style]="{width: '50vw'}"
+            [contentStyle]="{padding: '1.5em 2em'}"
+            [appendTo]="modalWrapper"
+            (visibleChange)="disableNodeEdit(node)"
+        >
+            <app-multi-language-input
+                *ngIf="allowedLanguages"
+                [ngModel]="node.data.name"
+                [locales]="allowedLanguages"
+                (onEnterKeyDown)="saveNodeName(node, $event)"
+            ></app-multi-language-input>
+            <p-footer>
+                <button type="button" class="btn btn-secondary" (click)="disableNodeEdit(node)">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>{{ 'entity.action.cancel' | translate }}</span>
+                </button>
+                <button type="button" class="btn btn-primary" (click)="saveNodeName(node, languageInputComponent.value)">
+                    <i class="fa fa-save" aria-hidden="true"></i>
+                    <span>{{ 'entity.action.save' | translate }}</span>
+                </button>
+            </p-footer>
+        </p-dialog>
+        <p-dialog
+            *ngIf="node.editMode === 'remap'"
+            [visible]="true"
+            [focusOnShow]="true"
+            [modal]="true"
+            [dismissableMask]="true"
+            [header]="'structuralResourcesTree.remapModal' | translate"
+            [resizable]="false"
+            [style]="{width: '80vw'}"
+            [contentStyle]="{padding: '0', 'overflow-y': 'auto'}"
+            [appendTo]="modalWrapper"
+            (visibleChange)="disableNodeEdit(node)"
+        >
+            <app-external-categories-table
+                #table
+                [selectedExternalCategories]="node.data.externalCategories"
+                [disabledExternalCategories]="getDisabledExternalCategories(node.data)"
+            ></app-external-categories-table>
+            <p-footer>
+                <button (click)="disableNodeEdit(node)" class="btn btn-secondary" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    <span>{{ 'entity.action.cancel' | translate }}</span>
+                </button>
+                <button type="button" class="btn btn-primary" (click)="saveRemap(node, table.getSelectedResources())">
+                    <i class="fa fa-save" aria-hidden="true"></i>
+                    <span>{{ 'entity.action.save' | translate }}</span>
+                </button>
+            </p-footer>
+        </p-dialog>
+        <div (mouseleave)="clickedDelete = false" *ngIf="node.data.favoriteType !== 'externalOperation'" class="buttons">
+            <button (click)="addNode(node)" class="btn btn-outline-success node-btn-sm" type="button">
+                <i aria-hidden="true" class="fa fa-plus"></i>
+            </button>
+            <button (click)="clickedDelete = true" *ngIf="!clickedDelete" class="btn btn-outline-danger node-btn-sm" type="button">
+                <i aria-hidden="true" class="fa fa-minus"></i>
+            </button>
+            <button (click)="clickedDelete = false; deleteNode(node)" *ngIf="clickedDelete" class="btn btn-outline-danger node-btn-sm" type="button">
+                {{ 'entity.eliminar.title' | translate }}
+            </button>
+            <button (click)="remapNode(node)" class="btn btn-primary node-btn-sm" type="button">
+                <i aria-hidden="true" class="fa fa-search"></i>
+            </button>
+        </div>
+    </ng-template>
+</p-tree>

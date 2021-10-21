@@ -1,0 +1,793 @@
+{
+    "account": {
+        "form": {
+            "apellido1": "Primer apellido",
+            "apellido1.placeholder": "Su primer apellido",
+            "apellido2": "Segundo apellido",
+            "apellido2.placeholder": "Su segundo apellido",
+            "button": "Guardar",
+            "nombre": "Nombre",
+            "nombre.placeholder": "Su nombre"
+        },
+        "messages": {
+            "error": {
+                "emailexists": "<strong>¡La dirección de correo ya existe!</strong> Por favor, escoja otra.",
+                "fail": "<strong>¡Ha ocurrido un error!</strong> Los ajustes no se han podido guardar."
+            },
+            "success": "<strong>¡Ajustes guardados!</strong>",
+            "validate": {
+                "apellido1": {
+                    "maxlength": "Su primer apellido no puede tener más de 50 carácteres",
+                    "minlength": "Se requiere que su primer apellido tenga por lo menos 1 carácter",
+                    "required": "Se requiere que ingrese su primer apellido."
+                },
+                "apellido2": {
+                    "maxlength": "Su segundo apellido no puede tener más de 50 carácteres",
+                    "minlength": "Se requiere que su segundo apellido tenga por lo menos 1 carácter",
+                    "required": "Se requiere que ingrese su segundo apellido."
+                },
+                "nombre": {
+                    "maxlength": "Su nombre no puede tener más de 50 carácteres",
+                    "minlength": "Se requiere que su nombre tenga por lo menos 1 carácter",
+                    "required": "Se requiere que ingrese su nombre."
+                }
+            }
+        },
+        "title": "Mi cuenta"
+    },
+    "app": {
+        "name": {
+            "complete": "Gestor de usuarios externos de EDatos",
+            "short": "Usuarios externos"
+        }
+    },
+    "arte": {
+        "arte-table-count": {
+            "itemCount": "{{itemFirst}} - {{itemLast}} de {{total}}"
+        },
+        "audit-info": {
+            "createdBy": "Creado por",
+            "createdDate": "Fecha de creación",
+            "deletedBy": "Eliminado por",
+            "deletionDate": "Fecha de eliminación",
+            "lastModifiedBy": "Modificado por",
+            "lastModifiedDate": "Fecha de modificación",
+            "title": "Auditoría"
+        },
+        "autocomplete": {
+            "createNewItem": "(Añadir nuevo)",
+            "emptyMessage": "No se han obtenido resultados que cumplan los criterios de búsqueda.",
+            "placeholder": "Seleccione una de las opciones disponibles"
+        },
+        "autocomplete-long-list": {
+            "placeholder": "Empiece a escribir para sugerir resultados"
+        },
+        "calendar": {
+            "placeholder": "Seleccione en el calendario la fecha deseada"
+        },
+        "entity-list-empty": {
+            "detail": "No se han obtenido resultados que cumplan los criterios de búsqueda.",
+            "sorry": "Lo sentimos."
+        },
+        "file-upload": {
+            "cancel": "Cancelar",
+            "choose": "Elegir",
+            "delete": "Eliminar",
+            "download": "Descargar",
+            "emptyFileList": "No hay archivos subidos",
+            "filename": "Nombre archivo",
+            "filesToUpload": "Archivos para subir",
+            "invalidFileSizeMessageDetail": "el tamaño máximo es {0}.",
+            "invalidFileSizeMessageSummary": "{0}: Tamaño incorrecto",
+            "invalidFileTypeMessageDetail": "tipos de documento permitidos: {0}.",
+            "invalidFileTypeMessageSummary": "{0}: Tipo de documento no válido, ",
+            "maxFileSizeExceeded": "No pueden adjuntarse ficheros de más de {{0}} MB.",
+            "noUploadPending": "No hay archivos pendientes de subir",
+            "upload": "Subir"
+        },
+        "form-control-status": {
+            "error-messages": {
+                "ZonedDateTimelocal": "Este campo debe ser una fecha y hora.",
+                "datetimelocal": "Este campo debe ser una fecha y hora.",
+                "email": "Este campo no contiene un email válido",
+                "max": "Este campo no puede ser mayor que {{max}}.",
+                "maxbytes": "Este campo no puede tener más de {{max}} bytes.",
+                "maxlength": "Este campo no puede superar más de {{max}} caracteres.",
+                "min": "Este campo debe ser mayor que {{min}}.",
+                "minbytes": "Este campo debe tener como mínimo {{min}} bytes.",
+                "minlength": "Este campo requiere al menos {{requiredLength}} caracteres.",
+                "not-valid": "El valor de este campo no es válido",
+                "number": "Este campo debe ser un número.",
+                "pattern": "Este campo debe seguir el patrón {{pattern}}.",
+                "required": "Este campo es obligatorio."
+            }
+        },
+        "input": {
+            "placeholder": "Introduzca el texto deseado"
+        },
+        "input-number": {
+            "placeholder": "Introduzca el número deseado"
+        },
+        "input-text": {
+            "placeholder": "Introduzca el texto deseado"
+        },
+        "multi-input": {
+            "placeholder": "Escriba el valor y pulse enter para añadirlo"
+        },
+        "tri-input-switch": {
+            "no": "No",
+            "yes": "Sí"
+        }
+    },
+    "audits": {
+        "filter": {
+            "button": {
+                "clear": "limpiar",
+                "close": "cerrar",
+                "today": "hoy",
+                "weeks": "Semanas"
+            },
+            "from": "desde",
+            "title": "Filtrar por fecha",
+            "to": "hasta"
+        },
+        "table": {
+            "data": {
+                "code": "Código:",
+                "remoteAddress": "Dirección remota:"
+            },
+            "header": {
+                "data": "Datos extra",
+                "date": "Fecha",
+                "principal": "Usuario",
+                "status": "Estado"
+            }
+        },
+        "title": "Auditoría"
+    },
+    "category": {
+        "name": "Tema"
+    },
+    "categoryMasterTree": {
+        "home": {
+            "title": "Editar árbol maestro de categorías"
+        }
+    },
+    "categorySubscriptions": {
+        "home": {
+            "title": "Suscripciones temáticas"
+        }
+    },
+    "configuration": {
+        "filter": "Filtro (por prefijo)",
+        "spring": "Spring configuration",
+        "table": {
+            "prefix": "Prefijo",
+            "properties": "Propiedades"
+        },
+        "title": "Configuración"
+    },
+    "dataProtectionPolicy": {
+        "home": {
+            "title": "Política de protección de datos"
+        }
+    },
+    "edatosExternalUsersApp": {
+        "rol": {
+            "accion": "Acción",
+            "created": "Se ha creado el rol {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar el rol {{ id }}?"
+            },
+            "deleted": "Se ha eliminado el rol {{ param }}",
+            "nombre": "Nombre",
+            "roles": "Roles",
+            "sujeto": "Sujeto",
+            "updated": "Se ha actualizado el rol {{ param }}"
+        },
+        "rolesEnum": {
+            "ADMINISTRADOR": "Administrador",
+            "ANY_ROLE_ALLOWED": "Cualquier rol permitido",
+            "JEFE_NORMALIZACION": "Jefe de normalización",
+            "LECTOR": "Lector",
+            "TECNICO_APOYO_DIFUSION": "Técnico de apoyo de difusión",
+            "TECNICO_APOYO_NORMALIZACION": "Técnico de apoyo de normalización",
+            "TECNICO_APOYO_PLANIFICACION": "Técnico de apoyo de planificación",
+            "TECNICO_APOYO_PRODUCCION": "Técnico de apoyo de producción",
+            "TECNICO_DIFUSION": "Técnico de difusión",
+            "TECNICO_NORMALIZACION": "Técnico de normalización",
+            "TECNICO_PLANIFICACION": "Técnico de planificación",
+            "TECNICO_PRODUCCION": "Técnico de producción"
+        }
+    },
+    "entity": {
+        "action": {
+            "back": "Volver",
+            "cancel": "Cancelar",
+            "close": "Cerrar",
+            "confirm": "Confirmar",
+            "crear": "Crear",
+            "deactivate": "Desactivar",
+            "delete": "Eliminar",
+            "edit": "Editar",
+            "eliminar": "Eliminar",
+            "filtersReset": "Reiniciar filtros",
+            "modificar": "Modificar",
+            "name": "Acciones",
+            "open": "Abrir",
+            "publishExternally": "Publicar externamente",
+            "publishInternally": "Publicar internamente",
+            "recuperar": "Recuperar",
+            "activate": "Activar",
+            "save": "Guardar",
+            "select": "Seleccionar",
+            "view": "Ver"
+        },
+        "audits": {
+            "createdBy": "Creado por",
+            "createdDate": "Fecha de creación",
+            "deletedBy": "Eliminado por",
+            "deletionDate": "Fecha de eliminación",
+            "lastModifiedBy": "Modificado por",
+            "lastModifiedDate": "Fecha de modificación",
+            "title": "Auditoría"
+        },
+        "calendar": {
+            "placeholder": "Seleccione en el calendario la fecha deseada"
+        },
+        "code": "Código",
+        "crear": {
+            "title": "Confirmar creación"
+        },
+        "currency": {
+            "errors": {
+                "notANumber": "El valor introducido debe ser numérico"
+            }
+        },
+        "deactivate": {
+            "title": "Confirmar desactivación"
+        },
+        "delete": {
+            "title": "Confirmar operación de borrado"
+        },
+        "disabled": "Desactivado",
+        "eliminar": {
+            "title": "Confirmar eliminación"
+        },
+        "enabled": "Activado",
+        "input": {
+            "placeholder": "Introduzca aquí el texto deseado"
+        },
+        "list": {
+            "empty": {
+                "createNewIitem": "(Añadir nuevo)",
+                "detail": "No se han obtenido resultados que cumplan los criterios de búsqueda.",
+                "multiInput": "Escriba el valor y pulse enter para añadirlo",
+                "selectOption": "Seleccione una de las opciones disponibles",
+                "sorry": "Lo sentimos.",
+                "writeForSuggestions": "Empiece a escribir para sugerir resultados"
+            }
+        },
+        "modificar": {
+            "title": "Confirmar modificación"
+        },
+        "name": "Nombre",
+        "publicationDate": "Fecha de publicación",
+        "recuperar": {
+            "title": "Confirmar recuperación"
+        },
+        "activate": {
+            "title": "Confirmar activación"
+        },
+        "status": "Estado",
+        "validation": {
+            "ZonedDateTimelocal": "Este campo debe ser una fecha y hora.",
+            "datetimelocal": "Este campo debe ser una fecha y hora.",
+            "max": "Este campo no puede ser mayor que {{max}}.",
+            "maxbytes": "Este campo no puede tener más de {{max}} bytes.",
+            "maxlength": "Este campo no puede superar más de {{max}} caracteres.",
+            "min": "Este campo debe ser mayor que {{min}}.",
+            "minbytes": "Este campo debe tener como mínimo {{min}} bytes.",
+            "minlength": "Este campo requiere al menos {{requiredLength}} caracteres.",
+            "not-valid": "El valor de este campo no es válido",
+            "number": "Este campo debe ser un número.",
+            "pattern": "Este campo debe seguir el patrón {{pattern}}.",
+            "required": "Este campo es obligatorio."
+        }
+    },
+    "enum": {
+        "localeToLanguage": {
+            "CA": "Catalán",
+            "DE": "Alemán",
+            "EN": "Inglés",
+            "ES": "Castellano",
+            "FR": "Francés",
+            "PT": "Portugués",
+            "RU": "Ruso",
+            "ZH": "Chino"
+        },
+        "procStatus": {
+            "DRAFT": "Borrador",
+            "EXTERNALLY_PUBLISHED": "Publicado externamente",
+            "INTERNALLY_PUBLISHED": "Publicado internamente",
+            "label": "Estado del ciclo de vida"
+        }
+    },
+    "error": {
+        "403": {
+            "detail": "Lo sentimos, no tiene permisos para acceder a la página.",
+            "title": "Error 403"
+        },
+        "404": {
+            "detail": "Lo sentimos, la página que busca no existe.",
+            "title": "Error 404"
+        },
+        "NotNull": "¡El campo {{0}} no puede estar vacío!",
+        "Size": "¡El campo {{0}} no cumple con los requisitos de tamaño mínimo/máximo!",
+        "accessDenied": "Lo sentimos, no tiene permisos para acceder a la página.",
+        "blockedUser": {
+            "detail": "Lo sentimos, el usuario con el que intenta acceder está bloqueado.",
+            "title": "Error de usuario"
+        },
+        "entidad-no-encontrada": "Resultado de {{0}} no encontrado",
+        "file": {
+            "empty": "Fichero vacío.",
+            "maxFileSize": "No pueden adjuntarse ficheros de más de {{0}} MB.",
+            "notFound": "Fichero no encontrado."
+        },
+        "file-empty": "El fichero está vacío",
+        "id-existe": "Un nuevo {{0}} no puede tener previamente un ID",
+        "internalServerError": "Error interno del servidor",
+        "nonExistingUser": {
+            "detail": "Lo sentimos, el usuario con el que intenta acceder no se ha dado de alta.",
+            "title": "Error de usuario"
+        },
+        "query-no-soportada": "Parámetro de búsqueda {{0}} no soportado",
+        "rol": {
+            "users-has-role": "No se puede eliminar un rol que está asignado a algunos usuarios"
+        },
+        "server.not.reachable": "Servidor no accesible",
+        "title": "¡Ups, ha ocurrido un error!",
+        "url.not.found": "No encontrado",
+        "userManagement": {
+            "usuario-ldap-no-encontrado": "No se ha encontrado el usuario especificado"
+        },
+        "usuario-existe": "El nombre de usuario introducido ya está siendo usado",
+        "quartz": {
+            "jobExecutionError": "Error durante la ejecución de un job Quartz"
+        }
+    },
+    "externalCategoriesTable": {
+        "alreadySelectedCategory": "No se puede seleccionar esta categoría porque ya existe un nodo que la referencia.",
+        "columns": {
+            "name": "Nombre",
+            "nestedCode": "Código anidado",
+            "schemaCode": "Código del esquema",
+            "schemaVersion": "Versión del esquema",
+            "urn": "URN"
+        },
+        "noResourceFound": "No se ha encontrado ningún recurso externo",
+        "title": "Temas seleccionados"
+    },
+    "externalOperation": {
+        "disabled": "Desactivada",
+        "enabled": "Activada"
+    },
+    "externalOperations": {
+        "home": {
+            "title": "Operaciones estadísticas"
+        }
+    },
+    "externalUser": {
+        "activado": "Activado",
+        "created": "Se ha creado el usuario {{ param }}",
+        "createdDate": "Fecha de registro",
+        "deactivate": {
+            "question": "¿Seguro que desea desactivar el usuario <strong>{{ email }}</strong>?"
+        },
+        "deleted": "Se ha eliminado el usuario {{ param }}",
+        "deletionDate": "Fecha de borrado",
+        "desactivado": "Desactivado",
+        "detail": {
+            "title": "Usuario"
+        },
+        "email": "Email",
+        "enableEmailNotifications": "Habilitar notificaciones a través de correo electrónico para este usuario",
+        "filters": {
+            "labels": {
+                "categories": "Suscripciones temáticas",
+                "fullname": "Nombre o apellidos",
+                "language": "Idioma",
+                "service": "Servicio"
+            },
+            "placeholders": {
+                "fullname": "Introduzca nombre o apellidos",
+                "language": "Introduzca idiomas del usuario",
+                "noResourceSelected": "No hay ningún recurso seleccionado",
+                "service": "Introduzca los servicios usados por el usuario"
+            },
+            "rolEnum": {
+                "label": "Rol"
+            },
+            "rolLong": {
+                "label": "Búsqueda por rol (ac-autocomplete-long-list)",
+                "placeholder": "Introduzca rol (ac-autocomplete-long-list)"
+            },
+            "rolShort": {
+                "label": "Búsqueda por rol (ac-autocomplete-short-list)",
+                "placeholder": "Introduzca rol (ac-autocomplete-short-list)"
+            },
+            "title": "Filtrar usuarios"
+        },
+        "home": {
+            "createDeactivatedTooltip": "La creación de usuarios está desactivada",
+            "createLabel": "Añadir nuevo usuario",
+            "createOrEditLabel": "Crear o editar un usuario",
+            "favorites": "Favoritos",
+            "filters": "Filtros",
+            "includeDeleted": "Incluir desactivados",
+            "title": "Usuarios"
+        },
+        "language": "Idioma",
+        "languageEnum": {
+            "CATALAN": "Catalán",
+            "SPANISH": "Castellano"
+        },
+        "login": "Nombre de usuario",
+        "name": "Nombre",
+        "permissions": "Permisos",
+        "personalData": "Datos personales",
+        "profiles": "Roles",
+        "activate": {
+            "question": "¿Seguro que desea activar el usuario {{ email }}?"
+        },
+        "rol": "Rol",
+        "roles": "Roles",
+        "serviceEnum": {
+            "FILTERS": "Filtros",
+            "FAVORITES": "Favoritos"
+        },
+        "status": {
+            "active": "Activo",
+            "deactivated": "Desactivado",
+            "name": "Estado"
+        },
+        "surname1": "Primer apellido",
+        "surname2": "Segundo apellido",
+        "treatment": "Tratamiento",
+        "treatmentEnum": {
+            "LADY": "Señora",
+            "MISTER": "Señor"
+        },
+        "updated": "Se ha actualizado el usuario {{ param }}"
+    },
+    "family": {
+        "acronym": {
+            "label": "Acrónimo",
+            "placeholder": "Acrónimo"
+        },
+        "code": {
+            "label": "Código",
+            "placeholder": "Código"
+        },
+        "creationDate": {
+            "label": "Fecha de creación"
+        },
+        "delete": {
+            "question": "¿Está seguro de que desea eliminar la familia <strong>{{title}}</strong>?"
+        },
+        "description": {
+            "label": "Descripción",
+            "placeholder": "Descripción"
+        },
+        "home": {
+            "createLabel": "Añadir nueva familia",
+            "title": "Familia estadísticas"
+        },
+        "internalInventoryDate": {
+            "label": "Fecha de publicación interna"
+        },
+        "inventoryDate": {
+            "label": "Fecha de publicación externa"
+        },
+        "section": {
+            "contentDescriptors": "Descriptores de contenido",
+            "diffusionDescriptors": "Descriptores de difusión",
+            "identifiers": "Identificadores",
+            "productionDescriptors": "Descriptores de producción"
+        },
+        "title": {
+            "label": "Título",
+            "placeholder": "Título"
+        },
+        "urn": {
+            "label": "URN",
+            "placeholder": "URN"
+        }
+    },
+    "favorite": {
+        "entity": {
+            "email": "Email"
+        },
+        "form": {
+            "cancel": "Cancelar",
+            "edit": "Editar favorito",
+            "goBack": "Volver al listado",
+            "legend": "Detalles del favorito",
+            "new": "Crear un nuevo favorito",
+            "save": "Guardar favorito"
+        },
+        "home": {
+            "createLabel": "Crear favorito",
+            "title": "Favoritos"
+        },
+        "name": "Favorito"
+    },
+    "filter": {
+        "entity": {
+            "email": "Email",
+            "lastAccessDate": "Fecha de último acceso",
+            "name": "Nombre",
+            "notes": "Notas",
+            "owner": "Propietario",
+            "permalink": "URL"
+        },
+        "form": {
+            "cancel": "Cancelar",
+            "delete": "Eliminar consulta",
+            "edit": "Editar consulta",
+            "goBack": "Volver al listado",
+            "legend": "Detalles de la consulta personalizada",
+            "new": "Crear una nueva consulta personalizada",
+            "save": "Guardar consulta"
+        },
+        "home": {
+            "createLabel": "Crear consulta personalizada",
+            "title": "Consultas personalizadas"
+        },
+        "name": "Consulta personalizada",
+        "search": {
+            "filterExternalUserLabel": "Nombre de usuario externo",
+            "filterNameLabel": "Nombre de consulta personalizada",
+            "includeFromDeactivatedUsers": "Consultas de usuarios desactivados",
+            "name": "Buscar consultas personalizadas",
+            "placeholder": "",
+            "placeholderForFilterNameSearch": "Buscar consultas por nombre",
+            "placeholderForUserSearch": "Buscar consultas por datos del usuario (nombre, apellidos, email)"
+        }
+    },
+    "global": {
+        "alerts": {
+            "title": {
+                "info": "Información"
+            }
+        },
+        "browsehappy": "Está usando un navegador <strong>no actualizado</strong>. Por favor, <a href=\"http://browsehappy.com/?locale=en\">actualice su navegador</a> para mejorar su experiencia.",
+        "form": {
+            "email": "Correo electrónico",
+            "email.placeholder": "Su correo electrónico"
+        },
+        "item-count": "{{first}} - {{second}} de {{total}}",
+        "loading": "Cargando",
+        "menu": {
+            "account": {
+                "login": "Iniciar sesión",
+                "logout": "Cerrar la sesión",
+                "main": "Cuenta",
+                "myAccount": "Mi cuenta",
+                "sessions": "Sesiones"
+            },
+            "admin": {
+                "apidocs": "API",
+                "audits": "Auditoría",
+                "categoryMasterTree": "Árbol maestro de categorías",
+                "configuration": "Configuración",
+                "dataProtectionPolicy": "Política de protección de datos",
+                "externalOperationsList": "Operaciones estadísticas",
+                "health": "Salud",
+                "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)",
+                "logs": "Logs",
+                "main": "Administración",
+                "metrics": "Métricas",
+                "treeTopicsAdministration": "Administrar árbol de temas",
+                "notifications": "Notificaciones",
+                "userManagement": "Gestión de usuarios"
+            },
+            "administracion": {
+                "main": "Administración"
+            },
+            "entities": {
+                "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+            },
+            "home": "Inicio",
+            "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)"
+        },
+        "messages": {
+            "validate": {
+                "email": {
+                    "invalid": "Su correo electrónico no es válido.",
+                    "maxlength": "Su correo electrónico no puede tener más de 50 caracteres",
+                    "minlength": "Se requiere que su correo electrónico tenga al menos 5 caracteres",
+                    "required": "Se requiere un correo electrónico."
+                }
+            }
+        },
+        "no": "No",
+        "pageSizeSelector": "Tamaño de página",
+        "title": "eDatos External Users",
+        "yes": "Sí"
+    },
+    "health": {
+        "details": {
+            "details": "Detalles",
+            "error": "Error",
+            "name": "Nombre",
+            "properties": "Propiedades",
+            "value": "Valor"
+        },
+        "indicator": {
+            "cas": "CAS",
+            "db": "Base de datos",
+            "diskSpace": "Espacio en disco",
+            "ldap": "LDAP",
+            "mail": "Email"
+        },
+        "refresh.button": "Refrescar",
+        "stacktrace": "Traza",
+        "status": {
+            "DOWN": "CAÍDO",
+            "UP": "LEVANTADO"
+        },
+        "table": {
+            "service": "Nombre del servicio",
+            "status": "Estado"
+        },
+        "title": "Control de salud"
+    },
+    "home": {
+        "detail": "Acceda al apartado deseado a través del menú de navegación",
+        "pageTitle": "Bienvenido",
+        "title": "Bienvenido, {{user}}"
+    },
+    "logs": {
+        "filter": "Filtro",
+        "nbloggers": "Hay {{ total }} registros. Los registros marcados con <i class='fa fa-asterisk'></i> no heredan el valor de su padre.",
+        "table": {
+            "button": {
+                "ERROR": "ERROR",
+                "INFO": "INFO",
+                "WARN": "WARN"
+            },
+            "level": "Nivel",
+            "name": "Nombre"
+        },
+        "title": "Logs"
+    },
+    "metrics": {
+        "cache": {
+            "cachename": "Nombre cache",
+            "evictions": "Contador desalojo",
+            "hits": "Accesos",
+            "misses": "Fallos",
+            "title": "Estadísticas de cache"
+        },
+        "datasource": {
+            "count": "Recuento",
+            "max": "Max",
+            "mean": "Media",
+            "min": "Min",
+            "name": "Uso del pool",
+            "p50": "p50",
+            "p75": "p75",
+            "p95": "p95",
+            "p99": "p99",
+            "title": "Estadísticas de la fuente de datos (tiempo en milisegundos)",
+            "usage": "Uso"
+        },
+        "filter": "Filtro",
+        "jvm": {
+            "gc": {
+                "marksweepcount": "Nº marcas Sweep",
+                "marksweeptime": "Tiempo marcas Sweep ",
+                "scavengecount": "Nº Scavenge",
+                "scavengetime": "Tiempo Scavenge ",
+                "title": "Colecciones de basura"
+            },
+            "http": {
+                "active": "Peticiones activas:",
+                "code": {
+                    "notfound": "No encontrado",
+                    "ok": "Ok",
+                    "servererror": "Error de servidor"
+                },
+                "table": {
+                    "average1": "Promedio (1 min)",
+                    "average15": "Promedio (15 min)",
+                    "average5": "Promedio (5 min)",
+                    "code": "Código",
+                    "count": "Recuento",
+                    "mean": "Media"
+                },
+                "title": "Peticiones HTTP (eventos por segundo)",
+                "total": "Peticiones totales:"
+            },
+            "memory": {
+                "heap": "Memoria del Heap",
+                "nonheap": "Memoria no Heap",
+                "title": "Memoria",
+                "total": "Memoria total"
+            },
+            "threads": {
+                "all": "Todo",
+                "blocked": "Bloqueados",
+                "dump": {
+                    "blockedcount": "Contador bloqueados",
+                    "blockedtime": "Tiempo bloqueado",
+                    "hide": "Ocultar",
+                    "id": "Id: ",
+                    "lockname": "Lock name",
+                    "show": "Mostrar",
+                    "stacktrace": "Stacktrace",
+                    "title": "Hilos ",
+                    "waitedcount": "Contador en espera",
+                    "waitedtime": "Tiempo en espera"
+                },
+                "runnable": "Ejecutables",
+                "timedwaiting": "Tiempo esperando",
+                "title": "Hilos",
+                "waiting": "Esperando"
+            },
+            "title": "Métricas de JVM"
+        },
+        "refresh.button": "Refrescar",
+        "servicesstats": {
+            "table": {
+                "count": "Contador",
+                "max": "Max",
+                "mean": "Media",
+                "min": "Min",
+                "name": "Nombre del servicio",
+                "p50": "p50",
+                "p75": "p75",
+                "p95": "p95",
+                "p99": "p99"
+            },
+            "title": "Estadísticas de servicios (tiempo en milisegundos)"
+        },
+        "title": "Métricas de aplicación",
+        "updating": "Actualizando..."
+    },
+    "operation": {
+        "name": "Operación estadística"
+    },
+    "structuralResourcesTree": {
+        "addNewNode": "Añadir tema",
+        "editionModal": "Edición multidioma del nombre del recurso",
+        "externalOperations": "Categorías adscritas",
+        "helpMessage": "Puede arrastrar los elementos para reposicionarlos. Puede editar el nombre del recurso haciendo doble clic sobre él",
+        "noRecordsFound": "No se ha encontrado ningún tema ni operación",
+        "numberOfFilters": "Consultas personalizadas: {{amount}}",
+        "remapModal": "Seleccionar temas",
+        "subscribedUsers": "Usuarios suscritos"
+    },
+    "table": {
+        "globalSearchPlaceholder": "Introducir términos de búsqueda",
+        "pageCount": "{{pageFirst}} - {{pageLast}} de {{total}}",
+        "pageReport": "{first}–{last} de {totalRecords}"
+    },
+    "notifications": {
+        "home": {
+            "title": "Notificaciones"
+        },
+        "form": {
+            "subject": "Asunto",
+            "message": "Mensaje",
+            "receivers": "Destinatarios",
+            "send": "Enviar"
+        },
+        "message": {
+            "onSuccessSumary": "Notificación enviada",
+            "onSuccess": "La notificación se ha enviado correctamente."
+        }
+    }
+}

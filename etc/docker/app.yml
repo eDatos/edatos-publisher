@@ -1,0 +1,14 @@
+version: '2'
+services:
+    edatos_publisher-app:
+        image: edatos_publisher
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://edatos_publisher-postgresql:5432/edatos_publisher
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+    edatos_publisher-postgresql:
+        extends:
+            file: postgresql.yml
+            service: edatos_publisher-postgresql

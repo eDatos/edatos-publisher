@@ -1,0 +1,793 @@
+{
+    "account": {
+        "form": {
+            "apellido1": "Primer cognom",
+            "apellido1.placeholder": "El seu primer cognom",
+            "apellido2": "Segon cognom",
+            "apellido2.placeholder": "El seu segon cognom",
+            "button": "Guardar",
+            "nombre": "Nom",
+            "nombre.placeholder": "El seu nom"
+        },
+        "messages": {
+            "error": {
+                "emailexists": "<strong>¡L'adreça de correu electrònic ja existeix!</strong> Si us plau, triï una altra.",
+                "fail": "<strong>¡Ha ocorregut un error!</strong> Els ajustos no s'han pogut guardar."
+            },
+            "success": "<strong>¡Ajustos guardats!</strong>",
+            "validate": {
+                "apellido1": {
+                    "maxlength": "El seu primer cognom no pot tenir més de 50 caràcters",
+                    "minlength": "Es requereix que el seu primer cognom tingui almenys 1 caràcter",
+                    "required": "Es requereix que ingressi el seu primer cognom."
+                },
+                "apellido2": {
+                    "maxlength": "El seu segon cognom no pot tenir més de 50 caràcters",
+                    "minlength": "Es requereix que el seu segon cognom tingui almenys 1 caràcter",
+                    "required": "Es requereix que ingressi el seu segon cognom."
+                },
+                "nombre": {
+                    "maxlength": "El seu nom no pot tenir més de 50 caràcters",
+                    "minlength": "Es requereix que el seu nom tingui almenys 1 caràcter",
+                    "required": "Es requereix que ingressi el seu nom."
+                }
+            }
+        },
+        "title": "El meu compte"
+    },
+    "app": {
+        "name": {
+            "complete": "Gestor d'usuaris externs de EDatos",
+            "short": "Usuaris externs"
+        }
+    },
+    "arte": {
+        "arte-table-count": {
+            "itemCount": "{{itemFirst}} - {{itemLast}} de {{total}}"
+        },
+        "audit-info": {
+            "createdBy": "Creat per",
+            "createdDate": "Data de creació",
+            "deletedBy": "Eliminat per",
+            "deletionDate": "Data d'eliminació",
+            "lastModifiedBy": "Modificat per",
+            "lastModifiedDate": "Data de modificació",
+            "title": "Auditoria"
+        },
+        "autocomplete": {
+            "createNewItem": "(Afegir nou)",
+            "emptyMessage": "No s'han obtingut resultats que compleixin els criteris de cerca.",
+            "placeholder": "Seleccioni una de les opcions disponibles"
+        },
+        "autocomplete-long-list": {
+            "placeholder": "Comenci a escriure per a suggerir resultats"
+        },
+        "calendar": {
+            "placeholder": "Seleccioni en el calendari la data desitjada"
+        },
+        "entity-list-empty": {
+            "detail": "No s'han obtingut resultats que compleixin els criteris de cerca.",
+            "sorry": "Ho sentim"
+        },
+        "file-upload": {
+            "cancel": "Cancel·lar",
+            "choose": "Triar",
+            "delete": "Eliminar",
+            "download": "Descarregar",
+            "emptyFileList": "No hi ha arxius pujats",
+            "filename": "Nom arxivo",
+            "filesToUpload": "Arxius per a pujar",
+            "invalidFileSizeMessageDetail": "la grandària màxima és {0}.",
+            "invalidFileSizeMessageSummary": "{0}: Tamany incorrecta",
+            "invalidFileTypeMessageDetail": "tipus de document permesos: {0}.",
+            "invalidFileTypeMessageSummary": "{0}: Tipus de document no vàlid, ",
+            "maxFileSizeExceeded": "No poden adjuntar-se fitxers de més de {{0}} MB.",
+            "noUploadPending": "No hi ha arxius pendents de pujar",
+            "upload": "Pujar"
+        },
+        "form-control-status": {
+            "error-messages": {
+                "ZonedDateTimelocal": "Aquest camp ha de ser una data i hora.",
+                "datetimelocal": "Este campo debe ser una fecha y hora.",
+                "email": "Aquest camp no conté un email vàlid",
+                "max": "Aquest camp no pot ser superior a {{max}}.",
+                "maxbytes": "Aquest camp no pot tenir més de {{max}} bytes.",
+                "maxlength": "Aquest camp no pot superar més de {{max}} caràcters.",
+                "min": "Aquest camp ha de ser superior a {{min}}.",
+                "minbytes": "Aquest camp ha de tenir com a mínim {{min}} bytes.",
+                "minlength": "Aquest camp requereix almenys {{requiredLength}} caràcters.",
+                "not-valid": "El valor d'aquest camp no és vàlid",
+                "number": "Aquest camp ha de ser un número.",
+                "pattern": "Aquest camp ha de seguir el patró {{pattern}}.",
+                "required": "Aquest camp és obligatori."
+            }
+        },
+        "input": {
+            "placeholder": "Introdueixi el text desitjat"
+        },
+        "input-number": {
+            "placeholder": "Introdueixi el número desitjat"
+        },
+        "input-text": {
+            "placeholder": "Introdueixi el text desitjat"
+        },
+        "multi-input": {
+            "placeholder": "Escrigui el valor i premi enter per a afegir-lo"
+        },
+        "tri-input-switch": {
+            "no": "No",
+            "yes": "Sí"
+        }
+    },
+    "audits": {
+        "filter": {
+            "button": {
+                "clear": "netejar",
+                "close": "tancar",
+                "today": "avui",
+                "weeks": "Setmanes"
+            },
+            "from": "des de",
+            "title": "Filtrar per data",
+            "to": "fins"
+        },
+        "table": {
+            "data": {
+                "code": "Codi:",
+                "remoteAddress": "Direcció remota:"
+            },
+            "header": {
+                "data": "Dades extra",
+                "date": "Data",
+                "principal": "Usuari",
+                "status": "Estat"
+            }
+        },
+        "title": "Auditoria"
+    },
+    "category": {
+        "name": "Tema"
+    },
+    "categoryMasterTree": {
+        "home": {
+            "title": "Editar arbre mestre de categories"
+        }
+    },
+    "categorySubscriptions": {
+        "home": {
+            "title": "Subscripcions temàtiques"
+        }
+    },
+    "configuration": {
+        "filter": "Filtre (per prefix)",
+        "spring": "Spring configuration",
+        "table": {
+            "prefix": "Prefix",
+            "properties": "Propietats"
+        },
+        "title": "Configuració"
+    },
+    "dataProtectionPolicy": {
+        "home": {
+            "title": "Política de protecció de dades"
+        }
+    },
+    "edatosExternalUsersApp": {
+        "rol": {
+            "accion": "Acció",
+            "created": "S'ha creat el rol {{ param }}",
+            "delete": {
+                "question": "¿Segur que vol eliminar el rol {{ id }}?"
+            },
+            "deleted": "S'ha eliminat el rol {{ param }}",
+            "nombre": "Nom",
+            "roles": "Rols",
+            "sujeto": "Subjecte",
+            "updated": "S'ha actualitzat el rol {{ param }}"
+        },
+        "rolesEnum": {
+            "ADMINISTRADOR": "Administrador",
+            "ANY_ROLE_ALLOWED": "Qualsevol rol permès",
+            "JEFE_NORMALIZACION": "Cap de normalització",
+            "LECTOR": "Lector",
+            "TECNICO_APOYO_DIFUSION": "Tècnic de suport de difusió",
+            "TECNICO_APOYO_NORMALIZACION": "Tècnic de suport de normalització",
+            "TECNICO_APOYO_PLANIFICACION": "Tècnic de suport de planificació",
+            "TECNICO_APOYO_PRODUCCION": "Tècnic de suport de producció",
+            "TECNICO_DIFUSION": "Tècnic de difusió",
+            "TECNICO_NORMALIZACION": "Tècnic de normalització",
+            "TECNICO_PLANIFICACION": "Tècnic de planificació",
+            "TECNICO_PRODUCCION": "Tècnic de producció"
+        }
+    },
+    "entity": {
+        "action": {
+            "back": "Tornar",
+            "cancel": "Cancel·lar",
+            "close": "Tancar",
+            "confirm": "Confirmar",
+            "crear": "Crear",
+            "deactivate": "Desactivar",
+            "delete": "Eliminar",
+            "edit": "Editar",
+            "eliminar": "Eliminar",
+            "filtersReset": "Reiniciar filtres",
+            "modificar": "Modificar",
+            "name": "Accions",
+            "open": "Obrir",
+            "publishExternally": "Publicar externamet",
+            "publishInternally": "Publicar internament",
+            "recuperar": "Recuperar",
+            "activate": "Activar",
+            "save": "Guardar",
+            "select": "Seleccionar",
+            "view": "Veure"
+        },
+        "audits": {
+            "createdBy": "Creat per",
+            "createdDate": "Data de creació",
+            "deletedBy": "Eliminat epr",
+            "deletionDate": "Data d'eliminació",
+            "lastModifiedBy": "Modificat epr",
+            "lastModifiedDate": "Data de modificació",
+            "title": "Auditoria"
+        },
+        "calendar": {
+            "placeholder": "Seleccioni en el calendari la data desitjada"
+        },
+        "code": "Codi",
+        "crear": {
+            "title": "Confirmar creació"
+        },
+        "currency": {
+            "errors": {
+                "notANumber": "El valor introduït ha de ser numèric"
+            }
+        },
+        "deactivate": {
+            "title": "Confirmar desactivació"
+        },
+        "delete": {
+            "title": "Confirmar operació d'esborrat"
+        },
+        "disabled": "Desactivat",
+        "eliminar": {
+            "title": "Confirmar eliminació"
+        },
+        "enabled": "Activat",
+        "input": {
+            "placeholder": "Introdueixi aquí el text desitjat"
+        },
+        "list": {
+            "empty": {
+                "createNewIitem": "(Afegir nou)",
+                "detail": "No s'han obtingut resultats que compleixin els criteris de cerca.",
+                "multiInput": "Escrigui el valor i premi enter per a afegir-lo",
+                "selectOption": "Seleccioni una de les opcions disponibles",
+                "sorry": "Ho sentim.",
+                "writeForSuggestions": "Comenci a escriure per a suggerir resultats"
+            }
+        },
+        "modificar": {
+            "title": "Confirmar modificació"
+        },
+        "name": "Nom",
+        "publicationDate": "Data de publicació",
+        "recuperar": {
+            "title": "Confirmar recuperació"
+        },
+        "activate": {
+            "title": "Confirmar activació"
+        },
+        "status": "Estat",
+        "validation": {
+            "ZonedDateTimelocal": "Aquest camp ha de ser una data i hora.",
+            "datetimelocal": "Aquest camp ha de ser una data i hora.",
+            "max": "Aquest camp no pot ser superior a {{max}}.",
+            "maxbytes": "Aquest camp no pot tenir més de {{max}} bytes.",
+            "maxlength": "Aquest camp no pot superar més de {{max}} caràcters.",
+            "min": "Aquest camp ha de ser superior a {{min}}.",
+            "minbytes": "Aquest camp ha de tenir com a mínim {{min}} bytes.",
+            "minlength": "Aquest camp requereix almenys {{requiredLength}} caràcters.",
+            "not-valid": "El valor d'aquest camp no és vàlid",
+            "number": "Aquest camp ha de ser un número.",
+            "pattern": "Aquest camp ha de seguir el patró {{pattern}}.",
+            "required": "Aquest camp és obligatori."
+        }
+    },
+    "enum": {
+        "localeToLanguage": {
+            "CA": "Català",
+            "DE": "Alemany",
+            "EN": "Anglès",
+            "ES": "Castellà",
+            "FR": "Francès",
+            "PT": "Portuguès",
+            "RU": "Rus",
+            "ZH": "Xinès"
+        },
+        "procStatus": {
+            "DRAFT": "Esborrany",
+            "EXTERNALLY_PUBLISHED": "Publicat externament",
+            "INTERNALLY_PUBLISHED": "Publicat internament",
+            "label": "Estat del cicle de vida"
+        }
+    },
+    "error": {
+        "403": {
+            "detail": "Ho sentim, no té permisos per a accedir a la pàgina.",
+            "title": "Error 403"
+        },
+        "404": {
+            "detail": "Ho sentim, la pàgina que busca no existeix.",
+            "title": "Error 404"
+        },
+        "NotNull": "¡El camp {{0}} no pot estar buit!",
+        "Size": "¡El camp {{0}} no compleix amb els requisits de grandària mínima/màxima!",
+        "accessDenied": "Lo sentimos, no tiene permisos para acceder a la página.",
+        "blockedUser": {
+            "detail": "Ho sentim, l'usuari amb el qual intenta accedir està bloquejat.",
+            "title": "Error d'usuari"
+        },
+        "entidad-no-encontrada": "Resultat de {{0}} no trobat",
+        "file": {
+            "empty": "Fitxer buit.",
+            "maxFileSize": "No poden adjuntar-se fitxers de més de {{0}} MB.",
+            "notFound": "Fitxer no trobat."
+        },
+        "file-empty": "El fitxer està buit",
+        "id-existe": "Un nou {{0}} no pot tenir prèviament un ID",
+        "internalServerError": "Error intern del servidor",
+        "nonExistingUser": {
+            "detail": "Ho sentim, l'usuari amb el qual intenta accedir no s'ha donat d'alta.",
+            "title": "Error d'usuari"
+        },
+        "query-no-soportada": "Paràmetre de cerca {{0}} no suportat",
+        "rol": {
+            "users-has-role": "No es pot eliminar un rol que està assignat a alguns usuaris"
+        },
+        "server.not.reachable": "Servidor no accessible",
+        "title": "¡Ups, ha ocorregut un error!",
+        "url.not.found": "No trobat",
+        "userManagement": {
+            "usuario-ldap-no-encontrado": "No s'ha trobat l'usuari especificat"
+        },
+        "usuario-existe": "El nom d'usuari introduït ja està fent servir",
+        "quartz": {
+            "jobExecutionError": "Error durant l'execució d'un job Quartz"
+        }
+    },
+    "externalCategoriesTable": {
+        "alreadySelectedCategory": "No es pot seleccionar aquesta categoria perquè ja existeix un node que la referència.",
+        "columns": {
+            "name": "Nom",
+            "nestedCode": "Codi niat",
+            "schemaCode": "Codi de l'esquema",
+            "schemaVersion": "Versió de l'esquema",
+            "urn": "URN"
+        },
+        "noResourceFound": "No s'ha trobat cap recurs extern",
+        "title": "Temes seleccionats"
+    },
+    "externalOperation": {
+        "disabled": "Desactivada",
+        "enabled": "Activada"
+    },
+    "externalOperations": {
+        "home": {
+            "title": "Operacions estadístiques"
+        }
+    },
+    "externalUser": {
+        "activado": "Activat",
+        "created": "S'ha creat l'usuari {{ param }}",
+        "createdDate": "Data de registre",
+        "deactivate": {
+            "question": "¿Segur que desitja desactivar l'usuari <strong>{{ email }}</strong>?"
+        },
+        "deleted": "S'ha eliminat l'usuari {{ param }}",
+        "deletionDate": "Data d'esborrat",
+        "desactivado": "Desactivat",
+        "detail": {
+            "title": "Usuari"
+        },
+        "email": "Email",
+        "enableEmailNotifications": "Habilitar notificacions a través de correu electrònic per a aquest usuari",
+        "filters": {
+            "labels": {
+                "categories": "Subscripcions temàtiques",
+                "fullname": "Nom o cognoms",
+                "language": "Idioma",
+                "service": "Servei"
+            },
+            "placeholders": {
+                "fullname": "Introdueixi nom o cognoms",
+                "language": "Introdueixi idiomes de l'usuari",
+                "noResourceSelected": "No hi ha cap recurs seleccionat",
+                "service": "Introdueixi els serveis usats per l'usuari"
+            },
+            "rolEnum": {
+                "label": "Rol"
+            },
+            "rolLong": {
+                "label": "Cerca per rol (ac-autocomplete-long-list)",
+                "placeholder": "Introdueixi el rol (ac-autocomplete-long-list)"
+            },
+            "rolShort": {
+                "label": "Cerca per rol (ac-autocomplete-short-list)",
+                "placeholder": "Introdueixi el rol (ac-autocomplete-short-list)"
+            },
+            "title": "Filtrar usuaris"
+        },
+        "home": {
+            "createDeactivatedTooltip": "La creació d'usuaris està desactivada",
+            "createLabel": "Afegir nou usuari",
+            "createOrEditLabel": "Crear o editar un usuari",
+            "favorites": "Favorits",
+            "filters": "Filtres",
+            "includeDeleted": "Incloure desactivats",
+            "title": "Usuaris"
+        },
+        "language": "Idioma",
+        "languageEnum": {
+            "CATALAN": "Català",
+            "SPANISH": "Castellà"
+        },
+        "login": "Nom d'usuari",
+        "name": "Nom",
+        "permissions": "Permisos",
+        "personalData": "Dades personals",
+        "profiles": "Rols",
+        "activate": {
+            "question": "¿Segur que desitja activar l'usuari {{ email }}?"
+        },
+        "rol": "Rol",
+        "roles": "Rols",
+        "serviceEnum": {
+            "FILTERS": "Filtres",
+            "FAVORITES": "Favorits"
+        },
+        "status": {
+            "active": "Actiu",
+            "deactivated": "Desactivat",
+            "name": "Estat"
+        },
+        "surname1": "Primer cognom",
+        "surname2": "Segon cognom",
+        "treatment": "Tractament",
+        "treatmentEnum": {
+            "LADY": "Senyora",
+            "MISTER": "Senyor"
+        },
+        "updated": "S'ha actualitzat l'usuari {{ param }}"
+    },
+    "family": {
+        "acronym": {
+            "label": "Acrònim",
+            "placeholder": "Acrònim"
+        },
+        "code": {
+            "label": "Codi",
+            "placeholder": "Codi"
+        },
+        "creationDate": {
+            "label": "Data de creació"
+        },
+        "delete": {
+            "question": "¿Està segur que desitja eliminar la família <strong>{{title}}</strong>?"
+        },
+        "description": {
+            "label": "Descripció",
+            "placeholder": "Descripció"
+        },
+        "home": {
+            "createLabel": "Afegir nova família",
+            "title": "Família estadístiques"
+        },
+        "internalInventoryDate": {
+            "label": "Data de publicació interna"
+        },
+        "inventoryDate": {
+            "label": "Data de publicació externa"
+        },
+        "section": {
+            "contentDescriptors": "Descriptors de contingut",
+            "diffusionDescriptors": "Descriptors de difusió",
+            "identifiers": "Identificadors",
+            "productionDescriptors": "Descriptors de producció"
+        },
+        "title": {
+            "label": "Títol",
+            "placeholder": "Títol"
+        },
+        "urn": {
+            "label": "URN",
+            "placeholder": "URN"
+        }
+    },
+    "favorite": {
+        "entity": {
+            "email": "Email"
+        },
+        "form": {
+            "cancel": "Cancel·lar",
+            "edit": "Editar favorit",
+            "goBack": "Tornar al llistat",
+            "legend": "Detalls del favorit",
+            "new": "Crear un nou favorit",
+            "save": "Guardar favorit"
+        },
+        "home": {
+            "createLabel": "Crear favorit",
+            "title": "Favorits"
+        },
+        "name": "Favorit"
+    },
+    "filter": {
+        "entity": {
+            "email": "Email",
+            "lastAccessDate": "Data d'últim accés",
+            "name": "Nom",
+            "notes": "Notes",
+            "owner": "Propietari",
+            "permalink": "URL"
+        },
+        "form": {
+            "cancel": "Cancel·lar",
+            "delete": "Eliminar consulta",
+            "edit": "Editar consulta",
+            "goBack": "Tornat al llistat",
+            "legend": "Detalls de la consulta personalitzada",
+            "new": "Crear una nova consulta personalitzada",
+            "save": "Guardar consulta"
+        },
+        "home": {
+            "createLabel": "Crear consulta personalizada",
+            "title": "Crear consulta personalitzada"
+        },
+        "name": "Consulta personalitzada",
+        "search": {
+            "filterExternalUserLabel": "Nom d'usuari extern",
+            "filterNameLabel": "Nom de consulta personalitzada",
+            "includeFromDeactivatedUsers": "Consultes d'usuaris desactivats",
+            "name": "Buscar consultes personalitzades",
+            "placeholder": "",
+            "placeholderForFilterNameSearch": "Buscar consultes per nom",
+            "placeholderForUserSearch": "Buscar consultes per dades de l'usuari (nom, cognoms, email)"
+        }
+    },
+    "global": {
+        "alerts": {
+            "title": {
+                "info": "Informació"
+            }
+        },
+        "browsehappy": "Està fent servir un navegador <strong>no actualitzat</strong>. Si us plau, <a href=\"http://browsehappy.com/?locale=en\">actualitzi el seu navegador</a> per millorar la seva experiència.",
+        "form": {
+            "email": "Correu electrònic",
+            "email.placeholder": "El seu correu electrònic"
+        },
+        "item-count": "{{first}} - {{second}} de {{total}}",
+        "loading": "Carregant",
+        "menu": {
+            "account": {
+                "login": "Iniciar sessió",
+                "logout": "Tencar la sessió",
+                "main": "Compte",
+                "myAccount": "El meu compte",
+                "sessions": "Sessions"
+            },
+            "admin": {
+                "apidocs": "API",
+                "audits": "Auditoria",
+                "categoryMasterTree": "Arbre mestre de categories",
+                "configuration": "Configuració",
+                "dataProtectionPolicy": "Política de protecció de dades",
+                "externalOperationsList": "Operacions estadístiques",
+                "health": "Salut",
+                "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)",
+                "logs": "Logs",
+                "main": "Administració",
+                "metrics": "Mètriques",
+                "treeTopicsAdministration": "Administrar arbre de temes",
+                "notifications": "Notificacions",
+                "userManagement": "Gestió d'usuaris"
+            },
+            "administracion": {
+                "main": "Administració"
+            },
+            "entities": {
+                "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+            },
+            "home": "Inici",
+            "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)"
+        },
+        "messages": {
+            "validate": {
+                "email": {
+                    "invalid": "El seu correu electrònic no és vàlid.",
+                    "maxlength": "El seu correu electrònic no pot tenir més de 50 caràcters",
+                    "minlength": "Es requereix que el seu correu electrònic tingui almenys 5 caràcters",
+                    "required": "Es requereix un correu electrònic."
+                }
+            }
+        },
+        "no": "No",
+        "pageSizeSelector": "Tamany de pàgina",
+        "title": "eDatos External Users",
+        "yes": "Sí"
+    },
+    "health": {
+        "details": {
+            "details": "Detalls",
+            "error": "Error",
+            "name": "Nom",
+            "properties": "Propietats",
+            "value": "Valor"
+        },
+        "indicator": {
+            "cas": "CAS",
+            "db": "Base de dades",
+            "diskSpace": "Espai en disc",
+            "ldap": "LDAP",
+            "mail": "Email"
+        },
+        "refresh.button": "Refrescar",
+        "stacktrace": "Traça",
+        "status": {
+            "DOWN": "CAIGUT",
+            "UP": "AIXECAT"
+        },
+        "table": {
+            "service": "Nom del servei",
+            "status": "Estat"
+        },
+        "title": "Control de salut"
+    },
+    "home": {
+        "detail": "Accedeixi a l'apartat desitjat a través del menú de navegació",
+        "pageTitle": "Benvingut",
+        "title": "Benvingut, {{user}}"
+    },
+    "logs": {
+        "filter": "Filtre",
+        "nbloggers": "Hi ha {{ total }} registres. Els registres marcats amb <i class='fa fa-asterisk'></i> no hereten el valor del seu pare.",
+        "table": {
+            "button": {
+                "ERROR": "ERROR",
+                "INFO": "INFO",
+                "WARN": "WARN"
+            },
+            "level": "Nivell",
+            "name": "Nom"
+        },
+        "title": "Logs"
+    },
+    "metrics": {
+        "cache": {
+            "cachename": "Nom cache",
+            "evictions": "Comptador desallotjament",
+            "hits": "Accessos",
+            "misses": "Fallades",
+            "title": "Estadístiques de cache"
+        },
+        "datasource": {
+            "count": "Recompte",
+            "max": "Max",
+            "mean": "Mediana",
+            "min": "Min",
+            "name": "Ús del pool",
+            "p50": "p50",
+            "p75": "p75",
+            "p95": "p95",
+            "p99": "p99",
+            "title": "Estadístiques de la font de dades (temps en mil·lisegons)",
+            "usage": "Ús"
+        },
+        "filter": "Filtre",
+        "jvm": {
+            "gc": {
+                "marksweepcount": "Nº marques Sweep",
+                "marksweeptime": "Temps marques Sweep ",
+                "scavengecount": "Nº Scavenge",
+                "scavengetime": "Tiempo Scavenge ",
+                "title": "Col·leccions de brossa"
+            },
+            "http": {
+                "active": "Peticions actives:",
+                "code": {
+                    "notfound": "No trobat",
+                    "ok": "Ok",
+                    "servererror": "Error de servidor"
+                },
+                "table": {
+                    "average1": "Mitjana (1 min)",
+                    "average15": "Mitjana (15 min)",
+                    "average5": "Mitjana (5 min)",
+                    "code": "Codi",
+                    "count": "Recompte",
+                    "mean": "Mediana"
+                },
+                "title": "Peticions HTTP (esdeveniments per segon)",
+                "total": "Peticions totals:"
+            },
+            "memory": {
+                "heap": "Memòria del Heap",
+                "nonheap": "Memòria no Heap",
+                "title": "Memòria",
+                "total": "Memòria total"
+            },
+            "threads": {
+                "all": "Tot",
+                "blocked": "Bloquejats",
+                "dump": {
+                    "blockedcount": "Comptador de bloquejats",
+                    "blockedtime": "Temps bloquejat",
+                    "hide": "Ocultar",
+                    "id": "Id: ",
+                    "lockname": "Lock name",
+                    "show": "Mostrar",
+                    "stacktrace": "Stacktrace",
+                    "title": "Fils ",
+                    "waitedcount": "Comptador en espera",
+                    "waitedtime": "Temps en espera"
+                },
+                "runnable": "Executables",
+                "timedwaiting": "Temps esperant",
+                "title": "Fils",
+                "waiting": "Esperant"
+            },
+            "title": "Mètriques de JVM"
+        },
+        "refresh.button": "Refrescar",
+        "servicesstats": {
+            "table": {
+                "count": "Comptador",
+                "max": "Max",
+                "mean": "Mediana",
+                "min": "Min",
+                "name": "Nom del servei",
+                "p50": "p50",
+                "p75": "p75",
+                "p95": "p95",
+                "p99": "p99"
+            },
+            "title": "Estadístiques de serveis (temps en mil·lisegons)"
+        },
+        "title": "Mètriques d'aplicació",
+        "updating": "Actualitzant..."
+    },
+    "operation": {
+        "name": "Operació estadística"
+    },
+    "structuralResourcesTree": {
+        "addNewNode": "Afegir tema",
+        "editionModal": "Edició multidioma del nom del recurs",
+        "externalOperations": "Categories adscrites",
+        "helpMessage": "Pot arrossegar els elements per a reposicionar-los. Pot editar el nom del recurs fent doble clic sobre ell",
+        "noRecordsFound": "No s'ha trobat cap tema ni operació",
+        "numberOfFilters": "Consultes personalitzades: {{amount}}",
+        "remapModal": "Seleccionar temes",
+        "subscribedUsers": "Usuaris subscrits"
+    },
+    "table": {
+        "globalSearchPlaceholder": "Introduir termes de cerca",
+        "pageCount": "{{pageFirst}} - {{pageLast}} de {{total}}",
+        "pageReport": "{first}–{last} de {totalRecords}"
+    },
+    "notifications": {
+        "home": {
+            "title": "Notificacions"
+        },
+        "form": {
+            "subject": "Assumpte",
+            "message": "Missatge",
+            "receivers": "Destinataris",
+            "send": "Enviar"
+        },
+        "message": {
+            "onSuccessSumary": "Notificació enviada",
+            "onSuccess": "La notificació s'ha enviat correctament."
+        }
+    }
+}

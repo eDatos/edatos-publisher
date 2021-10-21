@@ -1,0 +1,52 @@
+<div class="page">
+    <div class="page-header has-filters">
+        <div class="page-header-top">
+            <h2 class="page-header-title">
+                <span class="page-header-title-text">{{'externalOperations.home.title' | translate}}</span>
+            </h2>
+        </div>
+    </div>
+    <div class="page-body">
+        <arte-spinner *ngIf="!externalOperations"></arte-spinner>
+        <ng-container *ngIf="externalOperations && externalOperations?.length > 0">
+            <div class="page-table-container-fluid">
+                <arte-table
+                    (onLazyLoad)="loadData($event)"
+                    [columns]="columns"
+                    [rows]="itemsPerPage"
+                    [tableStatus]="{
+                            rows: itemsPerPage,
+                            sortField: predicate,
+                            sortOrder: reverse ? 1 : -1,
+                            first: (page - 1) * itemsPerPage
+                        }"
+                    [totalRecords]="totalItems"
+                    [value]="externalOperations"
+                    [rowsPerPageOptions]="paginatorOptions"
+                    tableStyleClass="page-table"
+                >
+                    <ng-template let-externalOperation pTemplate="body">
+                        <tr [class.disabled]="!externalOperation.enabled">
+                            <td>{{externalOperation.code}}</td>
+                            <td>{{externalOperation.name.val}}</td>
+                            <td>{{externalOperation.publicationDate | date: 'd/M/yyyy H:mm:ss' }}</td>
+                            <td>
+                                <div class="d-flex align-items-center" style="gap: 1em">
+                                    <p-inputSwitch
+                                        (onChange)="updateExternalOperation(externalOperation)"
+                                        [(ngModel)]="externalOperation.enabled"
+                                        styleClass="switch"
+                                    ></p-inputSwitch>
+                                    <span [class.badge-primary]="externalOperation.enabled" [class.badge-secondary]="!externalOperation.enabled" class="badge">
+                                        {{(externalOperation.enabled ? 'externalOperation.enabled' : 'externalOperation.disabled') | translate }}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </arte-table>
+            </div>
+        </ng-container>
+        <arte-entity-list-empty *ngIf="externalOperations?.length === 0"></arte-entity-list-empty>
+    </div>
+</div>

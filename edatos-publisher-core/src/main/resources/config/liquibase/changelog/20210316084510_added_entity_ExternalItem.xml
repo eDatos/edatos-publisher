@@ -1,0 +1,28 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="arte" id="1615884310000-1">
+        <createSequence incrementBy="50" sequenceName="seq_tb_external_items" startValue="1"/>
+    </changeSet>
+    <changeSet author="arte" id="1615884310000-2">
+        <createTable tableName="tb_external_items">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_external_itemsPK"/>
+            </column>
+            <column name="opt_lock" type="BIGINT"/>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="JSONB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="urn" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arte" id="1615884310000-3">
+        <addUniqueConstraint columnNames="urn" constraintName="UK_2j8uxr7rqj8m98udb8iwiufe0" tableName="tb_external_items"/>
+    </changeSet>
+</databaseChangeLog>

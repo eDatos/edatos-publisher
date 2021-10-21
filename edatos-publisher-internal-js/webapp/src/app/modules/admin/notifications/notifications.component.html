@@ -1,0 +1,77 @@
+<div class="page">
+    <div class="page-header page-header-top">
+        <h2 class="page-header-title">
+            <span class="page-header-title-text">{{ 'notifications.home.title' | translate }}</span>
+        </h2>
+        <button class="btn btn-primary mr-2" (click)="send()" [disabled]="notificationForm && notificationForm.form.invalid || !selectedReceivers.length">
+            <span class="fa fa-send"></span>
+            <span translate="notifications.form.send"></span>
+        </button>
+    </div>
+    <div class="page-body">
+        <form class="page-form" id="notification-form" name="notificationForm" role="form" novalidate #notificationForm="ngForm" autocomplete="off">
+            <fieldset class="page-section" arteAutofocus>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-6">
+                        <div class="form-row">
+                            <label class="form-label col-md-4" translate="notifications.form.receivers" for="field_email"></label>
+                            <div class="col-md-8 form-input-container errors-on-hover">
+                                <arte-autocomplete-short-list
+                                    inputId="field_email"
+                                    name="email"
+                                    (onUnselect)="onUnselectReceivers($event)"
+                                    (onSelect)="onSelectReceivers($event)"
+                                    [suggestions]="externalUsers"
+                                    dataKey="email"
+                                    [required]="true"
+                                    [properties]="['email']"
+                                    [multiple]="true"
+                                >
+                                </arte-autocomplete-short-list>
+                                <div class="form-errors-messages" *hasErrors="let messages">
+                                    <span *ngFor="let m of messages">{{m}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-6">
+                        <div class="form-row">
+                            <label class="form-label col-md-4" translate="notifications.form.subject"></label>
+                            <div class="col-md-8 form-input-container errors-on-hover">
+                                <arte-input name="subject" [(ngModel)]="notification.subject" [maxlength]="255" required></arte-input>
+                            </div>
+                        </div>
+                        <div class="form-errors-messages" *hasErrors="let messages">
+                            <span *ngFor="let m of messages">{{m}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-12">
+                        <div class="form-row">
+                            <label class="col-form-label col-md-6" translate="notifications.form.message"></label>
+                            <div class="col-md-12 form-input-container errors-on-hover">
+                                <textarea
+                                    [rows]="5"
+                                    [cols]="30"
+                                    pInputTextarea
+                                    autoResize="autoResize"
+                                    id="message"
+                                    name="message"
+                                    [(ngModel)]="notification.message"
+                                    [maxlength]="4000"
+                                    required
+                                ></textarea>
+                            </div>
+                            <div class="form-errors-messages" *hasErrors="let messages">
+                                <span *ngFor="let m of messages">{{m}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

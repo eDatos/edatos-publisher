@@ -1,0 +1,39 @@
+<div class="page">
+    <div class="page-header has-filters">
+        <div class="page-header-top">
+            <h2 class="page-header-title">
+                <span class="page-header-title-text" translate="filter.home.title"></span>
+            </h2>
+        </div>
+        <app-filter-search [filters]="this.filterSearch"></app-filter-search>
+    </div>
+    <div class="page-body">
+        <arte-spinner *ngIf="!filters"></arte-spinner>
+        <ng-container *ngIf="filters">
+            <ng-container *ngIf="filters.length > 0;else emptyList">
+                <div class="page-table-container-fluid">
+                    <arte-table
+                        [columns]="columns"
+                        [value]="filters"
+                        [rows]="itemsPerPage"
+                        [totalRecords]="totalItems"
+                        tableStyleClass="page-table table-has-pointer-rows"
+                        (onLazyLoad)="loadData($event)"
+                    >
+                        <ng-template pTemplate="body" let-filter>
+                            <tr [routerLink]="['../filter', filter.id]">
+                                <td>{{filter.name}}</td>
+                                <td>{{filter.externalUser.name}} {{filter.externalUser.surname1}} {{filter.externalUser.surname2}}</td>
+                                <td>{{filter.lastAccessDate | date: 'd/M/yyyy H:mm:ss' }}</td>
+                                <td>{{filter.createdDate | date: 'd/M/yyyy H:mm:ss' }}</td>
+                            </tr>
+                        </ng-template>
+                    </arte-table>
+                </div>
+            </ng-container>
+            <ng-template #emptyList>
+                <arte-entity-list-empty></arte-entity-list-empty>
+            </ng-template>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="arte" id="1615884741000-1">
+        <createTable tableName="tb_external_categories">
+            <column name="nested_code" type="VARCHAR(255)"/>
+            <column name="external_item_fk" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_external_categoriesPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="arte" id="1615884741000-4">
+        <addForeignKeyConstraint baseColumnNames="external_item_fk" baseTableName="tb_external_categories" constraintName="FK7drrsp1eexh1dobjn53ei382g" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tb_external_items" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

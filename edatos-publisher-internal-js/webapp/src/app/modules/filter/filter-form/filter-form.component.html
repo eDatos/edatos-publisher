@@ -1,0 +1,117 @@
+<div class="page">
+    <div class="page-header">
+        <div class="page-header-top">
+            <button *ngIf="!inEditMode" type="button" (click)="goBack()" class="btn btn-secondary btn-frameless back-arrow" [attr.aria-label]="'entity.action.back' | translate">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            <h2 class="page-header-title">
+                <span class="page-header-title-text" [ngSwitch]="true">
+                    <ng-container *ngSwitchCase="!inEditMode">{{ ('filter.name' | translate) + ': ' + filter.name }}</ng-container>
+                    <ng-container *ngSwitchCase="inEditMode && !filter.id">{{ 'filter.form.new' | translate }}</ng-container>
+                    <ng-container *ngSwitchDefault>{{ ('filter.form.edit' | translate) + ': ' + filter.name }}</ng-container>
+                </span>
+            </h2>
+
+            <button *ngIf="inEditMode && filter.id" class="btn btn-warning mr-2 d-flex align-items-center" (click)="cancel()" [disabled]="isSaving || isLoading">
+                <arte-spinner class="spinner-btn" *ngIf="isLoading" aria-hidden="true"></arte-spinner>
+                <span *ngIf="!isLoading" class="fa fa-times"></span>
+                <span translate="filter.form.cancel"></span>
+            </button>
+
+            <button *ngIf="!inEditMode" class="btn btn-primary mr-2" (click)="edit()">
+                <span class="fa fa-pencil-square-o"></span>
+                <span translate="filter.form.edit"></span>
+            </button>
+
+            <button *ngIf="!inEditMode" class="btn btn-danger mr-2" (click)="delete()">
+                <span class="fa fa-trash"></span>
+                <span translate="filter.form.delete"></span>
+            </button>
+
+            <button
+                *ngIf="inEditMode"
+                class="btn btn-primary d-flex align-items-center"
+                type="button"
+                (click)="submit()"
+                [disabled]="isSaving || isLoading || !filterForm.form.valid"
+            >
+                <arte-spinner class="spinner-btn" *ngIf="isSaving" aria-hidden="true"></arte-spinner>
+                <span *ngIf="!isSaving" class="fa fa-save"></span>
+                <span translate="filter.form.save"></span>
+            </button>
+        </div>
+    </div>
+    <div class="page-body">
+        <form class="page-form" id="filter-form" name="filterForm" role="form" novalidate #filterForm="ngForm" autocomplete="off">
+            <fieldset class="d-flex flex-column" [disabled]="!inEditMode || isLoading" arteAutofocus>
+                <legend class="pt-3">{{ "filter.form.legend" | translate }}</legend>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-6 required" [formControlStatus]="filterForm.controls.name">
+                        <div class="form-row">
+                            <label class="form-label col-md-4" for="name">{{ "filter.entity.name" | translate }}</label>
+                            <div class="col-md-8 form-input-container errors-on-hover">
+                                <arte-input id="name" name="name" [(ngModel)]="filter.name" [maxlength]="255" [required]="true"></arte-input>
+                                <div class="form-errors-messages" *hasErrors="let messages">
+                                    <span *ngFor="let m of messages">{{m}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!inEditMode" class="form-group form-group-inline col-md-6">
+                        <div class="form-row">
+                            <label class="form-label col-md-4">{{ "filter.entity.permalink" | translate }}</label>
+                            <div class="col-md-8 form-input-container errors-on-hover">
+                                <a href="{{getVisualizerPath() + filter.permalink}}" target="_blan">{{getVisualizerPath() + filter.permalink}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-6" [formControlStatus]="filterForm.controls.notes">
+                        <div class="form-row">
+                            <label class="form-label col-md-4" for="notes">{{ "filter.entity.notes" | translate }}</label>
+                            <div class="col-md-8 form-input-container errors-on-hover">
+                                <arte-input id="notes" name="notes" [(ngModel)]="filter.notes" [maxlength]="255"></arte-input>
+                                <div class="form-errors-messages" *hasErrors="let messages">
+                                    <span *ngFor="let m of messages">{{m}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="d-flex flex-column">
+                <legend class="pt-3 mb-3">{{ "entity.audits.title" | translate }}</legend>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-6">
+                        <div class="form-row">
+                            <label class="form-label col-md-4">{{ "filter.entity.owner" | translate }}</label>
+                            <div class="col-md-8 form-input-container">
+                                <label class="form-label">{{filter.externalUser.name}} {{filter.externalUser.surname1}} {{filter.externalUser.surname2}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-inline col-md-6">
+                        <div class="form-row">
+                            <label class="form-label col-md-4">{{ "entity.audits.createdDate" | translate }}</label>
+                            <div class="col-md-8 form-input-container">
+                                <label class="form-label">{{filter.createdDate | date: 'd/M/yyyy H:mm:ss' }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group form-group-inline col-md-6">
+                        <div class="form-row">
+                            <label class="form-label col-md-4">{{ "filter.entity.lastAccessDate" | translate }}</label>
+                            <div class="col-md-8 form-input-container">
+                                <label class="form-label">{{filter.lastAccessDate | date: 'd/M/yyyy H:mm:ss' }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

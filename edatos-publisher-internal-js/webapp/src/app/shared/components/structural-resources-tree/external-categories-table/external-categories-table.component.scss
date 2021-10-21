@@ -1,0 +1,132 @@
+:host ::ng-deep {
+    .external-categories-table {
+        border: none;
+
+        .ui-table-thead > tr > th,
+        .ui-table-tbody > tr > td {
+            padding: 0.5em;
+
+            &:first-child {
+                width: 4em;
+                text-align: right;
+                .disabled-tooltip {
+                    margin-right: 0.5em;
+                }
+            }
+
+            @media screen and (min-width: 1100px) {
+                &:nth-child(2) {
+                    width: 20%;
+                }
+
+                &:nth-child(3) {
+                    width: 15%;
+                }
+
+                &:last-child {
+                    width: 20%;
+                }
+            }
+
+            @media screen and (min-width: 1400px) {
+                &:nth-child(2) {
+                    width: 14%;
+                }
+
+                &:nth-child(3) {
+                    width: 12%;
+                }
+
+                &:last-child {
+                    width: 12%;
+                }
+            }
+        }
+
+        .ui-table-caption {
+            border: none;
+            background-color: transparent;
+
+            .search-wrapper {
+                display: flex;
+
+                input {
+                    width: 100%;
+                    background-image: none;
+                    border-bottom: solid 1px #c8c8c8;
+                    transition: border-bottom-color 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+                }
+
+                input:focus[pInputText] {
+                    box-shadow: none;
+                    border-bottom: solid 1px #3c3c3c;
+                }
+            }
+        }
+
+        .ui-table-thead > tr > th {
+            border: 0 none;
+            text-align: left;
+
+            &.ui-filter-column {
+                border-top: 1px solid #c8c8c8;
+            }
+        }
+
+        .ui-table-tbody {
+            border: none;
+        }
+
+        .ui-paginator {
+            border-top: 1px solid #e0e0e0;
+            border-left: none;
+            border-right: none;
+
+            .ui-dropdown {
+                float: left;
+            }
+
+            .ui-paginator-current {
+                float: right;
+            }
+        }
+
+        .ui-table-scrollable-wrapper {
+            min-height: 40vh;
+        }
+
+        .ui-table-tbody > tr > td {
+            border: 0 none;
+            cursor: auto;
+        }
+
+        .ui-table-summary {
+            border: none;
+            background-color: white;
+            text-align: left;
+            overflow-y: auto;
+            max-height: 20vh;
+        }
+
+        .summary-title {
+            font-weight: bold;
+            margin-bottom: 0.6em;
+        }
+
+        .summary-item {
+            font-weight: normal;
+        }
+
+        .text-secondary {
+            color: #a5a5a5;
+        }
+
+        .font-italic {
+            font-style: italic;
+        }
+
+        tr.disabled {
+            @extend .text-secondary;
+        }
+    }
+}
