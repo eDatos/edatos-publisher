@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Gestor de usuarios externos de EDatos</title>
+        <title>Gestor de publicador de EDatos</title>
         <base href="/" th:href="@{/}" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/x-icon" th:href="${faviconUrl}" />
@@ -12,9 +12,6 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             window.CONFIGURATION = {};
-
-            window.CONFIGURATION.metamac = {};
-            window.CONFIGURATION.metamac.visualizerPath = 'https://estadisticas.arte-consultores.com/istac/visualizer/data.html?permalink=';
 
             window.CONFIGURATION.endpoint = {};
             window.CONFIGURATION.endpoint.appUrl = /*[[${@metadataProperties.internalAppUrl}]]*/ 'http://localhost:4200';

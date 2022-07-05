@@ -31,74 +31,6 @@ public class ApplicationTemplateSecurity {
         });
     }
 
-    public boolean canUpdateCategory(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canDeleteCategory(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canAccessFilters(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canCreateFilters(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canUpdateFilters(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canDeleteFilters(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canAccessFavorites(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canCreateFavorites(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canDeleteFavorites(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canAccessUser(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canModifyUserStatus(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canCreateUser(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canUpdateUser(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canAccessDataProtectionPolicy(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canUpdateDataProtectionPolicy(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canAccessExternalOperation(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
-    public boolean canUpdateExternalOperation(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
-    }
-
     public boolean canAccessMetrics(Authentication authentication) {
         return isAdmin(authentication);
     }
@@ -129,9 +61,5 @@ public class ApplicationTemplateSecurity {
 
     public boolean canUpdateLogs(Authentication authentication) {
         return isAdmin(authentication);
-    }
-
-    public boolean canSendNotification(Authentication authentication) {
-        return isAdmin(authentication) || isManager(authentication);
     }
 }

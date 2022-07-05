@@ -6,13 +6,9 @@ import java.util.Locale;
 
 public final class Constants {
 
-    public static final String LOGIN_REGEX = "^[_'.@A-Za-z0-9-]*$";
-
     public static final String SYSTEM_ACCOUNT = "system";
 
     public static final String SPRING_PROFILE_ENV = "env";
-
-    public static final String SPRING_PROFILE_DEV = "dev";
 
     public static final String NAME_ATTRIBUTE_LANG = "lang";
 

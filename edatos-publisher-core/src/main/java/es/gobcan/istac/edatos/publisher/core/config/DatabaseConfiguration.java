@@ -2,6 +2,7 @@ package es.gobcan.istac.edatos.publisher.core.config;
 
 import javax.sql.DataSource;
 
+import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.arte.libs.grammar.repository.support.ArteJpaRepositoryFactoryBean;
 import com.zaxxer.hikari.HikariDataSource;
 
-import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import io.github.jhipster.config.JHipsterConstants;
 import liquibase.integration.spring.SpringLiquibase;
 

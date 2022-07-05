@@ -2,7 +2,7 @@
 
 if [[ $# -ne 2 ]] ; then
     echo 'Ejemplo de uso: server.sh start edatos-internal'
-    echo 'Ejemplo de uso: server.sh stop edatos-external'
+    echo 'Ejemplo de uso: server.sh stop edatos-internal'
     exit 1
 fi
 

@@ -24,8 +24,8 @@ import { ConfigService } from './config';
 import { ConfigModule } from './config/config.module';
 import { MissingTranslationHandlerImpl } from './config/missing-translation-handler-impl';
 import { CoreModule } from './core/core.module';
-import { AuthExpiredInterceptor, AuthInterceptor, ClassToPlainInterceptor, ErrorHandlerInterceptor } from './core/interceptor';
-import { EUsuariosAlertService } from './core/service/alert/eusuarios-alert.service';
+import { AuthExpiredInterceptor, AuthInterceptor, ErrorHandlerInterceptor } from './core/interceptor';
+import { PublisherAlertService } from './core/service/alert/publisher-alert.service';
 import { AuthServerProvider } from './core/service/auth';
 import { EdatosNavbarComponent } from './layouts/edatos-navbar/edatos-navbar.component';
 import { ErrorComponent, ErrorRoutingModule } from './layouts/error';
@@ -115,16 +115,11 @@ export function initTranslations(translateService: TranslateService, cookieServi
             useClass: ErrorHandlerInterceptor,
             multi: true,
         },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: ClassToPlainInterceptor,
-            multi: true,
-        },
         MessageService,
         ArteTableService,
         ArteEventManager,
         PagingParamsResolver,
-        EUsuariosAlertService,
+        PublisherAlertService,
         ScrollService,
     ],
     bootstrap: [AppComponent],

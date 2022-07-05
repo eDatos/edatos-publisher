@@ -11,7 +11,6 @@ import { UserRouteAccessGuard } from './guard';
 import {
     AuthServerProvider,
     CSRFService,
-    ExternalUserService,
     LoginService,
     PageTitleService,
     PermissionService,
@@ -19,7 +18,6 @@ import {
     ProfileService,
     StateStorageService,
     throwIfAlreadyLoaded,
-    UserService,
 } from './service';
 
 registerLocaleData(localeEs, 'es');
@@ -32,7 +30,6 @@ registerLocaleData(localeEs, 'es');
         PermissionService,
         Principal,
         StateStorageService,
-        UserService,
         UserRouteAccessGuard,
         PageTitleService,
         Title,
@@ -41,7 +38,6 @@ registerLocaleData(localeEs, 'es');
             useValue: 'es',
         },
         ProfileService,
-        ExternalUserService,
     ],
 })
 export class CoreModule {
