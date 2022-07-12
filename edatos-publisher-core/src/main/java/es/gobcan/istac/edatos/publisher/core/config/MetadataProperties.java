@@ -19,8 +19,11 @@ public class MetadataProperties {
     @Autowired
     private MetadataConfigurationService configurationService;
 
+    private String metamacNavbar;
     private String metamacCasPrefix;
+    private String metamacCasLoginUrl;
     private String metamacCasLogoutUrl;
+    private String defaultLanguage;
     private List<String> availableLanguages;
 
     private String internalAppUrl;
@@ -29,22 +32,37 @@ public class MetadataProperties {
     @PostConstruct
     public void setValues() {
         try {
+            metamacNavbar = normalizeUrl(configurationService.retrieveNavbarUrl());
             metamacCasPrefix = normalizeUrl(configurationService.retrieveSecurityCasServerUrlPrefix());
+            metamacCasLoginUrl = normalizeUrl(configurationService.retrieveSecurityCasServiceLoginUrl());
             metamacCasLogoutUrl = normalizeUrl(configurationService.retrieveSecurityCasServiceLogoutUrl());
             availableLanguages = configurationService.retrieveLanguages();
             internalAppUrl = normalizeUrl(configurationService.retrieveExternalUsersInternalWebApplicationUrlBase());
             casService = internalAppUrl + "/login/cas";
+            defaultLanguage = availableLanguages.get(0);
         } catch (Exception e) {
             log.error("Error getting the value of a metadata {}", e);
         }
+    }
+
+    public String getMetamacNavbar() {
+        return metamacNavbar;
     }
 
     public String getMetamacCasPrefix() {
         return metamacCasPrefix;
     }
 
+    public String getMetamacCasLoginUrl() {
+        return metamacCasLoginUrl;
+    }
+
     public String getMetamacCasLogoutUrl() {
         return metamacCasLogoutUrl;
+    }
+
+    public String getDefaultLanguage() {
+        return defaultLanguage;
     }
 
     public String getInternalAppUrl() {
