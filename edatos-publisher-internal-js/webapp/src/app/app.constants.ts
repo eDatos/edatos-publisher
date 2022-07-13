@@ -16,7 +16,7 @@ export const ERROR_ALERT_KEY = 'alert-errors';
 export const LANG_KEY = 'lang';
 export const DEFAULT_LANG = 'es';
 
-export const DEFAULT_PATH = '/external-users';
+export const DEFAULT_PATH = '/publisher';
 
 export const PAGINATION_OPTIONS = [100, 150, 200];
 export const ITEMS_PER_PAGE = PAGINATION_OPTIONS[0];

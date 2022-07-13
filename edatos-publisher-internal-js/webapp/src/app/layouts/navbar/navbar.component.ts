@@ -60,8 +60,4 @@ export class NavbarComponent implements OnInit {
     public correctlyLogged(): boolean {
         return Boolean(this.principal.correctlyLogged());
     }
-
-    public canNavigateAdminMenu(): boolean {
-        return this.permissionService.canNavigateAdminMenu();
-    }
 }

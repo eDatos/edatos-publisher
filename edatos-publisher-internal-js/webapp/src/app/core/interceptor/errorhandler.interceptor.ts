@@ -2,13 +2,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { EUsuariosAlertService } from '../service/alert/eusuarios-alert.service';
+import { PublisherAlertService } from '../service/alert/publisher-alert.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ErrorHandlerInterceptor implements HttpInterceptor {
-    constructor(private alertService: EUsuariosAlertService) {}
+    constructor(private alertService: PublisherAlertService) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next

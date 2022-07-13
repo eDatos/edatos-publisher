@@ -70,19 +70,6 @@ public class ExceptionTranslatorTest {
                 .andExpect(jsonPath("$.errorItems[1].params").value(hasItem("param_code2"))).andExpect(jsonPath("$.errorItems[2].params").value(hasItems("param1_code3", "param2_code3")));
     }
 
-/* TODO: after the changes of the MR https://git.arte-consultores.com/istac/edatos-publisher/merge_requests/170 some tests no longer works
-    @Test
-    public void testAccessDenied() throws Exception {
-        mockMvc.perform(get("/test/access-denied")).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message").value(ErrorConstants.ERR_ACCESS_DENIED))
-                .andExpect(jsonPath("$.description").value("test access denied!"));
-    }
-
-    @Test
-    public void testMethodNotSupported() throws Exception {
-        mockMvc.perform(post("/test/access-denied")).andExpect(status().isMethodNotAllowed()).andExpect(jsonPath("$.message").value(ErrorConstants.ERR_METHOD_NOT_SUPPORTED))
-                .andExpect(jsonPath("$.description").value("Request method 'POST' not supported"));
-    }
-*/
     @Test
     public void testExceptionWithResponseStatus() throws Exception {
         mockMvc.perform(get("/test/response-status")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").value("error.400"))

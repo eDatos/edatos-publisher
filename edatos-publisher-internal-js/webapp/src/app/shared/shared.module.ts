@@ -2,7 +2,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { StructuralResourcesTreeModule } from '@app/shared/components/structural-resources-tree';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,8 +26,6 @@ import { OrderListModule } from 'primeng/orderlist';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { AppAuditInfoComponent } from './components/audit-info/audit-info.component';
-import { MultiLanguageEditorComponent } from './components/multi-language-editor/multi-language-editor.component';
 
 @NgModule({
     imports: [
@@ -96,11 +93,7 @@ import { MultiLanguageEditorComponent } from './components/multi-language-editor
         ArteTableModule,
         ArteOrderListModule,
         ArteEntityListEmptyModule,
-        StructuralResourcesTreeModule,
-        AppAuditInfoComponent,
-        MultiLanguageEditorComponent,
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    declarations: [AppAuditInfoComponent, MultiLanguageEditorComponent],
 })
 export class SharedModule {}
