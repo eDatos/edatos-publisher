@@ -1,0 +1,62 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
+    <changeSet author="arte" id="1657703257641-1">
+        <createSequence sequenceName="seq_tb_external_items" startValue="1" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet author="arte" id="1657703257641-2">
+        <createTable tableName="tb_ckan_external_items">
+            <column name="ckan_state" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kafka_message" type="JSONB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="external_item_fk" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_ckan_external_itemsPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="arte" id="1657703257641-3">
+        <createTable tableName="tb_external_items">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tb_external_itemsPK"/>
+            </column>
+            <column name="opt_lock" type="BIGINT"/>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="JSONB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="urn" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="arte" id="1657703257641-4">
+        <addUniqueConstraint columnNames="urn" constraintName="UC_TB_EXTERNAL_ITEMSURN_COL" tableName="tb_external_items"/>
+    </changeSet>
+
+    <changeSet author="arte" id="1657703257641-5">
+        <addForeignKeyConstraint baseColumnNames="external_item_fk" baseTableName="tb_ckan_external_items" constraintName="fk_tb_ckan_external_items_tb_external_items_id" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="tb_external_items" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

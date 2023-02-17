@@ -12,8 +12,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <edatos-rest-common.version>1.0.0</edatos-rest-common.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>edatos-rest-common</artifactId>
+            <version>${edatos-rest-common.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <resources>

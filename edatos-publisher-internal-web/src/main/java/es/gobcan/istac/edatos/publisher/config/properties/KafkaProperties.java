@@ -25,6 +25,26 @@ public class KafkaProperties {
         return metadataConfigurationService.retrieveKafkaTopicDatasetsPublication();
     }
 
+    public String getCodelistsPublicationTopic() {
+        return metadataConfigurationService.retrieveKafkaTopicCodelistsPublication();
+    }
+
+    public String getDsdPublicationTopic() {
+        return metadataConfigurationService.retrieveKafkaTopicDsdPublication();
+    }
+
+    public String getConceptSchemesPublicationTopic() {
+        return metadataConfigurationService.retrieveKafkaTopicConceptSchemesPublication();
+    }
+
+    public String getOrganisationSchemesPublicationTopic() {
+        return metadataConfigurationService.retrieveKafkaTopicOrganisationSchemesPublication();
+    }
+
+    public String getCategorySchemesPublicationTopic() {
+        return metadataConfigurationService.retrieveKafkaTopicCategorySchemesPublication();
+    }
+
     public String getBootStrapServers() {
         return metadataConfigurationService.retrieveKafkaBootStrapServers();
     }
