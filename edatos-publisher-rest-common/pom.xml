@@ -58,12 +58,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>es.gobcan.istac.edatos-publisher</groupId>
             <artifactId>edatos-publisher-core</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>edatos-core-common</artifactId>
