@@ -1,13 +1,14 @@
 package es.gobcan.istac.edatos.publisher.core.util;
 
-import es.gobcan.istac.edatos.publisher.core.config.CkanProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+import es.gobcan.istac.edatos.publisher.core.config.CkanProperties;
+
 public class CkanUtil {
 
-    private final static String URN_VERSION_REGEX = "\\([^)]*\\)$";
+    private static final String URN_VERSION_REGEX = "\\([^)]*\\)$";
 
     public static String getUrnWithoutVersion(String versionUrn) {
         return versionUrn.replaceFirst(URN_VERSION_REGEX, "");
@@ -31,7 +32,7 @@ public class CkanUtil {
 
     public static HttpHeaders getBaseHttpHeader(RestTemplate restTemplate, String url) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        //httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.set("Authorization", CkanProperties.AUTHORIZATION);
 
         return httpHeaders;

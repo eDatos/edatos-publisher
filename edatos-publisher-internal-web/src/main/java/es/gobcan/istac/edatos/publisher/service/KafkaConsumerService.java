@@ -1,10 +1,13 @@
 package es.gobcan.istac.edatos.publisher.service;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.siemac.metamac.srm.core.stream.message.*;
+import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
+import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
+import org.siemac.metamac.srm.core.stream.message.DataStructureDefinitionAvro;
+import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.statistical.operations.core.stream.messages.OperationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.springframework.kafka.annotation.KafkaListener;
 
 public interface KafkaConsumerService {
 

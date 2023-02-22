@@ -1,11 +1,16 @@
 package es.gobcan.istac.edatos.publisher.core.ckan.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class CkanPackage {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class CkanPackage implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private String name;
     private String title;
 

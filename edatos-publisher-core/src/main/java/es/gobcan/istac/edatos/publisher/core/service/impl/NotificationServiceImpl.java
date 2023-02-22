@@ -61,7 +61,7 @@ public class NotificationServiceImpl implements NotificationService {
         // @formatter:off
         return NoticeBuilder.notification()
             .withMessages(message)
-            .withSendingApplication(MetamacApplicationsEnum.GESTOR_EXTERNAL_USERS.getName()) // TODO: use GESTOR_PUBLICACIONES instead
+            .withSendingApplication(MetamacApplicationsEnum.GESTOR_PUBLICACIONES.getName()) // TODO: use GESTOR_PUBLICACIONES instead
             .withSubject(subject)
             .build();
         // @formatter:on
