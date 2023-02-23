@@ -6,7 +6,6 @@ import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSe
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceCreateUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.getBaseHttpHeader;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +24,17 @@ import es.gobcan.istac.edatos.publisher.service.CkanService;
 @Service
 public class CkanServiceImpl implements CkanService {
 
-    @Autowired
-    private MetadataConfigurationService metadataConfigurationService;
+    private final MetadataConfigurationService metadataConfigurationService;
 
     RestTemplate restTemplate;
     String urlBase;
     String apiKey;
 
-    public CkanServiceImpl() {
+    public CkanServiceImpl(MetadataConfigurationService metadataConfigurationService) {
+        this.metadataConfigurationService = metadataConfigurationService;
         restTemplate = new RestTemplate();
-        urlBase = metadataConfigurationService.retrieveCkanUrlBase();
-        apiKey = metadataConfigurationService.retrieveCkanApiKey();
+        urlBase = this.metadataConfigurationService.retrieveCkanUrlBase();
+        apiKey = this.metadataConfigurationService.retrieveCkanApiKey();
     }
 
     @Override

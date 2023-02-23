@@ -1,6 +1,5 @@
 package es.gobcan.istac.edatos.publisher.ckan.service.dataset.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -14,14 +13,15 @@ import es.gobcan.istac.edatos.publisher.service.CkanService;
 @Service
 public class DatasetSenderServiceImpl implements DatasetSenderService {
 
-    @Autowired
-    private CkanService ckanService;
+    private final CkanService ckanService;
+    private final NotificationService notificationService;
+    private final NotificationError notificationError;
 
-    @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private NotificationError notificationError;
+    public DatasetSenderServiceImpl(CkanService ckanService, NotificationService notificationService, NotificationError notificationError) {
+        this.ckanService = ckanService;
+        this.notificationService = notificationService;
+        this.notificationError = notificationError;
+    }
 
     @Override
     public void createOrUpdateCkanPackage(CkanPackage ckanPackage, String urn) {

@@ -41,6 +41,7 @@ public class DatasetAvro2CkanPackageMapper {
 
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
         newPackage.setOwner_org(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getCode().toLowerCase());
+        newPackage.setResources(new ArrayList<>());
         newPackage.getResources().addAll(createResourcesFromDatasetVersion(newPackage.getName(), datasetVersion));
         newPackage.setTags(new ArrayList<>());
         newPackage.setExtras(new ArrayList<>());
@@ -63,6 +64,7 @@ public class DatasetAvro2CkanPackageMapper {
     private static List<CkanResource> createResourcesFromDatasetVersion(String package_id, DatasetVersionAvro datasetVersion) {
         List<CkanResource> resources = new ArrayList<>();
 
+        // TODO EDATOS-3460 poner un if para añadir sólo si hay datos.
         resources.add(createResourceFromDatasetVersion(package_id));
 
         return resources;
