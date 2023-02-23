@@ -2,7 +2,6 @@ package es.gobcan.istac.edatos.publisher.core.util;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
 
 import es.gobcan.istac.edatos.publisher.core.config.CkanProperties;
 
@@ -14,26 +13,26 @@ public class CkanUtil {
         return versionUrn.replaceFirst(URN_VERSION_REGEX, "");
     }
 
-    public static String buildPackageSearchByUrnUrl(String urn) {
-        return CkanProperties.BASE_URL + CkanProperties.PACKAGE_SEARCH_PATH + "?q=urn:\"" + getUrnWithoutVersion(urn) + "\"";
+    public static String buildPackageSearchByUrnUrl(String urlBase, String urn) {
+        return urlBase + CkanProperties.PACKAGE_SEARCH_PATH + "?q=urn:\"" + getUrnWithoutVersion(urn) + "\"";
     }
 
-    public static String buildPackageCreateUrl() {
-        return CkanProperties.BASE_URL + CkanProperties.PACKAGE_CREATE;
+    public static String buildPackageCreateUrl(String urlBase) {
+        return urlBase + CkanProperties.PACKAGE_CREATE;
     }
 
-    public static String buildResourceCreateUrl() {
-        return CkanProperties.BASE_URL + CkanProperties.RESOURCE_CREATE_PATH;
+    public static String buildResourceCreateUrl(String urlBase) {
+        return urlBase + CkanProperties.RESOURCE_CREATE_PATH;
     }
 
-    public static String buildPackagePatchUrl(String id) {
-        return CkanProperties.BASE_URL + CkanProperties.PACKAGE_PATCH_PATH + "?id=" + id;
+    public static String buildPackagePatchUrl(String urlBase, String id) {
+        return urlBase + CkanProperties.PACKAGE_PATCH_PATH + "?id=" + id;
     }
 
-    public static HttpHeaders getBaseHttpHeader(RestTemplate restTemplate, String url) {
+    public static HttpHeaders getBaseHttpHeader(String apiKey) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.set("Authorization", CkanProperties.AUTHORIZATION);
+        httpHeaders.set("Authorization", apiKey);
 
         return httpHeaders;
     }

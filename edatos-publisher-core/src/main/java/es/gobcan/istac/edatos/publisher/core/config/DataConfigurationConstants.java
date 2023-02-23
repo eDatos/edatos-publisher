@@ -11,4 +11,6 @@ public final class DataConfigurationConstants {
     public static final String DB_PASSWORD = "metamac.edatos_publisher.db.password";
     public static final String DB_DRIVER_NAME = "metamac.edatos_publisher.db.driver_name";
     public static final String CKAN_LICENCE_ID = "metamac.edatos_publisher.ckan.licence.id";
+    public static final String CKAN_API_KEY = "metamac.edatos_publisher.ckan.api.key";
+    public static final String CKAN_URL_BASE = "metamac.edatos_publisher.ckan.url.base";
 }

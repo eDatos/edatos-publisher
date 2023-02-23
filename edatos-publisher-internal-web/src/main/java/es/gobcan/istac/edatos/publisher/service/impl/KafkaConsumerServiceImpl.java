@@ -12,20 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpStatusCodeException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGenericResponse;
+import es.gobcan.istac.edatos.publisher.ckan.service.dataset.impl.DatasetSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanSearchResponse;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
-import es.gobcan.istac.edatos.publisher.core.service.NotificationService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
-import es.gobcan.istac.edatos.publisher.service.CkanService;
 import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
 
 @Service
@@ -33,16 +25,14 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
 
-    private final CkanService ckanService;
-    private final NotificationService notificationService;
+    private final DatasetSenderService datasetSenderService;
     private final ExternalCkanItemMapper externalCkanItemMapper;
     private final ExternalCkanItemService externalCkanItemService;
     private final DatasetService datasetService;
 
-    public KafkaConsumerServiceImpl(CkanService ckanService, NotificationService notificationService, DatasetService datasetService, ExternalCkanItemService externalCkanItemService,
+    public KafkaConsumerServiceImpl(DatasetSenderService datasetSenderService, DatasetService datasetService, ExternalCkanItemService externalCkanItemService,
             ExternalCkanItemMapper externalCkanItemMapper) {
-        this.ckanService = ckanService;
-        this.notificationService = notificationService;
+        this.datasetSenderService = datasetSenderService;
         this.datasetService = datasetService;
         this.externalCkanItemService = externalCkanItemService;
         this.externalCkanItemMapper = externalCkanItemMapper;
@@ -51,11 +41,8 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
-
         processDatasetPublicationEvent(datasetVersion);
-        // createOrUpdateCkanPackage(DatasetAvro2CkanPackageMapper.toCkanPackage(datasetVersion, metadataConfigurationService), datasetVersion.getSiemacMetadataStatisticalResource()
-        // .getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn());
-        // externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion));
+        externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion));
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getOperationPublicationTopic()}")
@@ -87,8 +74,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         String urn = "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.dataset=istac:c00010A_000026(2.30)";
         CkanPackage ckanPackage = datasetService.retrieveCkanPackageFromDatasetVersion(datasetVersion);
         if (ckanPackage != null) {
-            createOrUpdateCkanPackage(ckanPackage, urn);
-            urn = "";
+            datasetSenderService.createOrUpdateCkanPackage(ckanPackage, urn);
         }
     }
 
@@ -101,51 +87,4 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         // externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme));
     }
 
-    void createOrUpdateCkanPackage(CkanPackage ckanPackage, String urn) {
-
-        try {
-            ckanService.createResource("license_id_prueba", " http://www.gobiernodecanarias.org/istac/jaxi-istac/tabla.do?accion=jsonMtd&uuidConsulta=01316d91-8cc1-41dd-ac96-86ab033c71fca"); // TODO
-                                                                                                                                                                                               // EDATOS-3460
-
-        } catch (Exception e) {
-            LOGGER.error("create resource", e);
-        }
-
-        try {
-            CkanSearchResponse existingDataset = ckanService.getDatasetByUrn(urn);
-
-            if (existingDataset.isSuccess()) {
-                CkanPackageResponse packageResponse;
-
-                if (existingDataset.getResult().getCount() > 0) {
-                    packageResponse = ckanService.createDataset(ckanPackage);
-                    // packageResponse = ckanService.updateDataset(existingDataset.getResult().getResults().get(0).getId(), categoryScheme); // TODO EDATOS-3460
-                } else {
-                    packageResponse = ckanService.createDataset(ckanPackage);
-                }
-                if (!packageResponse.isSuccess()) {
-                    notificationService.createFailedDatasetPublicationNotification(urn, packageResponse.getError(), null);
-                }
-            } else {
-                notificationService.createFailedDatasetPublicationNotification(urn, existingDataset.getError(), null);
-            }
-        } catch (HttpStatusCodeException e) {
-            manageCkanPublicationError(e, urn);
-        }
-    }
-
-    void manageCkanPublicationError(HttpStatusCodeException e, String urn) {
-        CkanGenericResponse response;
-        try {
-            response = new ObjectMapper().readValue(e.getResponseBodyAsString(), CkanGenericResponse.class);
-        } catch (JsonProcessingException ex) {
-            response = new CkanGenericResponse();
-        }
-
-        notificationService.createFailedDatasetPublicationNotification(urn, response.getError(), e);
-
-        if (e.getStatusCode().is5xxServerError() || response.getHelp() == null) {
-            throw e;
-        }
-    }
 }

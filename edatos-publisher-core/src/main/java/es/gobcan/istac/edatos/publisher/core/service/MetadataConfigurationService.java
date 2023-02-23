@@ -9,4 +9,6 @@ public interface MetadataConfigurationService extends ConfigurationService {
      * Retrieves ckan licence id
      */
     public String retrieveCkanLicenceId() throws EDatosException;
+    public String retrieveCkanApiKey() throws EDatosException;
+    public String retrieveCkanUrlBase() throws EDatosException;
 }
