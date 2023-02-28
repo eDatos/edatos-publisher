@@ -2,7 +2,7 @@ package es.gobcan.istac.edatos.publisher.service.impl;
 
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageCreateUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchUrl;
-import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByUrnUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByNameUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceCreateUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.getBaseHttpHeader;
 
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGenericResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -38,8 +37,8 @@ public class CkanServiceImpl implements CkanService {
     }
 
     @Override
-    public CkanSearchResponse getDatasetByUrn(String urn) {
-        String packageSearchUrl = buildPackageSearchByUrnUrl(urlBase, urn);
+    public CkanSearchResponse getDatasetByName(String name) {
+        String packageSearchUrl = buildPackageSearchByNameUrl(urlBase, name);
 
         HttpHeaders httpHeaders = getBaseHttpHeader(apiKey);
         ResponseEntity<CkanSearchResponse> response = restTemplate.getForEntity(packageSearchUrl, CkanSearchResponse.class, httpHeaders);
@@ -68,11 +67,11 @@ public class CkanServiceImpl implements CkanService {
     }
 
     @Override
-    public CkanGenericResponse updateDataset(String datasetId, CkanPackage dataset) {
+    public CkanPackageResponse updateDataset(CkanPackage dataset) {
 
-        String packagePatchUrl = buildPackagePatchUrl(urlBase, datasetId);
+        String packagePatchUrl = buildPackagePatchUrl(urlBase);
         HttpEntity<CkanPackage> request = new HttpEntity<>(dataset, getBaseHttpHeader(apiKey));
-        ResponseEntity<CkanGenericResponse> response = restTemplate.postForEntity(packagePatchUrl, request, CkanGenericResponse.class);
+        ResponseEntity<CkanPackageResponse> response = restTemplate.postForEntity(packagePatchUrl, request, CkanPackageResponse.class);
 
         return response.getBody();
     }

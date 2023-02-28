@@ -3,8 +3,10 @@ package es.gobcan.istac.edatos.publisher.core.ckan.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CkanPackage implements Serializable {
 
     /**
@@ -33,6 +35,7 @@ public class CkanPackage implements Serializable {
     private List<CkanRelationship> relationships_as_subject;
     private List<CkanGroup> groups;
     private String owner_org;
+    private String id;
 
     public String getName() {
         return name;
@@ -192,5 +195,13 @@ public class CkanPackage implements Serializable {
 
     public void setOwner_org(String owner_org) {
         this.owner_org = owner_org;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

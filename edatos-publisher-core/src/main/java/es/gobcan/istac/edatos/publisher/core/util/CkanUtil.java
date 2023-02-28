@@ -7,14 +7,8 @@ import es.gobcan.istac.edatos.publisher.core.config.CkanProperties;
 
 public class CkanUtil {
 
-    private static final String URN_VERSION_REGEX = "\\([^)]*\\)$";
-
-    public static String getUrnWithoutVersion(String versionUrn) {
-        return versionUrn.replaceFirst(URN_VERSION_REGEX, "");
-    }
-
-    public static String buildPackageSearchByUrnUrl(String urlBase, String urn) {
-        return urlBase + CkanProperties.PACKAGE_SEARCH_PATH + "?q=urn:\"" + getUrnWithoutVersion(urn) + "\"";
+    public static String buildPackageSearchByNameUrl(String urlBase, String name) {
+        return urlBase + CkanProperties.PACKAGE_SEARCH_PATH + "?q=name:\"" + name + "\"";
     }
 
     public static String buildPackageCreateUrl(String urlBase) {
@@ -25,8 +19,8 @@ public class CkanUtil {
         return urlBase + CkanProperties.RESOURCE_CREATE_PATH;
     }
 
-    public static String buildPackagePatchUrl(String urlBase, String id) {
-        return urlBase + CkanProperties.PACKAGE_PATCH_PATH + "?id=" + id;
+    public static String buildPackagePatchUrl(String urlBase) {
+        return urlBase + CkanProperties.PACKAGE_PATCH_PATH;
     }
 
     public static HttpHeaders getBaseHttpHeader(String apiKey) {

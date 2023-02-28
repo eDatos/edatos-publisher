@@ -6,5 +6,8 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 
 public interface DatasetService {
 
-    CkanPackage retrieveCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion);
+    CkanPackage retrieveNewCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion);
+    CkanPackage retrieveUpdateCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion, String id);
+    String retrieveCkanPackageName(DatasetVersionAvro datasetVersion);
+
 }

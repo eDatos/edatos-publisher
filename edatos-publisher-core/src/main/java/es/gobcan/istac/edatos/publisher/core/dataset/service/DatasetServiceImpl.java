@@ -19,18 +19,41 @@ public class DatasetServiceImpl implements DatasetService {
     private MetadataConfigurationService metadataConfigurationService;
 
     @Override
-    public CkanPackage retrieveCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion) {
+    public CkanPackage retrieveNewCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion) {
         try {
-            return getCkanPackageFromDataset(datasetVersion);
+            return getNewCkanPackageFromDataset(datasetVersion);
         } catch (Exception e) {
-            log.debug("Error in dataset  version publication into ckan: {}", e);
+            log.debug("Error in new dataset  version publication into ckan: {}", e);
         }
         return null;
     }
 
-    private CkanPackage getCkanPackageFromDataset(DatasetVersionAvro datasetVersion) {
-        return DatasetAvro2CkanPackageMapper.toCkanPackage(datasetVersion, metadataConfigurationService);
+    @Override
+    public CkanPackage retrieveUpdateCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion, String id) {
+        try {
+            return getExistingCkanPackageFromDataset(datasetVersion, id);
+        } catch (Exception e) {
+            log.debug("Error in existing dataset  version publication into ckan: {}", e);
+        }
+        return null;
+    }
 
+    @Override
+    public String retrieveCkanPackageName(DatasetVersionAvro datasetVersion) {
+        try {
+            return DatasetAvro2CkanPackageMapper.getCkanPackageName(datasetVersion);
+        } catch (Exception e) {
+            log.debug("Error in retrieve dataset name: {}", e);
+        }
+        return null;
+    }
+
+    private CkanPackage getNewCkanPackageFromDataset(DatasetVersionAvro datasetVersion) {
+        return DatasetAvro2CkanPackageMapper.toNewCkanPackage(datasetVersion, metadataConfigurationService);
+    }
+
+    private CkanPackage getExistingCkanPackageFromDataset(DatasetVersionAvro datasetVersion, String id) {
+        return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, id);
     }
 
 }

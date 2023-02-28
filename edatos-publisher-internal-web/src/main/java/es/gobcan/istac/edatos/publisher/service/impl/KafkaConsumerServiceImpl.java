@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.ckan.service.dataset.impl.DatasetSenderService;
+import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
@@ -25,12 +25,12 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
 
-    private final DatasetSenderService datasetSenderService;
+    private final CkanSenderService datasetSenderService;
     private final ExternalCkanItemMapper externalCkanItemMapper;
     private final ExternalCkanItemService externalCkanItemService;
     private final DatasetService datasetService;
 
-    public KafkaConsumerServiceImpl(DatasetSenderService datasetSenderService, DatasetService datasetService, ExternalCkanItemService externalCkanItemService,
+    public KafkaConsumerServiceImpl(CkanSenderService datasetSenderService, DatasetService datasetService, ExternalCkanItemService externalCkanItemService,
             ExternalCkanItemMapper externalCkanItemMapper) {
         this.datasetSenderService = datasetSenderService;
         this.datasetService = datasetService;
@@ -41,8 +41,10 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
-        processDatasetPublicationEvent(datasetVersion);
-        externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion));
+        Boolean isProcessed = processDatasetPublicationEvent(datasetVersion);
+        if (isProcessed) { // TODO EDATOS-3460 ver qué poner cuando es un update y no un create. Puede haber error clave primaria?
+            externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion));
+        }
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getOperationPublicationTopic()}")
@@ -70,19 +72,33 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         OrganisationSchemeAvro organisationScheme = consumerRecord.value(); // TODO EDATOS-3460
     }
 
-    public void processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
-        String urn = "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.dataset=istac:c00010A_000026(2.30)";
-        CkanPackage ckanPackage = datasetService.retrieveCkanPackageFromDatasetVersion(datasetVersion);
-        if (ckanPackage != null) {
-            datasetSenderService.createOrUpdateCkanPackage(ckanPackage, urn);
+    public Boolean processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
+
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
+                .getIdentifiableStatisticalResource().getUrn();
+        CkanPackage ckanPackage = null;
+        CkanPackage actualPackage = datasetSenderService.getCkanPackageByName(urn, datasetService.retrieveCkanPackageName(datasetVersion));
+
+        if (actualPackage == null) {
+            return false;
         }
+
+        if (actualPackage.getId() != null) {
+            ckanPackage = datasetService.retrieveUpdateCkanPackageFromDatasetVersion(datasetVersion, actualPackage.getId());
+        } else {
+            ckanPackage = datasetService.retrieveNewCkanPackageFromDatasetVersion(datasetVersion);
+        }
+
+        if (ckanPackage != null) {
+            return datasetSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
+        }
+        return false;
     }
 
-    // @KafkaListener(topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
+    @KafkaListener(topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
     public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
         CategorySchemeAvro categoryScheme = consumerRecord.value();
         DatasetVersionAvro datasetVersion = null;
-        processDatasetPublicationEvent(datasetVersion);
         // createOrUpdateCkanPackage(categoryAvro2CkanPackageMapper.toCkanPackage(categoryScheme), "urn:sdmx:org.sdmx.infomodel.categoryscheme.CategoryScheme=ISTAC:TEMAS_CANARIAS(01.003)");
         // externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme));
     }
