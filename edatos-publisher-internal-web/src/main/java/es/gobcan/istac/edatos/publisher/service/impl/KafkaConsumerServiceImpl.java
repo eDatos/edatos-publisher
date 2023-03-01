@@ -96,9 +96,11 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
         if (ckanPackage != null) {
             Boolean resultado = datasetSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (resultado && actualPackage.getId() != null) {
-                List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
-                datasetSenderService.updateResources(resources, urn);
+            if (Boolean.TRUE.equals(resultado)) {
+                if (actualPackage.getId() != null) {
+                    List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
+                    datasetSenderService.updateResources(resources, urn);
+                }
                 return resultado;
             }
 

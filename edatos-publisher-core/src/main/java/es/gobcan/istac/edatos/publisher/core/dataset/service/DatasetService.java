@@ -13,5 +13,6 @@ public interface DatasetService {
     CkanPackage retrieveUpdateCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion, String id);
     String retrieveCkanPackageName(DatasetVersionAvro datasetVersion);
     List<CkanResource> retrieveUpdatedResources(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId);
+    List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, String packageId);
 
 }

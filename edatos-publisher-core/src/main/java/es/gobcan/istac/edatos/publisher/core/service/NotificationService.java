@@ -6,6 +6,6 @@ import org.springframework.web.client.RestClientResponseException;
 
 public interface NotificationService {
 
-    void createFailedNotification(String urn, Map<String, Object> ckanErrors, RestClientResponseException exception);
     void createNotification(String codeSubject, String messageCode, String[] args);
+    void createFailedNotification(String codeSubject, String messageCode, Map<String, Object> ckanErrors, RestClientResponseException exception, String... params);
 }

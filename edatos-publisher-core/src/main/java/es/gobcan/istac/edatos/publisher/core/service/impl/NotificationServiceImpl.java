@@ -34,11 +34,9 @@ public class NotificationServiceImpl implements NotificationService {
     private NotificationArgsService notificationArgsService;
 
     @Override
-    public void createFailedNotification(String urn, Map<String, Object> ckanErrors, RestClientResponseException exception) {
-        String codeSubject = "notice.subject.failed_publication.text";
-        String messageCode = "notice.message.failed_publication.text";
+    public void createFailedNotification(String codeSubject, String messageCode, Map<String, Object> ckanErrors, RestClientResponseException exception, String... params) {
 
-        String[] args = notificationArgsService.argsByIdAndErrors(urn, ckanErrors, exception);
+        String[] args = notificationArgsService.argsByParamsAndErrors(ckanErrors, exception, params);
 
         createNotification(codeSubject, messageCode, args);
     }

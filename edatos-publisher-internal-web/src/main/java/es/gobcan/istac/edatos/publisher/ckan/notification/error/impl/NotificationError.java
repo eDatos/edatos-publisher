@@ -4,5 +4,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 public interface NotificationError {
 
-    void manageCkanPublicationError(HttpStatusCodeException e, String urn);
+    void manageCkanPublicationError(String codeSubject, String messageCode, HttpStatusCodeException e, String... params);
+
 }

@@ -56,7 +56,17 @@ public class DatasetServiceImpl implements DatasetService {
         try {
             return updateResourcesFromDatasetVersion(datasetVersion, existingDataset, packageId);
         } catch (Exception e) {
-            log.debug("Error in retrieve dataset name: {}", e);
+            log.debug("Error in retrieve updated resources: {}", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, String packageId) {
+        try {
+            return createResourcesFromDatasetVersion(datasetVersion, packageId);
+        } catch (Exception e) {
+            log.debug("Error in retrieve new resources: {}", e);
         }
         return null;
     }
@@ -71,6 +81,10 @@ public class DatasetServiceImpl implements DatasetService {
 
     private List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId) {
         return DatasetAvro2CkanPackageMapper.updateResourcesFromDatasetVersion(datasetVersion, packageId, existingDataset);
+    }
+
+    private List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId) {
+        return DatasetAvro2CkanPackageMapper.createResourcesFromDatasetVersion(datasetVersion, packageId);
     }
 
 }
