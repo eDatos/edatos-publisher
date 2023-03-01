@@ -1,8 +1,12 @@
 package es.gobcan.istac.edatos.publisher.core.dataset.mappers;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 
@@ -15,7 +19,12 @@ import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 
 public class DatasetAvro2CkanPackageMapper {
 
+    private DatasetAvro2CkanPackageMapper() {
+
+    }
+
     private static final String DEFAULT_LANGUAGE = "es";
+    private static final String URL_BASE_DATASETS = "datasets";
     private static final String BASE_DATASET_RESOURCE = "Cubo estadístico. ";
 
     public static CkanPackage toNewCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService) {
@@ -79,27 +88,61 @@ public class DatasetAvro2CkanPackageMapper {
     private static List<CkanResource> createResourcesFromDatasetVersion(String packageId, String datasetDescription, DatasetVersionAvro datasetVersion) {
         List<CkanResource> resources = new ArrayList<>();
 
+        String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
+                .getIdentifiableStatisticalResource().getCode();
+        String urlBaseResource = getResourceUrlBase(datasetVersion);
+
         for (DatasetResourcesFormat resourceFormat : DatasetResourcesFormat.values()) {
-            resources.add(createResourceFromDatasetVersion(packageId, datasetDescription, resourceFormat.name(), datasetVersion));
+            resources.add(createResourceFromDatasetVersion(packageId, datasetDescription, resourceFormat.name(), datasetCode, urlBaseResource));
         }
         return resources;
     }
 
-    private static CkanResource createResourceFromDatasetVersion(String packageId, String datasetDescription, String resourceFormat, DatasetVersionAvro datasetVersion) {
+    private static CkanResource createResourceFromDatasetVersion(String packageId, String datasetDescription, String resourceFormat, String datasetCode, String urlBaseResource) {
         CkanResource resource = new CkanResource();
-        String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
-                .getIdentifiableStatisticalResource().getCode();
-
-        // TODO EDATOS-3460 urlBaseResource debe venir en datasetVersion
-        String urlBaseResource = "https://datos.canarias.es/api/estadisticas/statistical-resources/v1.0/ISTAC/C00010A_000026/2.30";
 
         resource.setPackage_id(packageId);
         resource.setUrl(getUrlResource(urlBaseResource, resourceFormat));
         resource.setDescription(datasetDescription);
         resource.setFormat(resourceFormat);
         resource.setName(getNameResource(datasetCode, resourceFormat));
-
+        resource.setCreated(getNowInIso());
         return resource;
+    }
+
+    public static List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId, CkanPackage existingDataset) {
+        List<CkanResource> resources = new ArrayList<>();
+
+        String urlBaseResource = getResourceUrlBase(datasetVersion);
+
+        for (CkanResource existingResource : existingDataset.getResources()) {
+            resources.add(updateResourceFromDatasetVersion(existingResource.getId(), packageId, urlBaseResource, existingResource.getFormat()));
+        }
+        return resources;
+    }
+
+    private static CkanResource updateResourceFromDatasetVersion(String resourceId, String packageId, String urlBaseResource, String format) {
+        CkanResource resource = new CkanResource();
+
+        resource.setPackage_id(packageId);
+        resource.setId(resourceId);
+        resource.setUrl(getUrlResource(urlBaseResource, format));
+        resource.setLast_modified(getNowInIso());
+        return resource;
+    }
+
+    private static String getNowInIso() {
+        return ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
+    private static String getResourceUrlBase(DatasetVersionAvro datasetVersion) {
+        String url = datasetVersion.getResourcesUrlBase();
+        if (url != null) {
+            String[] params = UrnUtils.splitUrnItem(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
+                    .getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn());
+            url += "/" + URL_BASE_DATASETS + "/" + params[0] + "/" + params[1] + "/" + params[2];
+        }
+        return url;
     }
 
     private static String getUrlResource(String baseUrl, String format) {
@@ -110,23 +153,4 @@ public class DatasetAvro2CkanPackageMapper {
         return BASE_DATASET_RESOURCE + datasetCode + "(" + format + ")";
     }
 
-    public static CkanPackage toCkanPackagePruebas(String urn, MetadataConfigurationService metadataConfigurationService) {
-
-        CkanPackage newPackage = new CkanPackage();
-
-        newPackage.setName(CkanFormatUtil.formatCkanNameFromDatasetUrn(urn));
-        newPackage.setTitle("pruebas título dataset v2");
-        newPackage.setPrivates(false);
-        newPackage.setOwner_org("istac");
-        newPackage.setResources(new ArrayList<>());
-        newPackage.getResources().add(new CkanResource(newPackage.getName(),
-                "https://www.stats.govt.nz/assets/Uploads/Annual-enterprise-survey/Annual-enterprise-survey-2020-financial-year-provisional/Download-data/annual-enterprise-survey-2020-financial-year-provisional-csv.csv",
-                "Prueba recurso"));
-        newPackage.setTags(new ArrayList<>());
-        newPackage.setExtras(new ArrayList<>());
-        newPackage.setRelationships_as_object(new ArrayList<>());
-        newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
-        return newPackage;
-    }
 }

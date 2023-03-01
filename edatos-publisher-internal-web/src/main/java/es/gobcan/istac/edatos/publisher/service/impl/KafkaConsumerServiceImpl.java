@@ -1,5 +1,7 @@
 package es.gobcan.istac.edatos.publisher.service.impl;
 
+import java.util.List;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
@@ -8,13 +10,12 @@ import org.siemac.metamac.srm.core.stream.message.DataStructureDefinitionAvro;
 import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.statistical.operations.core.stream.messages.OperationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
@@ -22,8 +23,6 @@ import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
 
 @Service
 public class KafkaConsumerServiceImpl implements KafkaConsumerService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
 
     private final CkanSenderService datasetSenderService;
     private final ExternalCkanItemMapper externalCkanItemMapper;
@@ -49,27 +48,32 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     // @KafkaListener(topics = "#{kafkaProperties.getOperationPublicationTopic()}")
     public void processOperationPublicationEvent(ConsumerRecord<String, OperationAvro> consumerRecord) {
-        OperationAvro operation = consumerRecord.value(); // TODO EDATOS-3460
+        OperationAvro operation = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getCodelistsPublicationTopic()}")
     public void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord) {
-        CodelistAvro codelist = consumerRecord.value(); // TODO EDATOS-3460
+        CodelistAvro codelist = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getDsdPublicationTopic()}")
     public void processDsdPublicationEvent(ConsumerRecord<String, DataStructureDefinitionAvro> consumerRecord) {
-        DataStructureDefinitionAvro dataStructureDefinition = consumerRecord.value(); // TODO EDATOS-3460
+        DataStructureDefinitionAvro dataStructureDefinition = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getConceptSchemesPublicationTopic()}")
     public void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord) {
-        ConceptSchemeAvro conceptScheme = consumerRecord.value(); // TODO EDATOS-3460
+        ConceptSchemeAvro conceptScheme = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
-        OrganisationSchemeAvro organisationScheme = consumerRecord.value(); // TODO EDATOS-3460
+        OrganisationSchemeAvro organisationScheme = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
+    }
+
+    // @KafkaListener(topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
+    public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
+        CategorySchemeAvro categoryScheme = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
     }
 
     public Boolean processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
@@ -77,7 +81,8 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
         CkanPackage ckanPackage = null;
-        CkanPackage actualPackage = datasetSenderService.getCkanPackageByName(urn, datasetService.retrieveCkanPackageName(datasetVersion));
+        String packageName = datasetService.retrieveCkanPackageName(datasetVersion);
+        CkanPackage actualPackage = datasetSenderService.getCkanPackageByName(urn, packageName);
 
         if (actualPackage == null) {
             return false;
@@ -90,17 +95,15 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
 
         if (ckanPackage != null) {
-            return datasetSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
+            Boolean resultado = datasetSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
+            if (resultado && actualPackage.getId() != null) {
+                List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
+                datasetSenderService.updateResources(resources, urn);
+                return resultado;
+            }
+
         }
         return false;
-    }
-
-    @KafkaListener(topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
-    public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
-        CategorySchemeAvro categoryScheme = consumerRecord.value();
-        DatasetVersionAvro datasetVersion = null;
-        // createOrUpdateCkanPackage(categoryAvro2CkanPackageMapper.toCkanPackage(categoryScheme), "urn:sdmx:org.sdmx.infomodel.categoryscheme.CategoryScheme=ISTAC:TEMAS_CANARIAS(01.003)");
-        // externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme));
     }
 
 }

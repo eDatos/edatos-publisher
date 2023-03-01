@@ -1,6 +1,7 @@
 package es.gobcan.istac.edatos.publisher.service.impl;
 
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageCreateUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchResourceUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByNameUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceCreateUrl;
@@ -72,6 +73,16 @@ public class CkanServiceImpl implements CkanService {
         String packagePatchUrl = buildPackagePatchUrl(urlBase);
         HttpEntity<CkanPackage> request = new HttpEntity<>(dataset, getBaseHttpHeader(apiKey));
         ResponseEntity<CkanPackageResponse> response = restTemplate.postForEntity(packagePatchUrl, request, CkanPackageResponse.class);
+
+        return response.getBody();
+    }
+
+    @Override
+    public CkanResourceResponse updateResource(CkanResource resource) {
+
+        String resourcePatchUrl = buildPackagePatchResourceUrl(urlBase);
+        HttpEntity<CkanResource> request = new HttpEntity<>(resource, getBaseHttpHeader(apiKey));
+        ResponseEntity<CkanResourceResponse> response = restTemplate.postForEntity(resourcePatchUrl, request, CkanResourceResponse.class);
 
         return response.getBody();
     }

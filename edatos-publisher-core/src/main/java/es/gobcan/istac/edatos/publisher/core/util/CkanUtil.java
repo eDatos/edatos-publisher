@@ -23,6 +23,10 @@ public class CkanUtil {
         return urlBase + CkanProperties.PACKAGE_PATCH_PATH;
     }
 
+    public static String buildPackagePatchResourceUrl(String urlBase) {
+        return urlBase + CkanProperties.RESOURCE_PATCH_PATH;
+    }
+
     public static HttpHeaders getBaseHttpHeader(String apiKey) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

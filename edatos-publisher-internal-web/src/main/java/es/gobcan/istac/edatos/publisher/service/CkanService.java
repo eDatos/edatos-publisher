@@ -12,4 +12,5 @@ public interface CkanService {
     CkanPackageResponse createDataset(CkanPackage dataset);
     CkanResourceResponse createResource(CkanResource ckanResource);
     CkanPackageResponse updateDataset(CkanPackage dataset);
+    CkanResourceResponse updateResource(CkanResource resource);
 }

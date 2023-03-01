@@ -1,5 +1,7 @@
 package es.gobcan.istac.edatos.publisher.ckan.service.impl;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -7,6 +9,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 import es.gobcan.istac.edatos.publisher.ckan.notification.error.impl.NotificationError;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResourceResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanSearchResponse;
 import es.gobcan.istac.edatos.publisher.core.service.NotificationService;
 import es.gobcan.istac.edatos.publisher.service.CkanService;
@@ -53,6 +57,27 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             if (!packageResponse.isSuccess()) {
                 notificationService.createFailedNotification(urn, packageResponse.getError(), null);
                 return false;
+            }
+            return true;
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(e, urn);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean updateResources(List<CkanResource> resources, String urn) {
+        try {
+
+            CkanResourceResponse resourceResponse;
+
+            for (CkanResource resource : resources) {
+
+                resourceResponse = ckanService.updateResource(resource);
+
+                if (!resourceResponse.isSuccess()) {
+                    notificationService.createFailedNotification("Actualización de recurso con formato " + resource.getFormat() + " para urn " + urn, resourceResponse.getError(), null);
+                }
             }
             return true;
         } catch (HttpStatusCodeException e) {
