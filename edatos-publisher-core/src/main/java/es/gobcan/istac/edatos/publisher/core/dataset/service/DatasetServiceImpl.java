@@ -76,7 +76,7 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     private CkanPackage getExistingCkanPackageFromDataset(DatasetVersionAvro datasetVersion, String id) {
-        return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, id);
+        return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, metadataConfigurationService, id);
     }
 
     private List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId) {

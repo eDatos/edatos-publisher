@@ -5,6 +5,8 @@ import org.siemac.edatos.core.common.enume.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.gson.Gson;
+
 import es.gobcan.istac.edatos.publisher.core.domain.ExternalCkanItemEntity;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.mapper.config.AuditingMapperConfig;
@@ -17,10 +19,13 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
     @Autowired
     private InternationalStringVOMapper internationalStringMapper;
 
-    public ExternalCkanItemEntity toExternalCkanItemEntity(DatasetVersionAvro datasetVersion) {
+    public ExternalCkanItemEntity toExternalCkanItemEntity(DatasetVersionAvro datasetVersion, CkanState state) {
+        Gson gson = new Gson();
+        String kafkaMessage = gson.toJson(datasetVersion);
+
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
-        externalCkanItem.setCkanState(CkanState.SENT);
-        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setCkanState(state);
+        externalCkanItem.setKafkaMessage(kafkaMessage);
         externalCkanItem.setCode(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getCode());
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(

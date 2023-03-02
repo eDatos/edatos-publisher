@@ -23,6 +23,7 @@ public class DatasetAvro2CkanPackageMapper {
 
     private static final String DEFAULT_LANGUAGE = "es";
     private static final String URL_BASE_DATASETS = "datasets";
+    private static final String URL_BASE_IDENTIFIER = "dataset";
     private static final String BASE_DATASET_RESOURCE = "Cubo estadístico. ";
 
     public static CkanPackage toNewCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService) {
@@ -44,13 +45,32 @@ public class DatasetAvro2CkanPackageMapper {
         newPackage.setResources(new ArrayList<>());
         newPackage.getResources().addAll(createResourcesFromDatasetVersion(datasetVersion, newPackage.getName()));
         newPackage.setTags(new ArrayList<>());
-        newPackage.setExtras(new ArrayList<>());
-        newPackage.getExtras().add(new CkanExtra("urn", datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                .getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn()));
+
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
         newPackage.setGroups(new ArrayList<>());
+
+        // extra fields
+        newPackage.setExtras(new ArrayList<>());
+        newPackage.getExtras().addAll(getExtraFields(datasetVersion, metadataConfigurationService, newPackage.getName()));
+
         return newPackage;
+    }
+
+    private static List<CkanExtra> getExtraFields(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageName) {
+        List<CkanExtra> extraFields = new ArrayList<>();
+
+        extraFields.add(new CkanExtra("identifier", getIdentifierCkan(metadataConfigurationService, packageName)));
+
+        extraFields.add(new CkanExtra("language", "[\"" + DEFAULT_LANGUAGE + "\"]"));
+
+        extraFields.add(new CkanExtra("publisher_uri", metadataConfigurationService.retrieveCkanPublisherUri()));
+
+        extraFields.add(new CkanExtra("spatial_uri", metadataConfigurationService.retrieveCkanSpatialUri()));
+
+        extraFields.add(new CkanExtra("theme", getTheme(datasetVersion, metadataConfigurationService)));
+
+        return extraFields;
     }
 
     public static String getCkanPackageName(DatasetVersionAvro datasetVersion) {
@@ -63,7 +83,7 @@ public class DatasetAvro2CkanPackageMapper {
                 .getLocalisedStrings().stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
     }
 
-    public static CkanPackage toExistingCkanPackage(DatasetVersionAvro datasetVersion, String id) {
+    public static CkanPackage toExistingCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String id) {
         CkanPackage existingPackage = new CkanPackage();
 
         existingPackage.setId(id);
@@ -71,10 +91,11 @@ public class DatasetAvro2CkanPackageMapper {
                 .getDescription().getLocalisedStrings().stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse(""));
 
         existingPackage.setUrl(datasetVersion.getVisualizerHtmlLink());
-        existingPackage.setExtras(new ArrayList<>());
         existingPackage.setVersion(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getVersionLogic());
-        existingPackage.getExtras().add(new CkanExtra("urn", datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                .getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn()));
+
+        // extra fields
+        existingPackage.setExtras(new ArrayList<>());
+        existingPackage.getExtras().addAll(getExtraFields(datasetVersion, metadataConfigurationService, getCkanPackageName(datasetVersion)));
 
         return existingPackage;
     }
@@ -85,6 +106,23 @@ public class DatasetAvro2CkanPackageMapper {
             return localisedString.stream().filter(x -> x.getLocale().equals(DEFAULT_LANGUAGE)).findFirst().get().getLabel();
         }
         return null;
+    }
+
+    private static String getIdentifierCkan(MetadataConfigurationService metadataConfigurationService, String packageName) {
+        String url = metadataConfigurationService.retrieveCkanUrlBase();
+        if (url != null) {
+            url += "/" + URL_BASE_IDENTIFIER + "/" + packageName;
+        }
+        return url;
+    }
+
+    private static String getTheme(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService) {
+        // if (eni exists) ------------------
+        String url = metadataConfigurationService.retrieveCkanEniUrlBase();
+        if (url != null) {
+            url += "/" + "fill-eni"; // TODO EDATOS-3460 FALTA ENI
+        }
+        return url;
     }
 
     public static List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId) {

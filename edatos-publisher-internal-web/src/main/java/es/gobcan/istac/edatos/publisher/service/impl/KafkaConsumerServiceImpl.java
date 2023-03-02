@@ -10,6 +10,8 @@ import org.siemac.metamac.srm.core.stream.message.DataStructureDefinitionAvro;
 import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.statistical.operations.core.stream.messages.OperationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +19,16 @@ import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
+import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetServiceImpl;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
 import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
 
 @Service
 public class KafkaConsumerServiceImpl implements KafkaConsumerService {
+
+    private final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
 
     private final CkanSenderService datasetSenderService;
     private final ExternalCkanItemMapper externalCkanItemMapper;
@@ -40,10 +46,13 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
-        Boolean isProcessed = processDatasetPublicationEvent(datasetVersion);
-        if (isProcessed) { // TODO EDATOS-3460 ver qué poner cuando es un update y no un create. Puede haber error clave primaria?
-            externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion));
+        boolean isProcessed = processDatasetPublicationEvent(datasetVersion);
+        try {
+            externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion, isProcessed ? CkanState.SENT : CkanState.FAILED));
+        } catch (Exception e) {
+            log.error("Error al guardar en external item el dataset procesado", e);
         }
+
     }
 
     // @KafkaListener(topics = "#{kafkaProperties.getOperationPublicationTopic()}")
@@ -76,7 +85,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         CategorySchemeAvro categoryScheme = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
     }
 
-    public Boolean processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
+    public boolean processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
 
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();

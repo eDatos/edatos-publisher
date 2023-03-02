@@ -13,4 +13,7 @@ public final class DataConfigurationConstants {
     public static final String CKAN_LICENCE_ID = "metamac.edatos_publisher.ckan.licence.id";
     public static final String CKAN_API_KEY = "metamac.edatos_publisher.ckan.api.key";
     public static final String CKAN_URL_BASE = "metamac.edatos_publisher.ckan.url.base";
+    public static final String CKAN_PUBLISHER_URI = "metamac.edatos_publisher.ckan.publisher_uri";
+    public static final String CKAN_SPATIAL_URI = "metamac.edatos_publisher.ckan.spatial.uri";
+    public static final String CKAN_ENI_URL_BASE = "metamac.edatos_publisher.ckan.eni.url_base";
 }

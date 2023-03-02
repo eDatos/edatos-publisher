@@ -24,4 +24,19 @@ public class MetadataConfigurationServiceImpl extends ConfigurationServiceImpl i
     public String retrieveCkanUrlBase() throws EDatosException {
         return retrieveProperty(DataConfigurationConstants.CKAN_URL_BASE);
     }
+
+    @Override
+    public String retrieveCkanPublisherUri() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_PUBLISHER_URI);
+    }
+
+    @Override
+    public String retrieveCkanSpatialUri() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_SPATIAL_URI);
+    }
+
+    @Override
+    public String retrieveCkanEniUrlBase() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_ENI_URL_BASE);
+    }
 }

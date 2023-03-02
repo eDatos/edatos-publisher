@@ -71,6 +71,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
     @Override
     public Boolean updateResources(List<CkanResource> resources, String urn) {
         String nameResource = null;
+
         try {
 
             CkanResourceResponse resourceResponse;
@@ -82,6 +83,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
                 if (!resourceResponse.isSuccess()) {
                     notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_UPDATE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_UPDATE_RESOURCE,
                             resourceResponse.getError(), null, nameResource, urn);
+                    return false;
                 }
             }
             return true;
@@ -106,6 +108,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
                 if (!resourceResponse.isSuccess()) {
                     notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_CREATE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_CREATE_RESOURCE,
                             resourceResponse.getError(), null, nameResource, urn);
+                    return false;
                 }
             }
             return true;
