@@ -23,6 +23,7 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
+import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
 
 public class DatasetAvro2CkanPackageMapper {
 
@@ -54,7 +55,7 @@ public class DatasetAvro2CkanPackageMapper {
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
         newPackage.setOwner_org(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getCode().toLowerCase());
         newPackage.setResources(new ArrayList<>());
-        newPackage.getResources().addAll(createResourcesFromDatasetVersion(datasetVersion, newPackage.getName()));
+        newPackage.getResources().addAll(createResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, newPackage.getName()));
         newPackage.setTags(new ArrayList<>());
 
         newPackage.setRelationships_as_object(new ArrayList<>());
@@ -178,12 +179,12 @@ public class DatasetAvro2CkanPackageMapper {
         return urlBase + "/" + eniId;
     }
 
-    public static List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId) {
+    public static List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageId) {
         List<CkanResource> resources = new ArrayList<>();
 
         String datasetCode = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getCode();
-        String urlBaseResource = getResourceUrlBase(datasetVersion);
+        String urlBaseResource = getResourceUrlBase(datasetVersion, metadataConfigurationService);
 
         for (DatasetResourcesFormat resourceFormat : DatasetResourcesFormat.values()) {
             resources.add(createResourceFromDatasetVersion(packageId, getDatasetDescription(datasetVersion), resourceFormat.name(), datasetCode, urlBaseResource));
@@ -197,17 +198,18 @@ public class DatasetAvro2CkanPackageMapper {
         resource.setPackage_id(packageId);
         resource.setUrl(getUrlResource(urlBaseResource, resourceFormat));
         resource.setDescription(datasetDescription);
-        resource.setFormat(DatasetResourcesFormat.getFormat(resourceFormat));
+        resource.setFormat(resourceFormat);
         resource.setName(getNameResource(datasetCode, resourceFormat));
         resource.setMimetype(DatasetResourcesFormat.getMimeType(resourceFormat));
         resource.setCreated(CkanDateUtil.getNowInIso());
         return resource;
     }
 
-    public static List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId, CkanPackage existingDataset) {
+    public static List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageId,
+            CkanPackage existingDataset) {
         List<CkanResource> resources = new ArrayList<>();
 
-        String urlBaseResource = getResourceUrlBase(datasetVersion);
+        String urlBaseResource = getResourceUrlBase(datasetVersion, metadataConfigurationService);
 
         for (CkanResource existingResource : existingDataset.getResources()) {
             resources.add(updateResourceFromDatasetVersion(existingResource.getId(), packageId, urlBaseResource, existingResource.getFormat(), existingResource.getName()));
@@ -223,19 +225,17 @@ public class DatasetAvro2CkanPackageMapper {
         resource.setUrl(getUrlResource(urlBaseResource, format));
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
-        resource.setFormat(DatasetResourcesFormat.getFormat(format));
+        resource.setFormat(format);
         resource.setMimetype(DatasetResourcesFormat.getMimeType(format));
         return resource;
     }
 
-    private static String getResourceUrlBase(DatasetVersionAvro datasetVersion) {
-        String url = datasetVersion.getResourcesUrlBase();
-        if (url != null) {
-            String[] params = UrnUtils.splitUrnItem(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                    .getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn());
-            url += "/" + URL_BASE_DATASETS + "/" + params[0] + "/" + params[1] + "/" + params[2];
-        }
-        return url;
+    private static String getResourceUrlBase(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService) {
+
+        String[] params = UrnUtils.splitUrnItem(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
+                .getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn());
+        return CkanUtil.getResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_DATASETS + "/" + params[0] + "/" + params[1] + "/" + params[2];
+
     }
 
     private static String getUrlResource(String baseUrl, String format) {

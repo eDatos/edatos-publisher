@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
 import es.gobcan.istac.edatos.publisher.core.config.CkanProperties;
+import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 public class CkanUtil {
 
@@ -33,5 +34,9 @@ public class CkanUtil {
         httpHeaders.set("Authorization", apiKey);
 
         return httpHeaders;
+    }
+
+    public static String getResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
+        return metadataConfigurationService.retrieveStatisticalResourcesExternalApiUrlBase() + "/v1.0";
     }
 }

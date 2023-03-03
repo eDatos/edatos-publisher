@@ -88,11 +88,11 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     private List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId) {
-        return DatasetAvro2CkanPackageMapper.updateResourcesFromDatasetVersion(datasetVersion, packageId, existingDataset);
+        return DatasetAvro2CkanPackageMapper.updateResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, packageId, existingDataset);
     }
 
     private List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId) {
-        return DatasetAvro2CkanPackageMapper.createResourcesFromDatasetVersion(datasetVersion, packageId);
+        return DatasetAvro2CkanPackageMapper.createResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, packageId);
     }
 
 }
