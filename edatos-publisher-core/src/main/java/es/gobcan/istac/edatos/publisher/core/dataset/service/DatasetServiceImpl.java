@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.dataset.mappers.DatasetAvro2CkanPackageMapper;
+import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
+import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Service
@@ -20,6 +22,12 @@ public class DatasetServiceImpl implements DatasetService {
 
     @Autowired
     private MetadataConfigurationService metadataConfigurationService;
+
+    @Autowired
+    private ExternalCategoryService externalCategoryService;
+
+    @Autowired
+    ExternalOperationService externalOperationService;
 
     @Override
     public CkanPackage retrieveNewCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion) {
@@ -72,11 +80,11 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     private CkanPackage getNewCkanPackageFromDataset(DatasetVersionAvro datasetVersion) {
-        return DatasetAvro2CkanPackageMapper.toNewCkanPackage(datasetVersion, metadataConfigurationService);
+        return DatasetAvro2CkanPackageMapper.toNewCkanPackage(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService);
     }
 
     private CkanPackage getExistingCkanPackageFromDataset(DatasetVersionAvro datasetVersion, String id) {
-        return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, metadataConfigurationService, id);
+        return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService, id);
     }
 
     private List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId) {

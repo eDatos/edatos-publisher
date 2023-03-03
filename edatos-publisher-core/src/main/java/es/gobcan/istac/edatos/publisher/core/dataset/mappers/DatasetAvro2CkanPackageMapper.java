@@ -1,16 +1,25 @@
 package es.gobcan.istac.edatos.publisher.core.dataset.mappers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
+import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
+import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
@@ -25,8 +34,10 @@ public class DatasetAvro2CkanPackageMapper {
     private static final String URL_BASE_DATASETS = "datasets";
     private static final String URL_BASE_IDENTIFIER = "dataset";
     private static final String BASE_DATASET_RESOURCE = "Cubo estadístico. ";
+    private static final String ENI_FIELD = "+eniSchemeType";
 
-    public static CkanPackage toNewCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService) {
+    public static CkanPackage toNewCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
+            ExternalOperationService externalOperationService) {
         CkanPackage newPackage = new CkanPackage();
         newPackage.setName(getCkanPackageName(datasetVersion));
         newPackage.setTitle(getDefaultLocalisedString(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
@@ -52,23 +63,27 @@ public class DatasetAvro2CkanPackageMapper {
 
         // extra fields
         newPackage.setExtras(new ArrayList<>());
-        newPackage.getExtras().addAll(getExtraFields(datasetVersion, metadataConfigurationService, newPackage.getName()));
+        newPackage.getExtras().addAll(getExtraFields(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService, newPackage.getName()));
 
         return newPackage;
     }
 
-    private static List<CkanExtra> getExtraFields(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageName) {
+    private static List<CkanExtra> getExtraFields(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
+            ExternalOperationService externalOperationService, String packageName) {
         List<CkanExtra> extraFields = new ArrayList<>();
 
         extraFields.add(new CkanExtra("identifier", getIdentifierCkan(metadataConfigurationService, packageName)));
 
-        extraFields.add(new CkanExtra("language", "[\"" + DEFAULT_LANGUAGE + "\"]"));
+        extraFields.add(new CkanExtra("language", DEFAULT_LANGUAGE));
 
         extraFields.add(new CkanExtra("publisher_uri", metadataConfigurationService.retrieveCkanPublisherUri()));
 
         extraFields.add(new CkanExtra("spatial_uri", metadataConfigurationService.retrieveCkanSpatialUri()));
 
-        extraFields.add(new CkanExtra("theme", getTheme(datasetVersion, metadataConfigurationService)));
+        String theme = getThemeFromStatisticalOperation(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService);
+        if (theme != null) {
+            extraFields.add(new CkanExtra("theme", theme));
+        }
 
         return extraFields;
     }
@@ -83,7 +98,8 @@ public class DatasetAvro2CkanPackageMapper {
                 .getLocalisedStrings().stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
     }
 
-    public static CkanPackage toExistingCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String id) {
+    public static CkanPackage toExistingCkanPackage(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
+            ExternalOperationService externalOperationService, String id) {
         CkanPackage existingPackage = new CkanPackage();
 
         existingPackage.setId(id);
@@ -95,7 +111,7 @@ public class DatasetAvro2CkanPackageMapper {
 
         // extra fields
         existingPackage.setExtras(new ArrayList<>());
-        existingPackage.getExtras().addAll(getExtraFields(datasetVersion, metadataConfigurationService, getCkanPackageName(datasetVersion)));
+        existingPackage.getExtras().addAll(getExtraFields(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService, getCkanPackageName(datasetVersion)));
 
         return existingPackage;
     }
@@ -116,13 +132,50 @@ public class DatasetAvro2CkanPackageMapper {
         return url;
     }
 
-    private static String getTheme(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService) {
-        // if (eni exists) ------------------
-        String url = metadataConfigurationService.retrieveCkanEniUrlBase();
-        if (url != null) {
-            url += "/" + "fill-eni"; // TODO EDATOS-3460 FALTA ENI
+    private static String getThemeFromStatisticalOperation(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService,
+            ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+
+        Set<String> eniThemes = new HashSet<>();
+        Pageable pageable = (new PageRequest(0, 100)).first();
+        String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
+
+        Operation operation = externalOperationService.retrieveStatisticalOperationById(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
+                .getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().getStatisticalOperation().getCode());
+
+        // get eniScheme from subjectArea field of statistical operation
+        String eniScheme = addTheme(externalCategoryService, eniUrlBase, pageable, operation.getSubjectArea().getUrn());
+        if (eniScheme != null) {
+            eniThemes.add(eniScheme);
         }
-        return url;
+
+        // get eniScheme from secondary subject area field of statistical operation. This field is optional
+        if (operation.getSecondarySubjectAreas() != null && !operation.getSecondarySubjectAreas().getSecondarySubjectAreas().isEmpty()) {
+            for (ResourceInternal category : operation.getSecondarySubjectAreas().getSecondarySubjectAreas()) {
+                eniScheme = addTheme(externalCategoryService, eniUrlBase, pageable, category.getUrn());
+                if (eniScheme != null) {
+                    eniThemes.add(eniScheme);
+                }
+            }
+        }
+
+        if (!eniThemes.isEmpty()) {
+            return String.join(",", eniThemes);
+        }
+        return null;
+    }
+
+    public static String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, Pageable pageable, String urnCategory) {
+        String[] params = UrnUtils.splitUrnItem(urnCategory);
+
+        Category category = externalCategoryService.getCategory(pageable, params[0], params[1], params[2], params[3]);
+        if (category != null && category.getEniSchemeType() != null) {
+            return getUrlEniTheme(eniUrlBase, category.getEniSchemeType().getId());
+        }
+        return null;
+    }
+
+    private static String getUrlEniTheme(String urlBase, String eniId) {
+        return urlBase + "/" + eniId;
     }
 
     public static List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId) {
