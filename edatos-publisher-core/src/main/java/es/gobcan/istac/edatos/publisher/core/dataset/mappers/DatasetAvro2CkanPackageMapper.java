@@ -198,7 +198,7 @@ public class DatasetAvro2CkanPackageMapper {
         resource.setPackage_id(packageId);
         resource.setUrl(getUrlResource(urlBaseResource, resourceFormat));
         resource.setDescription(datasetDescription);
-        resource.setFormat(resourceFormat);
+        resource.setFormat((DatasetResourcesFormat.getFormat(resourceFormat)));
         resource.setName(getNameResource(datasetCode, resourceFormat));
         resource.setMimetype(DatasetResourcesFormat.getMimeType(resourceFormat));
         resource.setCreated(CkanDateUtil.getNowInIso());
@@ -226,7 +226,7 @@ public class DatasetAvro2CkanPackageMapper {
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
         resource.setFormat(format);
-        resource.setMimetype(DatasetResourcesFormat.getMimeType(format));
+        resource.setMimetype(DatasetResourcesFormat.getFormat(format));
         return resource;
     }
 
