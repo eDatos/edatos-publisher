@@ -48,9 +48,9 @@ public class CkanServiceImpl implements CkanService {
     }
 
     @Override
-    public CkanPackageResponse createDataset(CkanPackage dataset) {
+    public CkanPackageResponse createPackage(CkanPackage ckanPackage) {
         String packageCreateUrl = buildPackageCreateUrl(urlBase);
-        HttpEntity<CkanPackage> request = new HttpEntity<>(dataset, getBaseHttpHeader(apiKey));
+        HttpEntity<CkanPackage> request = new HttpEntity<>(ckanPackage, getBaseHttpHeader(apiKey));
         ResponseEntity<CkanPackageResponse> response = restTemplate.postForEntity(packageCreateUrl, request, CkanPackageResponse.class);
 
         return response.getBody();
@@ -68,10 +68,10 @@ public class CkanServiceImpl implements CkanService {
     }
 
     @Override
-    public CkanPackageResponse updateDataset(CkanPackage dataset) {
+    public CkanPackageResponse updatePackage(CkanPackage ckanPackage) {
 
         String packagePatchUrl = buildPackagePatchUrl(urlBase);
-        HttpEntity<CkanPackage> request = new HttpEntity<>(dataset, getBaseHttpHeader(apiKey));
+        HttpEntity<CkanPackage> request = new HttpEntity<>(ckanPackage, getBaseHttpHeader(apiKey));
         ResponseEntity<CkanPackageResponse> response = restTemplate.postForEntity(packagePatchUrl, request, CkanPackageResponse.class);
 
         return response.getBody();

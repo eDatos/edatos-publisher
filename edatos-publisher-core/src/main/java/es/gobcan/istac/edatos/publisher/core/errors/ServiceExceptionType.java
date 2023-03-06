@@ -7,5 +7,5 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     /********
      * QUERY
      ********/
-    public static final CommonServiceExceptionType QUERY_NOT_SUPPORTED = create("exception.external_users.query.not_supported");
+    public static final CommonServiceExceptionType QUERY_NOT_SUPPORTED = create("exception.publisher.query.not_supported");
 }

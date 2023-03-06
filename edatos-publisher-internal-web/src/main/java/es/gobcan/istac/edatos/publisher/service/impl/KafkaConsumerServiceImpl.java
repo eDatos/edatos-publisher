@@ -116,5 +116,4 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
         return false;
     }
-
 }

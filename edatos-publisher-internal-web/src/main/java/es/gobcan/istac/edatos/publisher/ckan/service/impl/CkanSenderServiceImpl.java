@@ -31,16 +31,16 @@ public class CkanSenderServiceImpl implements CkanSenderService {
 
     @Override
     public CkanPackage getCkanPackageByName(String urn, String packageName) {
-        CkanSearchResponse existingDataset = ckanService.getDatasetByName(packageName);
-        if (existingDataset != null && existingDataset.isSuccess()) {
-            if (existingDataset.getResult().getCount() > 0) {
-                return existingDataset.getResult().getResults().get(0);
+        CkanSearchResponse existingPackaget = ckanService.getDatasetByName(packageName);
+        if (existingPackaget != null && existingPackaget.isSuccess()) {
+            if (existingPackaget.getResult().getCount() > 0) {
+                return existingPackaget.getResult().getResults().get(0);
             } else {
                 return new CkanPackage();
             }
         } else {
             notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
-                    existingDataset.getError(), null, urn);
+                    existingPackaget.getError(), null, urn);
         }
         return null;
     }
@@ -52,9 +52,9 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             CkanPackageResponse packageResponse;
 
             if (!StringUtils.isBlank(packageId)) {
-                packageResponse = ckanService.updateDataset(ckanPackage);
+                packageResponse = ckanService.updatePackage(ckanPackage);
             } else {
-                packageResponse = ckanService.createDataset(ckanPackage);
+                packageResponse = ckanService.createPackage(ckanPackage);
             }
             if (!packageResponse.isSuccess()) {
                 notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
