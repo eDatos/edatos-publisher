@@ -12,6 +12,8 @@
 
 
 spring:
+    application:
+        name: publisher
     profiles:
         active: dev
     devtools:
@@ -21,25 +23,49 @@ spring:
             enabled: false # we use gulp + BrowserSync for livereload
     jackson:
         serialization.indent_output: true
+    datasource:
+        type: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/edatos_publisher
+        username: edatos_publisher
+        password: edatos_publisher
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
         show-sql: true
         properties:
             hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: prueba@arte-consultores.com
+        password: prueba63
+        protocol: smtp
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     messages:
         cache-seconds: 1
     thymeleaf:
         cache: false
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+    view:
+        prefix: /WEB-INF/jsp/
+        suffix: .jsp
 
 liquibase:
     contexts: dev
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
-# keytool -genkey -alias edatos_publisher -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
+# keytool -genkey -alias edatos_external_users -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
 #
 # You can also use Let's Encrypt:
 # https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
@@ -52,7 +78,7 @@ liquibase:
 #        key-store: keystore.p12
 #        key-store-password: <your-password>
 #        keyStoreType: PKCS12
-#        keyAlias: edatos_publisher
+#        keyAlias: edatos_external_users
 # ===================================================================
 server:
     port: 8080
@@ -82,6 +108,9 @@ jhipster:
                 token-validity-in-seconds: 36001
                 # 30 days
                 token-validity-in-seconds-for-remember-me: 2592000
+    mail: # specific JHipster mail property, for standard properties see MailProperties
+        from: edatos_external_users@localhost
+        base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         logs: # Reports Dropwizard metrics in the logs
@@ -112,7 +141,23 @@ environment:
     edatos:
         configuration:
             db:
-                driverName: FILL_ME
-                url: FILL_ME
-                username: FILL_ME
-                password: FILL_ME
+                driverName: org.postgresql.Driver              # Ejemplo: org.postgresql.Driver
+                url: jdbc:postgresql://localhost:5432/metamac_common_metadata_bd             # Ejemplo: postgresql://localhost:5432/metamac_common_metadata_bd
+                username: metamac_common_metadata_bd         # Ejemplo: metamac_common_metadata_bd
+                password: iQs/i+zysWktMLClrjDfUp6Z91xbXpg3qxfrYroSLD9dsYLR9jHrtw==
+application:
+    metadata:
+        endpoint: http://localhost:4200
+    endpoint:
+        # Required: Aplication URL
+        app-url: http://localhost:4200
+    cas:
+        endpoint: https://demo-cas.arte-consultores.com # Required: Cas Endpoint
+        service: http://localhost:4200/login/cas # Required: Aplication service
+        login:  # Optional: Only change if needed (Leave empty for cas.enpoint + '/login')
+        logout: # Optional: Only change if needed(Leave empty for cas.enpoint + '/logout')
+        validate: # Optional: Only change if needed (Leave empty for 2.0 Cas Protocol). For CAS 3.0 protocol change for 'p3'
+    jobs:
+        cron:
+            enabledTokens: "0 0/1 * * * *"
+    

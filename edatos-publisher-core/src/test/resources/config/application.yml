@@ -36,6 +36,7 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.hbm2ddl.auto: validate
+            hibernate.dialect: org.hibernate.dialect.PostgreSQL82Dialect
     messages:
         basename: i18n/test_messages, i18n/messages-publisher
     mvc:
@@ -94,6 +95,7 @@ jhipster:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
 
+
 application:
     ldap:
         url: FILL_URL # Ejemplo: ldap://ldap.miorganizacion.com
@@ -103,13 +105,18 @@ application:
         searchUsersProperty: FILL_SEARCH_USERS_PROPERTY # Ejemplo: uid
     jobs:
         cron:
+            disabledTokens: 0 0 3 * * *
             enabledTokens: 0 0 4 * * *
+            registrationTokens: 0 0 5 * * *
+            captchaResponses: 0 0/30 * * * ?
 
 environment:
     edatos:
         configuration:
             db:
-                driverName: com.zaxxer.hikari.HikariDataSource
-                url: jdbc:postgresql://localhost:5432/metadata
-                username: edatos_external_users
-                password: jPpA0b4wVDFIi4A7LJpIyK+8kCZldP34iRzL8AXUIgU=
+                driverName: org.postgresql.Driver
+                url: jdbc:postgresql://localhost:5432/istac_metamac_common_metadata_ci
+                username: istac_metamac_common_metadata_ci
+                password: oYJYi+yfdqQtcsiboNlFmm2Eqm5GBYqBTJ+QGDE49BDlvcTK1YyQJBCHxBHiqYfN
+
+
