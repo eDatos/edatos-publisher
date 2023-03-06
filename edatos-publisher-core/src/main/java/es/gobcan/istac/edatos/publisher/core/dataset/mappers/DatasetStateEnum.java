@@ -14,6 +14,6 @@ public enum DatasetStateEnum implements Serializable {
     }
 
     public String getName() {
-        return name();
+        return name().toLowerCase();
     }
 }
