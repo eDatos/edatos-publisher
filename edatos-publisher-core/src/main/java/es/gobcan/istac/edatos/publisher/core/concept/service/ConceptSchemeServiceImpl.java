@@ -34,7 +34,7 @@ public class ConceptSchemeServiceImpl implements ConceptSchemeService {
         try {
             return ConceptSchemeAvro2CkanPackageMapper.toNewCkanPackage(conceptScheme, metadataConfigurationService, externalCategoryService, externalOperationService);
         } catch (Exception e) {
-            log.debug("Error in new codelist  version publication into ckan: {}", e);
+            log.debug("Error in new concept scheme publication into ckan: {}", e);
         }
         return null;
     }
@@ -44,7 +44,7 @@ public class ConceptSchemeServiceImpl implements ConceptSchemeService {
         try {
             return ConceptSchemeAvro2CkanPackageMapper.toExistingCkanPackage(conceptScheme, metadataConfigurationService, externalCategoryService, externalOperationService, id);
         } catch (Exception e) {
-            log.debug("Error in existing codelist publication into ckan: {}", e);
+            log.debug("Error in existing concept scheme publication into ckan: {}", e);
         }
         return null;
     }
@@ -54,7 +54,7 @@ public class ConceptSchemeServiceImpl implements ConceptSchemeService {
         try {
             return ConceptSchemeAvro2CkanPackageMapper.getCkanPackageName(conceptScheme);
         } catch (Exception e) {
-            log.debug("Error in retrieve codelist name: {}", e);
+            log.debug("Error in retrieve concept scheme name: {}", e);
         }
         return null;
     }

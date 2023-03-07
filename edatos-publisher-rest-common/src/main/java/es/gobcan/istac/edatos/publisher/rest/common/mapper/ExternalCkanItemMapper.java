@@ -3,6 +3,7 @@ package es.gobcan.istac.edatos.publisher.rest.common.mapper;
 import org.mapstruct.Mapper;
 import org.siemac.edatos.core.common.enume.TypeExternalArtefactsEnum;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
@@ -59,6 +60,18 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
         return externalCkanItem;
     }
 
+    public ExternalCkanItemEntity toExternalCkanItemEntity(CategorySchemeAvro categoryScheme, CkanState state) {
+        ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
+        String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
+        externalCkanItem.setCkanState(state);
+        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setCode(params[1]);
+        externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(categoryScheme.getName()));
+        externalCkanItem.setType(TypeExternalArtefactsEnum.CATEGORY_SCHEME);
+        externalCkanItem.setUrn(categoryScheme.getUrn());
+        return externalCkanItem;
+    }
+
     /*
      * public ExternalCkanItemEntity toExternalCkanItemEntity(IndicatorVersionAvro indicatorVersion) {
      * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
@@ -70,16 +83,6 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
      * externalCkanItem.setUrn();
      * return externalCkanItem;
      * }
-     * public ExternalCkanItemEntity toExternalCkanItemEntity(CodelistAvro codelist) {
-     * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
-     * externalCkanItem.setCkanState();
-     * externalCkanItem.setKafkaMessage();
-     * externalCkanItem.setCode();
-     * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(codelist.getName()));
-     * externalCkanItem.setType(TypeExternalArtefactsEnum.CODELIST);
-     * externalCkanItem.setUrn(codelist.getUrn());
-     * return externalCkanItem;
-     * }
      * public ExternalCkanItemEntity toExternalCkanItemEntity(OrganisationSchemeAvro organisationScheme) {
      * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
      * externalCkanItem.setCkanState();
@@ -88,19 +91,6 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
      * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(organisationScheme.getName()));
      * externalCkanItem.setType(TypeExternalArtefactsEnum.ORGANISATION_SCHEME);
      * externalCkanItem.setUrn(organisationScheme.getUrn());
-     * return externalCkanItem;
-     * }
-     */
-
-    /*
-     * public ExternalCkanItemEntity toExternalCkanItemEntity(CategorySchemeAvro categoryScheme) {
-     * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
-     * externalCkanItem.setCkanState(CkanState.SENT);
-     * externalCkanItem.setKafkaMessage("{}");
-     * externalCkanItem.setCode("indeiticador");
-     * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(categoryScheme.getName()));
-     * externalCkanItem.setType(TypeExternalArtefactsEnum.CATEGORY_SCHEME);
-     * externalCkanItem.setUrn(categoryScheme.getUrn());
      * return externalCkanItem;
      * }
      */
