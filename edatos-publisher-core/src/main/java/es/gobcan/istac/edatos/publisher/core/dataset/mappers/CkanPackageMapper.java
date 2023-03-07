@@ -154,6 +154,6 @@ public abstract class CkanPackageMapper {
     }
 
     private static String getNameResource(String nameResourceBase, String format) {
-        return nameResourceBase + "(" + format + ")";
+        return nameResourceBase + " (" + format + ")";
     }
 }

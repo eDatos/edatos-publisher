@@ -96,7 +96,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(codelist.getUrn());
 
-        return createResources(getCodelistDescription(codelist), codelist.getUrn(), getResourceUrlBase(metadataConfigurationService), getNameResourceBase(params[1]), packageId,
+        return createResources(getCodelistDescription(codelist), codelist.getUrn(), getResourceUrlBase(metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId,
                 CodelistResourcesFormat.getEnumList());
     }
 
@@ -120,8 +120,8 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         return null;
     }
 
-    private static String getNameResourceBase(String code) {
-        return BASE_CODELIST_RESOURCE + code;
+    private static String getNameResourceBase(String agency, String code) {
+        return BASE_CODELIST_RESOURCE + agency + ":" + code;
     }
 
     private static String getResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {

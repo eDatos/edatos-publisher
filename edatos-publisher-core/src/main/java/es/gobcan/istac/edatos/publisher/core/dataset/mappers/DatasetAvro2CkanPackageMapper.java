@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
@@ -90,10 +91,9 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     public static List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageId) {
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
-        return createResources(
-                getDatasetDescription(datasetVersion), urn, getResourceUrlBase(metadataConfigurationService), getNameResourceBase(datasetVersion.getSiemacMetadataStatisticalResource()
-                        .getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().getCode()),
-                packageId, DatasetResourcesFormat.getEnumList());
+        String[] params = UrnUtils.splitUrnItem(urn);
+        return createResources(getDatasetDescription(datasetVersion), urn, getResourceUrlBase(metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId,
+                DatasetResourcesFormat.getEnumList());
     }
 
     public static List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageId,
@@ -152,8 +152,8 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return null;
     }
 
-    private static String getNameResourceBase(String code) {
-        return BASE_DATASET_RESOURCE + code;
+    private static String getNameResourceBase(String agency, String code) {
+        return BASE_DATASET_RESOURCE + agency + ":" + code;
     }
 
     private static String getResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
