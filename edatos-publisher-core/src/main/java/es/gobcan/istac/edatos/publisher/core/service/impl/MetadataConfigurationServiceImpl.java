@@ -39,4 +39,9 @@ public class MetadataConfigurationServiceImpl extends ConfigurationServiceImpl i
     public String retrieveCkanEniUrlBase() throws EDatosException {
         return retrieveProperty(DataConfigurationConstants.CKAN_ENI_URL_BASE);
     }
+
+    @Override
+    public String retrieveCkanGenericEniTheme() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_GENERIC_ENI_THEME);
+    }
 }

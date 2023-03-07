@@ -9,10 +9,10 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 
 public interface DatasetService {
 
-    CkanPackage retrieveNewCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion);
-    CkanPackage retrieveUpdateCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion, String id);
+    CkanPackage retrieveNewCkanPackage(DatasetVersionAvro datasetVersion);
+    CkanPackage retrieveUpdateCkanPackage(DatasetVersionAvro datasetVersion, String id);
     String retrieveCkanPackageName(DatasetVersionAvro datasetVersion);
-    List<CkanResource> retrieveUpdatedResources(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId);
+    List<CkanResource> retrieveUpdatedResources(DatasetVersionAvro datasetVersion, CkanPackage existingPackage, String packageId);
     List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, String packageId);
 
 }

@@ -36,7 +36,11 @@ public class CkanUtil {
         return httpHeaders;
     }
 
-    public static String getResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
+    public static String getStatisticalResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
         return metadataConfigurationService.retrieveStatisticalResourcesExternalApiUrlBase() + "/v1.0";
+    }
+
+    public static String getStructuralResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
+        return metadataConfigurationService.retrieveSrmExternalApiUrlBase() + "/v1.0";
     }
 }

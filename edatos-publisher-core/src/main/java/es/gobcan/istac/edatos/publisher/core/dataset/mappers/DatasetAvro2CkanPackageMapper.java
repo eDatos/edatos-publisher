@@ -14,10 +14,13 @@ import org.springframework.data.domain.Pageable;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
+import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
 
 public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
@@ -32,11 +35,12 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
             ExternalOperationService externalOperationService) {
         CkanPackage newPackage = new CkanPackage();
         newPackage.setName(getCkanPackageName(datasetVersion));
-        newPackage.setTitle(getDefaultLocalisedString(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                .getNameableStatisticalResource().getTitle().getLocalisedStrings()));
+        newPackage.setTitle(getDefaultLocalisedStringFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
+                .getVersionableStatisticalResource().getNameableStatisticalResource().getTitle().getLocalisedStrings()));
         newPackage.setPrivates(false);
-        newPackage.setAuthor(getDefaultLocalisedString(datasetVersion.getSiemacMetadataStatisticalResource().getCreator().getTitle().getLocalisedStrings()));
-        newPackage.setMaintainer(getDefaultLocalisedString(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getTitle().getLocalisedStrings()));
+        newPackage.setAuthor(getDefaultLocalisedStringFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getCreator().getTitle().getLocalisedStrings()));
+        newPackage.setMaintainer(getDefaultLocalisedStringFromInternationalStringItemAvro(
+                datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getTitle().getLocalisedStrings()));
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
         newPackage.setNotes(getDatasetDescription(datasetVersion));
 
@@ -70,8 +74,8 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         CkanPackage existingPackage = new CkanPackage();
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getDescription(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                .getNameableStatisticalResource().getDescription().getLocalisedStrings()));
+        existingPackage.setNotes(getDescriptionFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
+                .getVersionableStatisticalResource().getNameableStatisticalResource().getDescription().getLocalisedStrings()));
 
         existingPackage.setUrl(datasetVersion.getVisualizerHtmlLink());
         existingPackage.setVersion(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getVersionLogic());
@@ -84,19 +88,19 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     public static List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageId) {
-
-        return createResources(getDatasetDescription(datasetVersion),
-                datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
-                        .getIdentifiableStatisticalResource().getUrn(),
-                URL_BASE_DATASETS, getDatasetNameResourceBase(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
-                        .getNameableStatisticalResource().getIdentifiableStatisticalResource().getCode()),
-                metadataConfigurationService, packageId);
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
+                .getIdentifiableStatisticalResource().getUrn();
+        return createResources(
+                getDatasetDescription(datasetVersion), urn, getResourceUrlBase(metadataConfigurationService), getNameResourceBase(datasetVersion.getSiemacMetadataStatisticalResource()
+                        .getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().getCode()),
+                packageId, DatasetResourcesFormat.getEnumList());
     }
 
     public static List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, String packageId,
             CkanPackage existingDataset) {
-        return updateResources(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
-                .getIdentifiableStatisticalResource().getUrn(), URL_BASE_DATASETS, metadataConfigurationService, packageId, existingDataset.getResources());
+        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
+                .getIdentifiableStatisticalResource().getUrn();
+        return updateResources(urn, getResourceUrlBase(metadataConfigurationService), packageId, existingDataset.getResources());
     }
 
     private static List<CkanExtra> getDatasetExtraFields(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
@@ -112,8 +116,8 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private static String getDatasetDescription(DatasetVersionAvro datasetVersion) {
-        return getDescription(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
-                .getDescription().getLocalisedStrings());
+        return getDescriptionFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
+                .getNameableStatisticalResource().getDescription().getLocalisedStrings());
     }
 
     private static String getThemeFromStatisticalOperation(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService,
@@ -148,8 +152,12 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return null;
     }
 
-    private static String getDatasetNameResourceBase(String datasetCode) {
-        return BASE_DATASET_RESOURCE + datasetCode;
+    private static String getNameResourceBase(String code) {
+        return BASE_DATASET_RESOURCE + code;
+    }
+
+    private static String getResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
+        return CkanUtil.getStatisticalResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_DATASETS;
     }
 
 }

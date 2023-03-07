@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
+import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 import org.springframework.data.domain.Pageable;
 
@@ -15,7 +16,6 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
-import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
 
 public abstract class CkanPackageMapper {
 
@@ -43,11 +43,29 @@ public abstract class CkanPackageMapper {
         return CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
     }
 
-    protected static String getDescription(List<InternationalStringItemAvro> description) {
-        return description.stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+    protected static String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description) {
+        if (description != null) {
+            return description.stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+        }
+        return null;
     }
 
-    protected static String getDefaultLocalisedString(List<InternationalStringItemAvro> localisedString) {
+    protected static String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description) {
+        if (description != null) {
+            return description.stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
+        }
+        return null;
+    }
+
+    protected static String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString) {
+
+        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(DEFAULT_LANGUAGE))) {
+            return localisedString.stream().filter(x -> x.getLocale().equals(DEFAULT_LANGUAGE)).findFirst().get().getLabel();
+        }
+        return null;
+    }
+
+    protected static String getDefaultLocalisedStringFromLocalisedStringAvro(List<LocalisedStringAvro> localisedString) {
 
         if (localisedString.stream().anyMatch(x -> x.getLocale().equals(DEFAULT_LANGUAGE))) {
             return localisedString.stream().filter(x -> x.getLocale().equals(DEFAULT_LANGUAGE)).findFirst().get().getLabel();
@@ -77,14 +95,13 @@ public abstract class CkanPackageMapper {
         return urlBase + "/" + eniId;
     }
 
-    protected static List<CkanResource> createResources(String description, String urn, String urlBaseIdentifier, String code, MetadataConfigurationService metadataConfigurationService,
-            String packageId) {
+    protected static List<CkanResource> createResources(String description, String urn, String urlBaseIdentifier, String code, String packageId, List<String> formatValues) {
         List<CkanResource> resources = new ArrayList<>();
 
-        String urlBaseResource = getResourceUrlBase(urn, urlBaseIdentifier, metadataConfigurationService);
+        String urlBaseResource = getResourceUrlBase(urn, urlBaseIdentifier);
 
-        for (DatasetResourcesFormat resourceFormat : DatasetResourcesFormat.values()) {
-            resources.add(createResource(packageId, description, resourceFormat.name(), code, urlBaseResource));
+        for (String resourceFormat : formatValues) {
+            resources.add(createResource(packageId, description, resourceFormat, code, urlBaseResource));
         }
         return resources;
     }
@@ -102,11 +119,10 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    protected static List<CkanResource> updateResources(String urn, String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageId,
-            List<CkanResource> existingResources) {
+    protected static List<CkanResource> updateResources(String urn, String urlBaseIdentifier, String packageId, List<CkanResource> existingResources) {
         List<CkanResource> resources = new ArrayList<>();
 
-        String urlBaseResource = getResourceUrlBase(urn, urlBaseIdentifier, metadataConfigurationService);
+        String urlBaseResource = getResourceUrlBase(urn, urlBaseIdentifier);
 
         for (CkanResource existingResource : existingResources) {
             resources.add(updateResource(existingResource.getId(), packageId, urlBaseResource, existingResource.getFormat(), existingResource.getName()));
@@ -127,11 +143,10 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    private static String getResourceUrlBase(String urn, String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService) {
+    private static String getResourceUrlBase(String urn, String urlBaseIdentifier) {
 
         String[] params = UrnUtils.splitUrnItem(urn);
-        return CkanUtil.getResourceUrlBase(metadataConfigurationService) + "/" + urlBaseIdentifier + "/" + params[0] + "/" + params[1] + "/" + params[2];
-
+        return urlBaseIdentifier + "/" + params[0] + "/" + params[1] + "/" + params[2];
     }
 
     private static String getUrlResource(String baseUrl, String format) {

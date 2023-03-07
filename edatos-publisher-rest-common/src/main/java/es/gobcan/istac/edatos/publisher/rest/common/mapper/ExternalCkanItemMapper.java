@@ -2,6 +2,7 @@ package es.gobcan.istac.edatos.publisher.rest.common.mapper;
 
 import org.mapstruct.Mapper;
 import org.siemac.edatos.core.common.enume.TypeExternalArtefactsEnum;
+import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,6 +32,18 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
                 .getIdentifiableStatisticalResource().getUrn());
         return externalCkanItem;
     }
+
+    public ExternalCkanItemEntity toExternalCkanItemEntity(CodelistAvro codelist, CkanState state) {
+        ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
+        externalCkanItem.setCkanState(state);
+        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setCode(codelist.getUuid());
+        externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(codelist.getName()));
+        externalCkanItem.setType(TypeExternalArtefactsEnum.CODELIST);
+        externalCkanItem.setUrn(codelist.getUrn());
+        return externalCkanItem;
+    }
+
     /*
      * public ExternalCkanItemEntity toExternalCkanItemEntity(IndicatorVersionAvro indicatorVersion) {
      * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();

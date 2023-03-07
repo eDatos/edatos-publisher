@@ -30,9 +30,9 @@ public class DatasetServiceImpl implements DatasetService {
     ExternalOperationService externalOperationService;
 
     @Override
-    public CkanPackage retrieveNewCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion) {
+    public CkanPackage retrieveNewCkanPackage(DatasetVersionAvro datasetVersion) {
         try {
-            return getNewCkanPackageFromDataset(datasetVersion);
+            return DatasetAvro2CkanPackageMapper.toNewCkanPackage(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService);
         } catch (Exception e) {
             log.debug("Error in new dataset  version publication into ckan: {}", e);
         }
@@ -40,9 +40,9 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     @Override
-    public CkanPackage retrieveUpdateCkanPackageFromDatasetVersion(DatasetVersionAvro datasetVersion, String id) {
+    public CkanPackage retrieveUpdateCkanPackage(DatasetVersionAvro datasetVersion, String id) {
         try {
-            return getExistingCkanPackageFromDataset(datasetVersion, id);
+            return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService, id);
         } catch (Exception e) {
             log.debug("Error in existing dataset  version publication into ckan: {}", e);
         }
@@ -60,9 +60,9 @@ public class DatasetServiceImpl implements DatasetService {
     }
 
     @Override
-    public List<CkanResource> retrieveUpdatedResources(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId) {
+    public List<CkanResource> retrieveUpdatedResources(DatasetVersionAvro datasetVersion, CkanPackage existingPackage, String packageId) {
         try {
-            return updateResourcesFromDatasetVersion(datasetVersion, existingDataset, packageId);
+            return DatasetAvro2CkanPackageMapper.updateResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, packageId, existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -72,27 +72,10 @@ public class DatasetServiceImpl implements DatasetService {
     @Override
     public List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, String packageId) {
         try {
-            return createResourcesFromDatasetVersion(datasetVersion, packageId);
+            return DatasetAvro2CkanPackageMapper.createResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, packageId);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }
         return null;
     }
-
-    private CkanPackage getNewCkanPackageFromDataset(DatasetVersionAvro datasetVersion) {
-        return DatasetAvro2CkanPackageMapper.toNewCkanPackage(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService);
-    }
-
-    private CkanPackage getExistingCkanPackageFromDataset(DatasetVersionAvro datasetVersion, String id) {
-        return DatasetAvro2CkanPackageMapper.toExistingCkanPackage(datasetVersion, metadataConfigurationService, externalCategoryService, externalOperationService, id);
-    }
-
-    private List<CkanResource> updateResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, CkanPackage existingDataset, String packageId) {
-        return DatasetAvro2CkanPackageMapper.updateResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, packageId, existingDataset);
-    }
-
-    private List<CkanResource> createResourcesFromDatasetVersion(DatasetVersionAvro datasetVersion, String packageId) {
-        return DatasetAvro2CkanPackageMapper.createResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, packageId);
-    }
-
 }
