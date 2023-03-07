@@ -2,7 +2,9 @@ package es.gobcan.istac.edatos.publisher.rest.common.mapper;
 
 import org.mapstruct.Mapper;
 import org.siemac.edatos.core.common.enume.TypeExternalArtefactsEnum;
+import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
+import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,12 +37,25 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
 
     public ExternalCkanItemEntity toExternalCkanItemEntity(CodelistAvro codelist, CkanState state) {
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
+        String[] params = UrnUtils.splitUrnItem(codelist.getUrn());
         externalCkanItem.setCkanState(state);
         externalCkanItem.setKafkaMessage("{}");
-        externalCkanItem.setCode(codelist.getUuid());
+        externalCkanItem.setCode(params[1]);
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(codelist.getName()));
         externalCkanItem.setType(TypeExternalArtefactsEnum.CODELIST);
         externalCkanItem.setUrn(codelist.getUrn());
+        return externalCkanItem;
+    }
+
+    public ExternalCkanItemEntity toExternalCkanItemEntity(ConceptSchemeAvro conceptScheme, CkanState state) {
+        ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
+        String[] params = UrnUtils.splitUrnItem(conceptScheme.getUrn());
+        externalCkanItem.setCkanState(state);
+        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setCode(params[1]);
+        externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(conceptScheme.getName()));
+        externalCkanItem.setType(TypeExternalArtefactsEnum.CONCEPT_SCHEME);
+        externalCkanItem.setUrn(conceptScheme.getUrn());
         return externalCkanItem;
     }
 
@@ -63,16 +78,6 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
      * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(codelist.getName()));
      * externalCkanItem.setType(TypeExternalArtefactsEnum.CODELIST);
      * externalCkanItem.setUrn(codelist.getUrn());
-     * return externalCkanItem;
-     * }
-     * public ExternalCkanItemEntity toExternalCkanItemEntity(ConceptSchemeAvro conceptScheme) {
-     * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
-     * externalCkanItem.setCkanState();
-     * externalCkanItem.setKafkaMessage();
-     * externalCkanItem.setCode();
-     * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(conceptScheme.getName()));
-     * externalCkanItem.setType(TypeExternalArtefactsEnum.CONCEPT_SCHEME);
-     * externalCkanItem.setUrn(conceptScheme.getUrn());
      * return externalCkanItem;
      * }
      * public ExternalCkanItemEntity toExternalCkanItemEntity(OrganisationSchemeAvro organisationScheme) {

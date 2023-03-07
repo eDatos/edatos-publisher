@@ -38,7 +38,6 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setName(getCkanPackageName(codelist));
         newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings()));
         newPackage.setPrivates(false);
-        newPackage.setAuthor(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings()));
         newPackage.setMaintainer(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings()));
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
         newPackage.setNotes(getCodelistDescription(codelist));
@@ -48,7 +47,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
         newPackage.setOwner_org(codelist.getMaintainer().getCode().toLowerCase());
         newPackage.setResources(createResources(codelist, metadataConfigurationService, newPackage.getName()));
-        newPackage.setTags(getCodelistTags());
+        newPackage.setTags(getTags());
 
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
@@ -83,7 +82,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         return existingPackage;
     }
 
-    private static List<CkanTag> getCodelistTags() {
+    private static List<CkanTag> getTags() {
         List<CkanTag> tags = new ArrayList<>();
 
         tags.add(new CkanTag(CODELIST_TAG));
