@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.dataset.mappers.ConceptSchemeAvro2CkanPackageMapper;
+import es.gobcan.istac.edatos.publisher.core.mappers.ConceptSchemeAvro2CkanPackageMapper;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;

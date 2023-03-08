@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.dataset.mappers.CodelistAvro2CkanPackageMapper;
+import es.gobcan.istac.edatos.publisher.core.mappers.CodelistAvro2CkanPackageMapper;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
-import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Service
@@ -26,13 +25,10 @@ public class CodelistServiceImpl implements CodelistService {
     @Autowired
     private ExternalCategoryService externalCategoryService;
 
-    @Autowired
-    ExternalOperationService externalOperationService;
-
     @Override
     public CkanPackage retrieveNewCkanPackage(CodelistAvro codelist) {
         try {
-            return CodelistAvro2CkanPackageMapper.toNewCkanPackage(codelist, metadataConfigurationService, externalCategoryService, externalOperationService);
+            return CodelistAvro2CkanPackageMapper.toNewCkanPackage(codelist, metadataConfigurationService, externalCategoryService);
         } catch (Exception e) {
             log.debug("Error in new codelist  version publication into ckan: {}", e);
         }
@@ -42,7 +38,7 @@ public class CodelistServiceImpl implements CodelistService {
     @Override
     public CkanPackage retrieveUpdateCkanPackage(CodelistAvro codelist, String id) {
         try {
-            return CodelistAvro2CkanPackageMapper.toExistingCkanPackage(codelist, metadataConfigurationService, externalCategoryService, externalOperationService, id);
+            return CodelistAvro2CkanPackageMapper.toExistingCkanPackage(codelist, metadataConfigurationService, externalCategoryService, id);
         } catch (Exception e) {
             log.debug("Error in existing codelist publication into ckan: {}", e);
         }

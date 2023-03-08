@@ -6,8 +6,11 @@ import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
+import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 
 import es.gobcan.istac.edatos.publisher.core.domain.ExternalCkanItemEntity;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
@@ -72,26 +75,18 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
         return externalCkanItem;
     }
 
-    /*
-     * public ExternalCkanItemEntity toExternalCkanItemEntity(IndicatorVersionAvro indicatorVersion) {
-     * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
-     * externalCkanItem.setCkanState();
-     * externalCkanItem.setKafkaMessage();
-     * externalCkanItem.setCode(indicatorVersion.getCode());
-     * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(indicatorVersion.getTitle()));
-     * externalCkanItem.setType(TypeExternalArtefactsEnum.INDICATOR);
-     * externalCkanItem.setUrn();
-     * return externalCkanItem;
-     * }
-     * public ExternalCkanItemEntity toExternalCkanItemEntity(OrganisationSchemeAvro organisationScheme) {
-     * ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
-     * externalCkanItem.setCkanState();
-     * externalCkanItem.setKafkaMessage();
-     * externalCkanItem.setCode();
-     * externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(organisationScheme.getName()));
-     * externalCkanItem.setType(TypeExternalArtefactsEnum.ORGANISATION_SCHEME);
-     * externalCkanItem.setUrn(organisationScheme.getUrn());
-     * return externalCkanItem;
-     * }
-     */
+    public ExternalCkanItemEntity toExternalCkanItemEntity(OrganisationSchemeAvro organisationScheme, CkanState state) {
+        ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
+        Gson gson = new Gson();
+        String kafkaMessage = gson.toJson(organisationScheme);
+
+        String[] params = UrnUtils.splitUrnItem(organisationScheme.getUrn());
+        externalCkanItem.setCkanState(state);
+        externalCkanItem.setKafkaMessage(kafkaMessage);
+        externalCkanItem.setCode(params[1]);
+        externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(organisationScheme.getName()));
+        externalCkanItem.setType(TypeExternalArtefactsEnum.valueOf(organisationScheme.getOrganisationSchemeType().name()));
+        externalCkanItem.setUrn(organisationScheme.getUrn());
+        return externalCkanItem;
+    }
 }

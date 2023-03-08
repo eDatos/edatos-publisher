@@ -1,4 +1,4 @@
-package es.gobcan.istac.edatos.publisher.core.dataset.mappers;
+package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,8 +9,6 @@ import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -49,7 +47,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setVersion(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getVersionLogic());
 
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
-        newPackage.setOwner_org(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getCode().toLowerCase());
+        newPackage.setOwner_org(getDefaultOrganisation(metadataConfigurationService));
         newPackage.setResources(new ArrayList<>());
         newPackage.getResources().addAll(createResourcesFromDatasetVersion(datasetVersion, metadataConfigurationService, newPackage.getName()));
         newPackage.setTags(new ArrayList<>());
@@ -124,14 +122,13 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
             ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
 
         Set<String> eniThemes = new HashSet<>();
-        Pageable pageable = (new PageRequest(0, 100)).first();
         String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
 
         Operation operation = externalOperationService.retrieveStatisticalOperationById(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
                 .getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().getStatisticalOperation().getCode());
 
         // get eniScheme from subjectArea field of statistical operation
-        String eniScheme = addTheme(externalCategoryService, eniUrlBase, pageable, operation.getSubjectArea().getUrn());
+        String eniScheme = addTheme(externalCategoryService, eniUrlBase, operation.getSubjectArea().getUrn());
         if (eniScheme != null) {
             eniThemes.add(eniScheme);
         }
@@ -139,7 +136,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         // get eniScheme from secondary subject area field of statistical operation. This field is optional
         if (operation.getSecondarySubjectAreas() != null && !operation.getSecondarySubjectAreas().getSecondarySubjectAreas().isEmpty()) {
             for (ResourceInternal category : operation.getSecondarySubjectAreas().getSecondarySubjectAreas()) {
-                eniScheme = addTheme(externalCategoryService, eniUrlBase, pageable, category.getUrn());
+                eniScheme = addTheme(externalCategoryService, eniUrlBase, category.getUrn());
                 if (eniScheme != null) {
                     eniThemes.add(eniScheme);
                 }

@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.dataset.mappers.CategorySchemeAvro2CkanPackageMapper;
+import es.gobcan.istac.edatos.publisher.core.mappers.CategorySchemeAvro2CkanPackageMapper;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
-import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Service
@@ -26,13 +25,10 @@ public class CategorySchemeServiceImpl implements CategorySchemeService {
     @Autowired
     private ExternalCategoryService externalCategoryService;
 
-    @Autowired
-    ExternalOperationService externalOperationService;
-
     @Override
     public CkanPackage retrieveNewCkanPackage(CategorySchemeAvro categoryScheme) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.toNewCkanPackage(categoryScheme, metadataConfigurationService, externalCategoryService, externalOperationService);
+            return CategorySchemeAvro2CkanPackageMapper.toNewCkanPackage(categoryScheme, metadataConfigurationService, externalCategoryService);
         } catch (Exception e) {
             log.debug("Error in new category scheme publication into ckan: {}", e);
         }
@@ -42,7 +38,7 @@ public class CategorySchemeServiceImpl implements CategorySchemeService {
     @Override
     public CkanPackage retrieveUpdateCkanPackage(CategorySchemeAvro categoryScheme, String id) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.toExistingCkanPackage(categoryScheme, metadataConfigurationService, externalCategoryService, externalOperationService, id);
+            return CategorySchemeAvro2CkanPackageMapper.toExistingCkanPackage(categoryScheme, metadataConfigurationService, externalCategoryService, id);
         } catch (Exception e) {
             log.debug("Error in existing category scheme publication into ckan: {}", e);
         }

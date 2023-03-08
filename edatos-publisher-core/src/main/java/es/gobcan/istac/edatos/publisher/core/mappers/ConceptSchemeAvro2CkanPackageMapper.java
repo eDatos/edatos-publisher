@@ -1,4 +1,4 @@
-package es.gobcan.istac.edatos.publisher.core.dataset.mappers;
+package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +38,16 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setName(getCkanPackageName(conceptScheme));
         newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings()));
         newPackage.setPrivates(false);
-        newPackage.setMaintainer(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getMaintainer().getTitle().getLocalisedStrings()));
+        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getMaintainer().getTitle().getLocalisedStrings());
+        newPackage.setAuthor(maintainer);
+        newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
         newPackage.setNotes(getConceptSchemeDescription(conceptScheme));
 
         newPackage.setVersion(version);
 
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
-        newPackage.setOwner_org(conceptScheme.getMaintainer().getCode().toLowerCase());
+        newPackage.setOwner_org(getDefaultOrganisation(metadataConfigurationService));
         newPackage.setResources(createResources(conceptScheme, metadataConfigurationService, newPackage.getName()));
         newPackage.setTags(getTags());
 
@@ -55,7 +57,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setGroups(new ArrayList<>());
 
         // extra fields
-        newPackage.setExtras(getCodelistExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, newPackage.getName()));
+        newPackage.setExtras(getConceptSchemeExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, newPackage.getName()));
 
         return newPackage;
     }
@@ -77,7 +79,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         existingPackage.setVersion(version);
 
         // extra fields
-        existingPackage.setExtras(getCodelistExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, getCkanPackageName(conceptScheme)));
+        existingPackage.setExtras(getConceptSchemeExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, getCkanPackageName(conceptScheme)));
 
         return existingPackage;
     }
@@ -103,11 +105,10 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return updateResources(conceptScheme.getUrn(), getResourceUrlBase(metadataConfigurationService), packageId, existingPackage.getResources());
     }
 
-    private static List<CkanExtra> getCodelistExtraFields(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
+    private static List<CkanExtra> getConceptSchemeExtraFields(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
             ExternalOperationService externalOperationService, String packageName) {
         List<CkanExtra> extraFields = getExtraFields(URL_BASE_IDENTIFIER, metadataConfigurationService, packageName);
-        String genericEniUrl = getUrlEniTheme(metadataConfigurationService.retrieveCkanEniUrlBase(), metadataConfigurationService.retrieveCkanGenericEniTheme());
-        extraFields.add(new CkanExtra("theme", genericEniUrl));
+        extraFields.add(new CkanExtra("theme", getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase())));
 
         return extraFields;
     }

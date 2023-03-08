@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.core.dataset.mappers.ItemResourceMapper;
+import es.gobcan.istac.edatos.publisher.core.mappers.ItemResourceMapper;
 import es.gobcan.istac.edatos.publisher.core.service.EDatosApisLocator;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 

@@ -1,12 +1,12 @@
 package es.gobcan.istac.edatos.publisher.core.service.impl;
 
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.CategorySchemes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.core.dataset.mappers.ItemResourceMapper;
+import es.gobcan.istac.edatos.publisher.core.mappers.ItemResourceMapper;
 import es.gobcan.istac.edatos.publisher.core.service.EDatosApisLocator;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 
@@ -26,11 +26,19 @@ public class ExternalCategoryServiceImpl implements ExternalCategoryService {
     }
 
     @Override
-    public Category getCategory(Pageable pageable, String agency, String resourceId, String version, String categoryId) {
+    public Category getCategory(String agency, String resourceId, String version, String categoryId) {
         LOG.info("Making request to Structural Resources Manager to GET a category. agency: {}, resourceId: {}, version: {}, categoryId: {}",
                 agency + "/" + resourceId + "/" + version + "/" + categoryId);
 
         return eDatosApisLocator.srmExternal().retrieveCategory(agency, resourceId, version, categoryId);
+
+    }
+
+    @Override
+    public CategorySchemes getCategoryByQuery(String agency, String resourceId, String query) {
+        LOG.info("Making request to Structural Resources Manager to GET a category. agency: {}, resourceId: {}, query: {}", agency + "/" + resourceId + "/" + query);
+
+        return eDatosApisLocator.srmExternal().findCategorySchemes(agency, resourceId, query, null, null, null);
 
     }
 

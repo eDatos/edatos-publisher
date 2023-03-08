@@ -41,7 +41,12 @@ public class MetadataConfigurationServiceImpl extends ConfigurationServiceImpl i
     }
 
     @Override
-    public String retrieveCkanGenericEniTheme() throws EDatosException {
-        return retrieveProperty(DataConfigurationConstants.CKAN_GENERIC_ENI_THEME);
+    public String retrieveCkanDefaultUrnCategory() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_URN_CATEGORY);
+    }
+
+    @Override
+    public String retrieveCkanDefaultOrganisation() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_ORGANISATION);
     }
 }

@@ -6,10 +6,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
-import org.siemac.metamac.srm.core.stream.message.DataStructureDefinitionAvro;
 import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.ProcStatusEnumAvro;
-import org.siemac.metamac.statistical.operations.core.stream.messages.OperationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +21,8 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.codelist.service.CodelistService;
 import es.gobcan.istac.edatos.publisher.core.concept.service.ConceptSchemeService;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
-import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetServiceImpl;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
+import es.gobcan.istac.edatos.publisher.core.organisation.service.OrganisationSchemeService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
 import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
@@ -32,7 +30,7 @@ import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
 @Service
 public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
-    private final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
 
     private final CkanSenderService ckanSenderService;
     private final ExternalCkanItemMapper externalCkanItemMapper;
@@ -41,14 +39,17 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     private final CodelistService codelistService;
     private final ConceptSchemeService conceptSchemeService;
     private final CategorySchemeService categorySchemeService;
+    private final OrganisationSchemeService organisationSchemeService;
 
     public KafkaConsumerServiceImpl(CkanSenderService ckanSenderService, DatasetService datasetService, CodelistService codelistService, ConceptSchemeService conceptSchemeService,
-            CategorySchemeService categorySchemeService, ExternalCkanItemService externalCkanItemService, ExternalCkanItemMapper externalCkanItemMapper) {
+            CategorySchemeService categorySchemeService, OrganisationSchemeService organisationSchemeService, ExternalCkanItemService externalCkanItemService,
+            ExternalCkanItemMapper externalCkanItemMapper) {
         this.ckanSenderService = ckanSenderService;
         this.datasetService = datasetService;
         this.codelistService = codelistService;
         this.conceptSchemeService = conceptSchemeService;
         this.categorySchemeService = categorySchemeService;
+        this.organisationSchemeService = organisationSchemeService;
         this.externalCkanItemService = externalCkanItemService;
         this.externalCkanItemMapper = externalCkanItemMapper;
     }
@@ -104,19 +105,17 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    // @KafkaListener(topics = "#{kafkaProperties.getOperationPublicationTopic()}")
-    public void processOperationPublicationEvent(ConsumerRecord<String, OperationAvro> consumerRecord) {
-        OperationAvro operation = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
-    }
-
-    // @KafkaListener(topics = "#{kafkaProperties.getDsdPublicationTopic()}")
-    public void processDsdPublicationEvent(ConsumerRecord<String, DataStructureDefinitionAvro> consumerRecord) {
-        DataStructureDefinitionAvro dataStructureDefinition = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
-    }
-
-    // @KafkaListener(topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
+    @KafkaListener(topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
-        OrganisationSchemeAvro organisationScheme = consumerRecord.value(); // TODO EDATOS-3460 PENDIENTE
+        OrganisationSchemeAvro organisationScheme = consumerRecord.value();
+        if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(organisationScheme.getProcStatus())) {
+            boolean isProcessed = processOrganisationSchemePublicationEvent(organisationScheme);
+            try {
+                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(organisationScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
+            } catch (Exception e) {
+                log.error("ERROR. organisation scheme metadata were not saved in externalCkanItem ", e);
+            }
+        }
     }
 
     public boolean processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
@@ -239,7 +238,38 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
                 }
                 return resultado;
             }
-
         }
-        re
+        return false;
+    }
+
+    public boolean processOrganisationSchemePublicationEvent(OrganisationSchemeAvro organisationScheme) {
+
+        String urn = organisationScheme.getUrn();
+        CkanPackage ckanPackage = null;
+        String packageName = organisationSchemeService.retrieveCkanPackageName(organisationScheme);
+        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
+
+        if (actualPackage == null) {
+            return false;
+        }
+
+        if (actualPackage.getId() != null) {
+            ckanPackage = organisationSchemeService.retrieveUpdateCkanPackage(organisationScheme, actualPackage.getId());
+        } else {
+            ckanPackage = organisationSchemeService.retrieveNewCkanPackage(organisationScheme);
+        }
+
+        if (ckanPackage != null) {
+            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
+            if (Boolean.TRUE.equals(resultado)) {
+                if (actualPackage.getId() != null) {
+                    List<CkanResource> resources = organisationSchemeService.retrieveUpdatedResources(organisationScheme, actualPackage, packageName);
+                    ckanSenderService.updateResources(resources, urn);
+                }
+                return resultado;
+            }
+        }
+        return false;
+    }
+
 }

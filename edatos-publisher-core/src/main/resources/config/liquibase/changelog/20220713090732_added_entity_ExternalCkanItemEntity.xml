@@ -51,10 +51,6 @@
     </changeSet>
 
     <changeSet author="arte" id="1657703257641-4">
-        <addUniqueConstraint columnNames="urn" constraintName="UC_TB_EXTERNAL_ITEMSURN_COL" tableName="tb_external_items"/>
-    </changeSet>
-
-    <changeSet author="arte" id="1657703257641-5">
         <addForeignKeyConstraint baseColumnNames="external_item_fk" baseTableName="tb_ckan_external_items" constraintName="fk_tb_ckan_external_items_tb_external_items_id" deferrable="false" initiallyDeferred="false"
                                  referencedColumnNames="id" referencedTableName="tb_external_items" validate="true"/>
     </changeSet>

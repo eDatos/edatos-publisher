@@ -16,5 +16,6 @@ public final class DataConfigurationConstants {
     public static final String CKAN_PUBLISHER_URI = "metamac.edatos_publisher.ckan.publisher_uri";
     public static final String CKAN_SPATIAL_URI = "metamac.edatos_publisher.ckan.spatial.uri";
     public static final String CKAN_ENI_URL_BASE = "metamac.edatos_publisher.ckan.eni.url_base";
-    public static final String CKAN_GENERIC_ENI_THEME = "metamac.edatos_publisher.ckan.generic.eni.theme";
+    public static final String CKAN_DEFAULT_URN_CATEGORY = "metamac.edatos_publisher.ckan.default.urn.category";
+    public static final String CKAN_DEFAULT_ORGANISATION = "metamac.edatos_publisher.ckan.default.organisation";
 }

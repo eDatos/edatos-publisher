@@ -1,13 +1,13 @@
-package es.gobcan.istac.edatos.publisher.core.dataset.mappers;
+package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
-import org.springframework.data.domain.Pageable;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -81,12 +81,37 @@ public abstract class CkanPackageMapper {
         return url;
     }
 
-    public static String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, Pageable pageable, String urnCategory) {
+    public static String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String urnCategory) {
         String[] params = UrnUtils.splitUrnItem(urnCategory);
 
-        Category category = externalCategoryService.getCategory(pageable, params[0], params[1], params[2], params[3]);
+        return addTheme(externalCategoryService, eniUrlBase, params[0], params[1], params[2], params[3]);
+    }
+
+    public static String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
+        Category category = externalCategoryService.getCategory(agency, resourceId, version, categoryId);
         if (category != null && category.getEniSchemeType() != null) {
             return getUrlEniTheme(eniUrlBase, category.getEniSchemeType().getId());
+        }
+        return null;
+    }
+
+    public static String getDefaultTheme(ExternalCategoryService externalCategoryService, MetadataConfigurationService metadataConfigurationService, String eniUrlBase) {
+        String[] urnCategoryWithoutVersion = UrnUtils.splitUrnItem(metadataConfigurationService.retrieveCkanDefaultUrnCategory());
+
+        String urnLastVersionDefaultCategoryScheme = getLastVersionDefaultUrnCategory(externalCategoryService, urnCategoryWithoutVersion[0], urnCategoryWithoutVersion[1]);
+        if (urnLastVersionDefaultCategoryScheme != null) {
+            String[] params = UrnUtils.splitUrnItem(urnLastVersionDefaultCategoryScheme);
+            return addTheme(externalCategoryService, eniUrlBase, params[0], params[1], params[2], urnCategoryWithoutVersion[3]);
+        }
+
+        return null;
+    }
+
+    private static String getLastVersionDefaultUrnCategory(ExternalCategoryService externalCategoryService, String agency, String resourceId) {
+        String query = "LATEST EQ 'true'";
+        CategorySchemes categoryScheme = externalCategoryService.getCategoryByQuery(agency, resourceId, query);
+        if (categoryScheme != null && !categoryScheme.getCategorySchemes().isEmpty()) {
+            return categoryScheme.getCategorySchemes().get(0).getUrn();
         }
         return null;
     }
@@ -130,6 +155,10 @@ public abstract class CkanPackageMapper {
         return resources;
     }
 
+    protected static String getDefaultOrganisation(MetadataConfigurationService metadataConfigurationService) {
+        return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
+    }
+
     private static CkanResource updateResource(String resourceId, String packageId, String urlBaseResource, String format, String name) {
         CkanResource resource = new CkanResource();
 
@@ -156,4 +185,5 @@ public abstract class CkanPackageMapper {
     private static String getNameResource(String nameResourceBase, String format) {
         return nameResourceBase + " (" + format + ")";
     }
+
 }

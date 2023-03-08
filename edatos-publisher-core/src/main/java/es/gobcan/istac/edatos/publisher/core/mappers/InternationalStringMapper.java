@@ -1,4 +1,4 @@
-package es.gobcan.istac.edatos.publisher.core.dataset.mappers;
+package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
