@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
+import org.siemac.metamac.srm.core.stream.message.ConceptSchemeTypeEnumAvro;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -57,7 +58,8 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setGroups(new ArrayList<>());
 
         // extra fields
-        newPackage.setExtras(getConceptSchemeExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, newPackage.getName()));
+        newPackage.setExtras(getConceptSchemeExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(), newPackage.getName(),
+                conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
 
         return newPackage;
     }
@@ -79,7 +81,8 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         existingPackage.setVersion(version);
 
         // extra fields
-        existingPackage.setExtras(getConceptSchemeExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, getCkanPackageName(conceptScheme)));
+        existingPackage.setExtras(getConceptSchemeExtraFields(metadataConfigurationService, externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(),
+                getCkanPackageName(conceptScheme), conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
 
         return existingPackage;
     }
@@ -106,11 +109,21 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private static List<CkanExtra> getConceptSchemeExtraFields(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
-            ExternalOperationService externalOperationService, String packageName) {
+            ExternalOperationService externalOperationService, ConceptSchemeTypeEnumAvro conceptSchemeType, String packageName, String stadisticalOperationCode) {
+
         List<CkanExtra> extraFields = getExtraFields(URL_BASE_IDENTIFIER, metadataConfigurationService, packageName);
-        extraFields.add(new CkanExtra("theme", getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase())));
+        extraFields.add(new CkanExtra("theme", getTheme(stadisticalOperationCode, conceptSchemeType, metadataConfigurationService, externalCategoryService, externalOperationService)));
 
         return extraFields;
+    }
+
+    private static String getTheme(String stadisticalOperationCode, ConceptSchemeTypeEnumAvro conceptSchemeType, MetadataConfigurationService metadataConfigurationService,
+            ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+        if (ConceptSchemeTypeEnumAvro.OPERATION.equals(conceptSchemeType)) {
+            return getThemeFromStatisticalOperation(stadisticalOperationCode, metadataConfigurationService, externalCategoryService, externalOperationService);
+        } else {
+            return getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
+        }
     }
 
     private static String getConceptSchemeDescription(ConceptSchemeAvro conceptScheme) {

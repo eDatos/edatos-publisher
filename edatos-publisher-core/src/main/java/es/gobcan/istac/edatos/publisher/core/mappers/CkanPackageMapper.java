@@ -1,9 +1,13 @@
 package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
@@ -13,6 +17,7 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
+import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
@@ -104,6 +109,36 @@ public abstract class CkanPackageMapper {
             return addTheme(externalCategoryService, eniUrlBase, params[0], params[1], params[2], urnCategoryWithoutVersion[3]);
         }
 
+        return null;
+    }
+
+    protected static String getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService,
+            ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+
+        Set<String> eniThemes = new HashSet<>();
+        String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
+
+        Operation operation = externalOperationService.retrieveStatisticalOperationById(stadisticalOperationCode);
+
+        // get eniScheme from subjectArea field of statistical operation
+        String eniScheme = addTheme(externalCategoryService, eniUrlBase, operation.getSubjectArea().getUrn());
+        if (eniScheme != null) {
+            eniThemes.add(eniScheme);
+        }
+
+        // get eniScheme from secondary subject area field of statistical operation. This field is optional
+        if (operation.getSecondarySubjectAreas() != null && !operation.getSecondarySubjectAreas().getSecondarySubjectAreas().isEmpty()) {
+            for (ResourceInternal category : operation.getSecondarySubjectAreas().getSecondarySubjectAreas()) {
+                eniScheme = addTheme(externalCategoryService, eniUrlBase, category.getUrn());
+                if (eniScheme != null) {
+                    eniThemes.add(eniScheme);
+                }
+            }
+        }
+
+        if (!eniThemes.isEmpty()) {
+            return String.join(",", eniThemes);
+        }
         return null;
     }
 
