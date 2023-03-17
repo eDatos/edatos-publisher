@@ -109,7 +109,7 @@ environment:
     edatos:
         configuration:
             db:
-                driverName: com.zaxxer.hikari.HikariDataSource
-                url: jdbc:postgresql://localhost:5432/metadata
-                username: edatos_external_users
-                password: jPpA0b4wVDFIi4A7LJpIyK+8kCZldP34iRzL8AXUIgU=
+                driverName: org.postgresql.Driver
+                url: jdbc:postgresql://artejenkins.arte.internal:5432/ARTE
+                username: istac_metamac_common_metadata_ci
+                password: oYJYi+yfdqQtcsiboNlFmm2Eqm5GBYqBTJ+QGDE49BDlvcTK1YyQJBCHxBHiqYfN
