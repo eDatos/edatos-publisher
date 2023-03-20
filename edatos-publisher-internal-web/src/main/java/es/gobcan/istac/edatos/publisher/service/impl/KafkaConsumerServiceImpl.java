@@ -1,7 +1,5 @@
 package es.gobcan.istac.edatos.publisher.service.impl;
 
-import java.util.List;
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
@@ -14,15 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
-import es.gobcan.istac.edatos.publisher.core.category.service.CategorySchemeService;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.codelist.service.CodelistService;
-import es.gobcan.istac.edatos.publisher.core.concept.service.ConceptSchemeService;
-import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
-import es.gobcan.istac.edatos.publisher.core.organisation.service.OrganisationSchemeService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
 import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
@@ -32,24 +22,12 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     private final Logger log = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
 
-    private final CkanSenderService ckanSenderService;
     private final ExternalCkanItemMapper externalCkanItemMapper;
     private final ExternalCkanItemService externalCkanItemService;
-    private final DatasetService datasetService;
-    private final CodelistService codelistService;
-    private final ConceptSchemeService conceptSchemeService;
-    private final CategorySchemeService categorySchemeService;
-    private final OrganisationSchemeService organisationSchemeService;
+    private final ConsumerProcessFacade consumerProcessFacade;
 
-    public KafkaConsumerServiceImpl(CkanSenderService ckanSenderService, DatasetService datasetService, CodelistService codelistService, ConceptSchemeService conceptSchemeService,
-            CategorySchemeService categorySchemeService, OrganisationSchemeService organisationSchemeService, ExternalCkanItemService externalCkanItemService,
-            ExternalCkanItemMapper externalCkanItemMapper) {
-        this.ckanSenderService = ckanSenderService;
-        this.datasetService = datasetService;
-        this.codelistService = codelistService;
-        this.conceptSchemeService = conceptSchemeService;
-        this.categorySchemeService = categorySchemeService;
-        this.organisationSchemeService = organisationSchemeService;
+    public KafkaConsumerServiceImpl(ConsumerProcessFacade consumerProcessFacade, ExternalCkanItemService externalCkanItemService, ExternalCkanItemMapper externalCkanItemMapper) {
+        this.consumerProcessFacade = consumerProcessFacade;
         this.externalCkanItemService = externalCkanItemService;
         this.externalCkanItemMapper = externalCkanItemMapper;
     }
@@ -57,7 +35,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
-        boolean isProcessed = processDatasetPublicationEvent(datasetVersion);
+        boolean isProcessed = consumerProcessFacade.processDatasetPublicationMessage(datasetVersion);
         try {
             externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion, isProcessed ? CkanState.SENT : CkanState.FAILED));
         } catch (Exception e) {
@@ -70,7 +48,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord) {
         CodelistAvro codelist = consumerRecord.value();
         if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(codelist.getProcStatus())) {
-            boolean isProcessed = processCodelistPublicationEvent(codelist);
+            boolean isProcessed = consumerProcessFacade.processCodelistPublicationMessage(codelist);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(codelist, isProcessed ? CkanState.SENT : CkanState.FAILED));
             } catch (Exception e) {
@@ -83,7 +61,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord) {
         ConceptSchemeAvro conceptScheme = consumerRecord.value();
         if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(conceptScheme.getProcStatus())) {
-            boolean isProcessed = processConceptSchemePublicationEvent(conceptScheme);
+            boolean isProcessed = consumerProcessFacade.processConceptSchemePublicationMessage(conceptScheme);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(conceptScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
             } catch (Exception e) {
@@ -96,7 +74,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
         CategorySchemeAvro categoryScheme = consumerRecord.value();
         if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(categoryScheme.getProcStatus())) {
-            boolean isProcessed = processCategorySchemePublicationEvent(categoryScheme);
+            boolean isProcessed = consumerProcessFacade.processCategorySchemePublicationMessage(categoryScheme);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
             } catch (Exception e) {
@@ -109,167 +87,13 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
         OrganisationSchemeAvro organisationScheme = consumerRecord.value();
         if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(organisationScheme.getProcStatus())) {
-            boolean isProcessed = processOrganisationSchemePublicationEvent(organisationScheme);
+            boolean isProcessed = consumerProcessFacade.processOrganisationSchemePublicationMessage(organisationScheme);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(organisationScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
             } catch (Exception e) {
                 log.error("ERROR. organisation scheme metadata were not saved in externalCkanItem ", e);
             }
         }
-    }
-
-    public boolean processDatasetPublicationEvent(DatasetVersionAvro datasetVersion) {
-
-        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
-                .getIdentifiableStatisticalResource().getUrn();
-        CkanPackage ckanPackage = null;
-        String packageName = datasetService.retrieveCkanPackageName(datasetVersion);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
-
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = datasetService.retrieveUpdateCkanPackage(datasetVersion, actualPackage.getId());
-        } else {
-            ckanPackage = datasetService.retrieveNewCkanPackage(datasetVersion);
-        }
-
-        if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
-                }
-                return resultado;
-            }
-
-        }
-        return false;
-    }
-
-    public boolean processCodelistPublicationEvent(CodelistAvro codelist) {
-
-        String urn = codelist.getUrn();
-        CkanPackage ckanPackage = null;
-        String packageName = codelistService.retrieveCkanPackageName(codelist);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
-
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = codelistService.retrieveUpdateCkanPackage(codelist, actualPackage.getId());
-        } else {
-            ckanPackage = codelistService.retrieveNewCkanPackage(codelist);
-        }
-
-        if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = codelistService.retrieveUpdatedResources(codelist, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
-                }
-                return resultado;
-            }
-
-        }
-        return false;
-    }
-
-    public boolean processConceptSchemePublicationEvent(ConceptSchemeAvro conceptScheme) {
-
-        String urn = conceptScheme.getUrn();
-        CkanPackage ckanPackage = null;
-        String packageName = conceptSchemeService.retrieveCkanPackageName(conceptScheme);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
-
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = conceptSchemeService.retrieveUpdateCkanPackage(conceptScheme, actualPackage.getId());
-        } else {
-            ckanPackage = conceptSchemeService.retrieveNewCkanPackage(conceptScheme);
-        }
-
-        if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = conceptSchemeService.retrieveUpdatedResources(conceptScheme, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
-                }
-                return resultado;
-            }
-
-        }
-        return false;
-    }
-
-    public boolean processCategorySchemePublicationEvent(CategorySchemeAvro categoryScheme) {
-
-        String urn = categoryScheme.getUrn();
-        CkanPackage ckanPackage = null;
-        String packageName = categorySchemeService.retrieveCkanPackageName(categoryScheme);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
-
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = categorySchemeService.retrieveUpdateCkanPackage(categoryScheme, actualPackage.getId());
-        } else {
-            ckanPackage = categorySchemeService.retrieveNewCkanPackage(categoryScheme);
-        }
-
-        if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = categorySchemeService.retrieveUpdatedResources(categoryScheme, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
-                }
-                return resultado;
-            }
-        }
-        return false;
-    }
-
-    public boolean processOrganisationSchemePublicationEvent(OrganisationSchemeAvro organisationScheme) {
-
-        String urn = organisationScheme.getUrn();
-        CkanPackage ckanPackage = null;
-        String packageName = organisationSchemeService.retrieveCkanPackageName(organisationScheme);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
-
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = organisationSchemeService.retrieveUpdateCkanPackage(organisationScheme, actualPackage.getId());
-        } else {
-            ckanPackage = organisationSchemeService.retrieveNewCkanPackage(organisationScheme);
-        }
-
-        if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = organisationSchemeService.retrieveUpdatedResources(organisationScheme, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
-                }
-                return resultado;
-            }
-        }
-        return false;
     }
 
 }
