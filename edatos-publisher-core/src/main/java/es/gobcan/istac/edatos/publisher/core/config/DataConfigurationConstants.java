@@ -18,4 +18,5 @@ public final class DataConfigurationConstants {
     public static final String CKAN_ENI_URL_BASE = "metamac.edatos_publisher.ckan.eni.url_base";
     public static final String CKAN_DEFAULT_URN_CATEGORY = "metamac.edatos_publisher.ckan.default.urn.category";
     public static final String CKAN_DEFAULT_ORGANISATION = "metamac.edatos_publisher.ckan.default.organisation";
+    public static final String CKAN_DEFAULT_LANGUAGE = "metamac.edatos_publisher.ckan.default.language";
 }

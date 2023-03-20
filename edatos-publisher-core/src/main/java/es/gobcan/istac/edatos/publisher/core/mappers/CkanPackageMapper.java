@@ -25,17 +25,14 @@ import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 public abstract class CkanPackageMapper {
 
     protected CkanPackageMapper() {
-
     }
-
-    private static final String DEFAULT_LANGUAGE = "es";
 
     protected static List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
         List<CkanExtra> extraFields = new ArrayList<>();
 
         extraFields.add(new CkanExtra("identifier", getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName)));
 
-        extraFields.add(new CkanExtra("language", DEFAULT_LANGUAGE));
+        extraFields.add(new CkanExtra("language", metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         extraFields.add(new CkanExtra("publisher_uri", metadataConfigurationService.retrieveCkanPublisherUri()));
 
@@ -48,32 +45,32 @@ public abstract class CkanPackageMapper {
         return CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
     }
 
-    protected static String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description) {
+    protected static String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
-            return description.stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+            return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
         }
         return null;
     }
 
-    protected static String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description) {
+    protected static String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
-            return description.stream().filter(locString -> DEFAULT_LANGUAGE.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
+            return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
         }
         return null;
     }
 
-    protected static String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString) {
+    protected static String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
 
-        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(DEFAULT_LANGUAGE))) {
-            return localisedString.stream().filter(x -> x.getLocale().equals(DEFAULT_LANGUAGE)).findFirst().get().getLabel();
+        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(defaultLanguage))) {
+            return localisedString.stream().filter(x -> x.getLocale().equals(defaultLanguage)).findFirst().get().getLabel();
         }
         return null;
     }
 
-    protected static String getDefaultLocalisedStringFromLocalisedStringAvro(List<LocalisedStringAvro> localisedString) {
+    protected static String getDefaultLocalisedStringFromLocalisedStringAvro(List<LocalisedStringAvro> localisedString, String defaultLanguage) {
 
-        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(DEFAULT_LANGUAGE))) {
-            return localisedString.stream().filter(x -> x.getLocale().equals(DEFAULT_LANGUAGE)).findFirst().get().getLabel();
+        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(defaultLanguage))) {
+            return localisedString.stream().filter(x -> x.getLocale().equals(defaultLanguage)).findFirst().get().getLabel();
         }
         return null;
     }

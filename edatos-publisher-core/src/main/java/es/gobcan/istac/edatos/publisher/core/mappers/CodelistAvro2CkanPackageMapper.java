@@ -34,13 +34,13 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName(codelist));
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings()));
+        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
         newPackage.setPrivates(false);
-        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings());
+        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage());
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getCodelistDescription(codelist));
+        newPackage.setNotes(getCodelistDescription(codelist, metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         newPackage.setVersion(version);
 
@@ -71,7 +71,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getCodelistDescription(codelist));
+        existingPackage.setNotes(getCodelistDescription(codelist, metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         existingPackage.setVersion(version);
 
@@ -94,8 +94,8 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(codelist.getUrn());
 
-        return createResources(getCodelistDescription(codelist), codelist.getUrn(), getResourceUrlBase(metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId,
-                CodelistResourcesFormat.getEnumList());
+        return createResources(getCodelistDescription(codelist, metadataConfigurationService.retrieveCkanDefaultLanguage()), codelist.getUrn(), getResourceUrlBase(metadataConfigurationService),
+                getNameResourceBase(params[0], params[1]), packageId, CodelistResourcesFormat.getEnumList());
     }
 
     public static List<CkanResource> updateResources(CodelistAvro codelist, MetadataConfigurationService metadataConfigurationService, String packageId, CkanPackage existingPackage) {
@@ -110,9 +110,9 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         return extraFields;
     }
 
-    private static String getCodelistDescription(CodelistAvro codelist) {
+    private static String getCodelistDescription(CodelistAvro codelist, String defaultLanguage) {
         if (codelist.getDescription() != null) {
-            return getDescriptionFromLocalisedStringAvro(codelist.getDescription().getLocalisedStrings());
+            return getDescriptionFromLocalisedStringAvro(codelist.getDescription().getLocalisedStrings(), defaultLanguage);
         }
         return null;
     }

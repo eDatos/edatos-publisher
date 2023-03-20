@@ -39,14 +39,14 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         String version = params[2];
 
         newPackage.setName(getCkanPackageName(organisationScheme));
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getName().getLocalisedStrings()));
+        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getName().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
         newPackage.setPrivates(false);
         String maintainer = getMaintainer(organisationScheme, metadataConfigurationService);
 
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getOrganisationSchemeDescription(organisationScheme));
+        newPackage.setNotes(getOrganisationSchemeDescription(organisationScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         newPackage.setVersion(version);
 
@@ -68,7 +68,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
     private static String getMaintainer(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService) {
         if (organisationScheme.getMaintainer() != null) {
-            return getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getMaintainer().getTitle().getLocalisedStrings());
+            return getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getMaintainer().getTitle().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage());
         } else {
             return getDefaultOrganisation(metadataConfigurationService);
         }
@@ -86,7 +86,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getOrganisationSchemeDescription(organisationScheme));
+        existingPackage.setNotes(getOrganisationSchemeDescription(organisationScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         existingPackage.setVersion(version);
 
@@ -124,8 +124,8 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
         String[] params = UrnUtils.splitUrnItem(organisationScheme.getUrn());
 
-        return createResources(getOrganisationSchemeDescription(organisationScheme), organisationScheme.getUrn(), getResourceUrlBase(metadataConfigurationService),
-                getNameResourceBase(params[0], params[1]), packageId, CodelistResourcesFormat.getEnumList());
+        return createResources(getOrganisationSchemeDescription(organisationScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()), organisationScheme.getUrn(),
+                getResourceUrlBase(metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId, CodelistResourcesFormat.getEnumList());
     }
 
     public static List<CkanResource> updateResources(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService, String packageId,
@@ -141,9 +141,9 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         return extraFields;
     }
 
-    private static String getOrganisationSchemeDescription(OrganisationSchemeAvro organisationScheme) {
+    private static String getOrganisationSchemeDescription(OrganisationSchemeAvro organisationScheme, String defaultLanguage) {
         if (organisationScheme.getDescription() != null) {
-            return getDescriptionFromLocalisedStringAvro(organisationScheme.getDescription().getLocalisedStrings());
+            return getDescriptionFromLocalisedStringAvro(organisationScheme.getDescription().getLocalisedStrings(), defaultLanguage);
         }
         return null;
     }

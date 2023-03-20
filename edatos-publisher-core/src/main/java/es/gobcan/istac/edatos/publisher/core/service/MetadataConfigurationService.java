@@ -13,4 +13,5 @@ public interface MetadataConfigurationService extends ConfigurationService {
     String retrieveCkanEniUrlBase() throws EDatosException;
     String retrieveCkanDefaultUrnCategory() throws EDatosException;
     String retrieveCkanDefaultOrganisation() throws EDatosException;
+    String retrieveCkanDefaultLanguage() throws EDatosException;
 }
