@@ -10,8 +10,10 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CodelistResourcesFormat;
+import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
+import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.SrmResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
@@ -94,12 +96,16 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(codelist.getUrn());
 
-        return createResources(getCodelistDescription(codelist, metadataConfigurationService.retrieveCkanDefaultLanguage()), codelist.getUrn(), getResourceUrlBase(metadataConfigurationService),
-                getNameResourceBase(params[0], params[1]), packageId, CodelistResourcesFormat.getEnumList());
+        return createResources(getCodelistDescription(codelist, metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(codelist, metadataConfigurationService),
+                getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
     }
 
     public static List<CkanResource> updateResources(CodelistAvro codelist, MetadataConfigurationService metadataConfigurationService, String packageId, CkanPackage existingPackage) {
-        return updateResources(codelist.getUrn(), getResourceUrlBase(metadataConfigurationService), packageId, existingPackage.getResources());
+        return updateResources(getCkanUrlResource(codelist, metadataConfigurationService), packageId, existingPackage.getResources());
+    }
+
+    private static CkanUrlResource getCkanUrlResource(CodelistAvro codelist, MetadataConfigurationService metadataConfigurationService) {
+        return new CkanUrlResource(getResourceUrlBase(codelist.getUrn(), getResourceUrlBase(metadataConfigurationService)), Constants.URL_RESOURCES_CODELIST_CODES, null);
     }
 
     private static List<CkanExtra> getCodelistExtraFields(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService, String packageName) {

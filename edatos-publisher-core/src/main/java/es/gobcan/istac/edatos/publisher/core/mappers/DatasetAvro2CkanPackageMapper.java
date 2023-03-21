@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVers
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
@@ -92,7 +93,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
         String[] params = UrnUtils.splitUrnItem(urn);
-        return createResources(getDatasetDescription(datasetVersion, metadataConfigurationService.retrieveCkanDefaultLanguage()), urn, getResourceUrlBase(metadataConfigurationService),
+        return createResources(getDatasetDescription(datasetVersion, metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(urn, metadataConfigurationService),
                 getNameResourceBase(params[0], params[1]), packageId, DatasetResourcesFormat.getEnumList());
     }
 
@@ -100,7 +101,11 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
             CkanPackage existingDataset) {
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
-        return updateResources(urn, getResourceUrlBase(metadataConfigurationService), packageId, existingDataset.getResources());
+        return updateResources(getCkanUrlResource(urn, metadataConfigurationService), packageId, existingDataset.getResources());
+    }
+
+    private static CkanUrlResource getCkanUrlResource(String urn, MetadataConfigurationService metadataConfigurationService) {
+        return new CkanUrlResource(getResourceUrlBase(urn, getResourceUrlBase(metadataConfigurationService)), null, null);
     }
 
     private static List<CkanExtra> getDatasetExtraFields(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,

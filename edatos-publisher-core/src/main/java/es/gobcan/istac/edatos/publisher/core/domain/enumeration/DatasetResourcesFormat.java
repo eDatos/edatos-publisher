@@ -6,6 +6,8 @@ import java.util.stream.Stream;
 
 import javax.ws.rs.core.MediaType;
 
+import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
+
 public enum DatasetResourcesFormat {
     JSON, XML, JSONSTAT, TSV;
 
@@ -26,7 +28,7 @@ public enum DatasetResourcesFormat {
         } else if (format.equals(DatasetResourcesFormat.XML.name())) {
             return MediaType.APPLICATION_XML;
         } else if (format.equals(DatasetResourcesFormat.TSV.name())) {
-            return MediaType.TEXT_PLAIN;
+            return Constants.MIME_TYPE_TSV;
         } else {
             return null;
         }

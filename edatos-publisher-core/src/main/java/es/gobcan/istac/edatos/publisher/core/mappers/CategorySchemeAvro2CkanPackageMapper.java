@@ -10,8 +10,10 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CodelistResourcesFormat;
+import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
+import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.SrmResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
@@ -96,12 +98,16 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
 
-        return createResources(getConceptSchemeDescription(categoryScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()), categoryScheme.getUrn(),
-                getResourceUrlBase(metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId, CodelistResourcesFormat.getEnumList());
+        return createResources(getConceptSchemeDescription(categoryScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()),
+                getCkanUrlResource(categoryScheme, metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
     }
 
     public static List<CkanResource> updateResources(CategorySchemeAvro categoryScheme, MetadataConfigurationService metadataConfigurationService, String packageId, CkanPackage existingPackage) {
-        return updateResources(categoryScheme.getUrn(), getResourceUrlBase(metadataConfigurationService), packageId, existingPackage.getResources());
+        return updateResources(getCkanUrlResource(categoryScheme, metadataConfigurationService), packageId, existingPackage.getResources());
+    }
+
+    private static CkanUrlResource getCkanUrlResource(CategorySchemeAvro categoryScheme, MetadataConfigurationService metadataConfigurationService) {
+        return new CkanUrlResource(getResourceUrlBase(categoryScheme.getUrn(), getResourceUrlBase(metadataConfigurationService)), Constants.URL_RESOURCES_CATEGORIES, null);
     }
 
     private static List<CkanExtra> getCategorySchemeExtraFields(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService, String packageName) {

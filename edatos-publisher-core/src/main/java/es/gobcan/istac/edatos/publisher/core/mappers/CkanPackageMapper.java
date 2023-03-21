@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
@@ -15,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Internation
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
@@ -152,22 +154,20 @@ public abstract class CkanPackageMapper {
         return urlBase + "/" + eniId;
     }
 
-    protected static List<CkanResource> createResources(String description, String urn, String urlBaseIdentifier, String code, String packageId, List<String> formatValues) {
+    protected static List<CkanResource> createResources(String description, CkanUrlResource ckanUrlResource, String code, String packageId, List<String> formatValues) {
         List<CkanResource> resources = new ArrayList<>();
 
-        String urlBaseResource = getResourceUrlBase(urn, urlBaseIdentifier);
-
         for (String resourceFormat : formatValues) {
-            resources.add(createResource(packageId, description, resourceFormat, code, urlBaseResource));
+            resources.add(createResource(packageId, description, resourceFormat, code, ckanUrlResource));
         }
         return resources;
     }
 
-    private static CkanResource createResource(String packageId, String description, String resourceFormat, String nameResourceBase, String urlBaseResource) {
+    private static CkanResource createResource(String packageId, String description, String resourceFormat, String nameResourceBase, CkanUrlResource ckanUrlResource) {
         CkanResource resource = new CkanResource();
 
         resource.setPackage_id(packageId);
-        resource.setUrl(getUrlResource(urlBaseResource, resourceFormat));
+        resource.setUrl(getUrlResource(ckanUrlResource, resourceFormat));
         resource.setDescription(description);
         resource.setFormat((DatasetResourcesFormat.getFormat(resourceFormat)));
         resource.setName(getNameResource(nameResourceBase, resourceFormat));
@@ -176,13 +176,11 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    protected static List<CkanResource> updateResources(String urn, String urlBaseIdentifier, String packageId, List<CkanResource> existingResources) {
+    protected static List<CkanResource> updateResources(CkanUrlResource ckanUrlResource, String packageId, List<CkanResource> existingResources) {
         List<CkanResource> resources = new ArrayList<>();
 
-        String urlBaseResource = getResourceUrlBase(urn, urlBaseIdentifier);
-
         for (CkanResource existingResource : existingResources) {
-            resources.add(updateResource(existingResource.getId(), packageId, urlBaseResource, existingResource.getFormat(), existingResource.getName()));
+            resources.add(updateResource(existingResource.getId(), packageId, ckanUrlResource, existingResource.getFormat(), existingResource.getName()));
         }
         return resources;
     }
@@ -191,12 +189,12 @@ public abstract class CkanPackageMapper {
         return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
     }
 
-    private static CkanResource updateResource(String resourceId, String packageId, String urlBaseResource, String format, String name) {
+    private static CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name) {
         CkanResource resource = new CkanResource();
 
         resource.setPackage_id(packageId);
         resource.setId(resourceId);
-        resource.setUrl(getUrlResource(urlBaseResource, format));
+        resource.setUrl(getUrlResource(ckanUrlResource, format));
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
         resource.setFormat(format);
@@ -204,14 +202,26 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    private static String getResourceUrlBase(String urn, String urlBaseIdentifier) {
+    protected static String getResourceUrlBase(String urn, String urlBaseIdentifier) {
 
         String[] params = UrnUtils.splitUrnItem(urn);
         return urlBaseIdentifier + "/" + params[0] + "/" + params[1] + "/" + params[2];
     }
 
-    private static String getUrlResource(String baseUrl, String format) {
-        return baseUrl + "." + format.toLowerCase();
+    private static String getUrlResource(CkanUrlResource ckanUrlResource, String format) {
+        String urlResource = ckanUrlResource.getUrlBaseResource();
+
+        if (!StringUtils.isEmpty(ckanUrlResource.getUrlSuffixResource())) {
+            urlResource += "/" + ckanUrlResource.getUrlSuffixResource();
+        }
+
+        urlResource += "." + format.toLowerCase();
+
+        if (!StringUtils.isEmpty(ckanUrlResource.getUrlParametersFields())) {
+            urlResource += "?" + ckanUrlResource.getUrlParametersFields();
+        }
+
+        return urlResource;
     }
 
     private static String getNameResource(String nameResourceBase, String format) {
