@@ -115,8 +115,6 @@ environment:
         configuration:
             db:
                 driverName: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/istac_metamac_common_metadata_ci
+                url: jdbc:postgresql://artejenkins.arte.internal:5432/ARTE
                 username: istac_metamac_common_metadata_ci
                 password: oYJYi+yfdqQtcsiboNlFmm2Eqm5GBYqBTJ+QGDE49BDlvcTK1YyQJBCHxBHiqYfN
-
-
