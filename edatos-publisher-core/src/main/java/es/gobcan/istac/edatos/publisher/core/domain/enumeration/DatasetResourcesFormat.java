@@ -1,6 +1,7 @@
 package es.gobcan.istac.edatos.publisher.core.domain.enumeration;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,8 +31,7 @@ public enum DatasetResourcesFormat {
         } else if (format.equals(DatasetResourcesFormat.TSV.name())) {
             return Constants.MIME_TYPE_TSV;
         } else {
-            return null;
+            throw new NoSuchElementException("unable to recognize mime type for format: " + format);
         }
-
     }
 }

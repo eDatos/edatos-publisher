@@ -1,6 +1,7 @@
 package es.gobcan.istac.edatos.publisher.core.domain.enumeration;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,7 +30,7 @@ public enum SrmResourcesFormat {
         } else if (format.equals(SrmResourcesFormat.CSV.name())) {
             return Constants.MIME_TYPE_CSV;
         } else {
-            return null;
+            throw new NoSuchElementException("unable to recognize mime type for format: " + format);
         }
     }
 }

@@ -23,11 +23,6 @@ spring:
             enabled: false # we use gulp + BrowserSync for livereload
     jackson:
         serialization.indent_output: true
-    datasource:
-        type: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/edatos_publisher
-        username: edatos_publisher
-        password: edatos_publisher
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
