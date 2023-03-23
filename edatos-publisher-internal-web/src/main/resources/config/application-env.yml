@@ -127,10 +127,10 @@ environment:
     edatos:
         configuration:
             db:
-                driverName: org.postgresql.Driver              # Ejemplo: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/metamac_common_metadata_bd             # Ejemplo: postgresql://localhost:5432/metamac_common_metadata_bd
-                username: metamac_common_metadata_bd         # Ejemplo: metamac_common_metadata_bd
-                password: iQs/i+zysWktMLClrjDfUp6Z91xbXpg3qxfrYroSLD9dsYLR9jHrtw==E
+                driverName: FILL_ME
+                url: FILL_ME
+                username: FILL_ME
+                password: FILL_ME
 
 
 application:
