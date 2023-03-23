@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.core.mappers.ItemResourceMapper;
 import es.gobcan.istac.edatos.publisher.core.service.EDatosApisLocator;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 
@@ -16,7 +15,7 @@ public class ExternalOperationServiceImpl implements ExternalOperationService {
 
     private final EDatosApisLocator eDatosApisLocator;
 
-    public ExternalOperationServiceImpl(EDatosApisLocator eDatosApisLocator, ItemResourceMapper itemResourceMapper) {
+    public ExternalOperationServiceImpl(EDatosApisLocator eDatosApisLocator) {
         this.eDatosApisLocator = eDatosApisLocator;
     }
 

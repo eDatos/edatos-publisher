@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.core.mappers.ItemResourceMapper;
 import es.gobcan.istac.edatos.publisher.core.service.EDatosApisLocator;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 
@@ -21,7 +20,7 @@ public class ExternalCategoryServiceImpl implements ExternalCategoryService {
 
     private final EDatosApisLocator eDatosApisLocator;
 
-    public ExternalCategoryServiceImpl(EDatosApisLocator eDatosApisLocator, ItemResourceMapper itemResourceMapper) {
+    public ExternalCategoryServiceImpl(EDatosApisLocator eDatosApisLocator) {
         this.eDatosApisLocator = eDatosApisLocator;
     }
 
