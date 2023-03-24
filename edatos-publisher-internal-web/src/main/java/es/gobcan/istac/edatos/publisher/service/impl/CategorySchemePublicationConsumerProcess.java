@@ -45,7 +45,7 @@ public class CategorySchemePublicationConsumerProcess implements ConsumerProcess
                     List<CkanResource> resources = categorySchemePublisherService.retrieveUpdatedResources(categoryScheme, actualPackage, packageName);
                     ckanSenderService.updateResources(resources, urn);
                 }
-                return resultado;
+                return true;
             }
         }
         return false;

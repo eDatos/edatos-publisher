@@ -45,7 +45,7 @@ public class CodelistPublicationConsumerProcess implements ConsumerProcess<Codel
                     List<CkanResource> resources = codelistService.retrieveUpdatedResources(codelist, actualPackage, packageName);
                     ckanSenderService.updateResources(resources, urn);
                 }
-                return resultado;
+                return true;
             }
 
         }

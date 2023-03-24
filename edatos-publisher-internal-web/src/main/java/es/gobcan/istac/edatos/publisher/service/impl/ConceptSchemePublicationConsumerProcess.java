@@ -45,7 +45,7 @@ public class ConceptSchemePublicationConsumerProcess implements ConsumerProcess<
                     List<CkanResource> resources = conceptSchemeService.retrieveUpdatedResources(conceptScheme, actualPackage, packageName);
                     ckanSenderService.updateResources(resources, urn);
                 }
-                return resultado;
+                return true;
             }
 
         }

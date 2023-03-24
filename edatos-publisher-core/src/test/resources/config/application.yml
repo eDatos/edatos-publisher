@@ -97,12 +97,6 @@ jhipster:
 
 
 application:
-    ldap:
-        url: FILL_URL # Ejemplo: ldap://ldap.miorganizacion.com
-        username: FILL_USERNAME # Ejemplo: cn=username,dc=miorganizacion,dc=com
-        password: FILL_PASSWORD # Ejemplo: mipassword
-        base: ou=usuarios,dc=miorganizacion,dc=com # Ejemplo ou=usuarios,dc=miorganizacion,dc=com
-        searchUsersProperty: FILL_SEARCH_USERS_PROPERTY # Ejemplo: uid
     jobs:
         cron:
             disabledTokens: 0 0 3 * * *

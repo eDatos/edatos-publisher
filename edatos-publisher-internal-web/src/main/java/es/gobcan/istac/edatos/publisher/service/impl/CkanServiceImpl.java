@@ -26,6 +26,7 @@ public class CkanServiceImpl implements CkanService {
 
     private final MetadataConfigurationService metadataConfigurationService;
 
+    HttpHeaders httpHeaders;
     RestTemplate restTemplate;
     String urlBase;
     String apiKey;
@@ -33,6 +34,7 @@ public class CkanServiceImpl implements CkanService {
     public CkanServiceImpl(MetadataConfigurationService metadataConfigurationService) {
         this.metadataConfigurationService = metadataConfigurationService;
         restTemplate = new RestTemplate();
+        httpHeaders = getBaseHttpHeader(apiKey);
         urlBase = this.metadataConfigurationService.retrieveCkanUrlBase();
         apiKey = this.metadataConfigurationService.retrieveCkanApiKey();
     }
@@ -41,7 +43,6 @@ public class CkanServiceImpl implements CkanService {
     public CkanSearchResponse getDatasetByName(String name) {
         String packageSearchUrl = buildPackageSearchByNameUrl(urlBase, name);
 
-        HttpHeaders httpHeaders = getBaseHttpHeader(apiKey);
         ResponseEntity<CkanSearchResponse> response = restTemplate.getForEntity(packageSearchUrl, CkanSearchResponse.class, httpHeaders);
 
         return response.getBody();

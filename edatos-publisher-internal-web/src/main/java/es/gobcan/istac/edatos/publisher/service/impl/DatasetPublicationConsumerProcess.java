@@ -46,7 +46,7 @@ public class DatasetPublicationConsumerProcess implements ConsumerProcess<Datase
                     List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
                     ckanSenderService.updateResources(resources, urn);
                 }
-                return resultado;
+                return true;
             }
 
         }

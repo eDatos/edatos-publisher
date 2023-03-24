@@ -1,13 +1,15 @@
 package es.gobcan.istac.edatos.publisher.core.domain.enumeration;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.core.MediaType;
 
+import org.siemac.edatos.core.common.exception.EDatosException;
+
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
+import es.gobcan.istac.edatos.publisher.core.errors.ServiceExceptionType;
 
 public enum SrmResourcesFormat {
     JSON, XML, TSV, CSV;
@@ -30,7 +32,7 @@ public enum SrmResourcesFormat {
         } else if (format.equals(SrmResourcesFormat.CSV.name())) {
             return Constants.MIME_TYPE_CSV;
         } else {
-            throw new NoSuchElementException("unable to recognize mime type for format: " + format);
+            throw new EDatosException(ServiceExceptionType.UNRECOGNIZED_MIME_TYPE, format);
         }
     }
 }

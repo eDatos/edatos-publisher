@@ -1,10 +1,3 @@
-## 1.0.0
-- Será necesario ejecutar los scripts contenidos en la carpeta:
-```
-etc/db/common-metadata/db/common-metadata/postgresql/*.sql
-```
-!!Atención!!
-Por otro lado, esta aplicación consume los servicios de la api del ckan. Para consumir dichos servicios se requiere la base de los endpoints del ckan. Dicha url base se mantendrá en el proyecto del ckan a través de una propiedad del common-metadata "edatos.ckan.url.base". Será necesario ejecutar el script .sql que se encuentra en dicho proyecto.
 
 # edatos-Publisher
 
@@ -75,6 +68,15 @@ Pueden modificarse los ficheros relacionados con la configuración de logging en
 ### Desde versión 1.0.0 a x.y.z
 
 ----------
+
+## Anexo. Propiedades common-metadata
+- Será necesario ejecutar los scripts contenidos en la carpeta:
+```
+etc/db/common-metadata/db/common-metadata/postgresql/*.sql
+```
+!!Atención!!
+Por otro lado, esta aplicación consumer los servicios de la api del ckan. Para consumir dichos servicios se requiere la base de los endpoints del ckan. Dicha url base se mantendrá en el proyecto del ckan a través de una propiedad del common-metadata "edatos.ckan.url.base". Será necesario ejecutar el script .sql que se encuentra en dicho proyecto.
+
 
 ## Anexo. Perfiles de compilación
 

@@ -19,6 +19,7 @@ import es.gobcan.istac.edatos.publisher.rest.common.mapper.resolver.GenericMappe
 @Mapper(componentModel = "spring", config = AuditingMapperConfig.class, uses = {GenericMapperResolver.class, InternationalStringVOMapper.class})
 public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCkanItemDto, ExternalCkanItemEntity> {
 
+    private final String EMPTY_KAFKA_MESSAGE = "{}";
     @Autowired
     private InternationalStringVOMapper internationalStringMapper;
 
@@ -26,7 +27,7 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
 
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
         externalCkanItem.setCkanState(state);
-        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setKafkaMessage(EMPTY_KAFKA_MESSAGE);
         externalCkanItem.setCode(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getCode());
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(
@@ -41,7 +42,7 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
         String[] params = UrnUtils.splitUrnItem(codelist.getUrn());
         externalCkanItem.setCkanState(state);
-        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setKafkaMessage(EMPTY_KAFKA_MESSAGE);
         externalCkanItem.setCode(params[1]);
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(codelist.getName()));
         externalCkanItem.setType(TypeExternalArtefactsEnum.CODELIST);
@@ -53,7 +54,7 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
         String[] params = UrnUtils.splitUrnItem(conceptScheme.getUrn());
         externalCkanItem.setCkanState(state);
-        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setKafkaMessage(EMPTY_KAFKA_MESSAGE);
         externalCkanItem.setCode(params[1]);
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(conceptScheme.getName()));
         externalCkanItem.setType(TypeExternalArtefactsEnum.CONCEPT_SCHEME);
@@ -65,7 +66,7 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
         String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
         externalCkanItem.setCkanState(state);
-        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setKafkaMessage(EMPTY_KAFKA_MESSAGE);
         externalCkanItem.setCode(params[1]);
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(categoryScheme.getName()));
         externalCkanItem.setType(TypeExternalArtefactsEnum.CATEGORY_SCHEME);
@@ -78,7 +79,7 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
 
         String[] params = UrnUtils.splitUrnItem(organisationScheme.getUrn());
         externalCkanItem.setCkanState(state);
-        externalCkanItem.setKafkaMessage("{}");
+        externalCkanItem.setKafkaMessage(EMPTY_KAFKA_MESSAGE);
         externalCkanItem.setCode(params[1]);
         externalCkanItem.setName(internationalStringMapper.toInternationalStringVO(organisationScheme.getName()));
         externalCkanItem.setType(TypeExternalArtefactsEnum.valueOf(organisationScheme.getOrganisationSchemeType().name()));

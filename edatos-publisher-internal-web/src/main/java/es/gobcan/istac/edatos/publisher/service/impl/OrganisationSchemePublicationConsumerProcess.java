@@ -45,7 +45,7 @@ public class OrganisationSchemePublicationConsumerProcess implements ConsumerPro
                     List<CkanResource> resources = organisationSchemeService.retrieveUpdatedResources(organisationScheme, actualPackage, packageName);
                     ckanSenderService.updateResources(resources, urn);
                 }
-                return resultado;
+                return true;
             }
         }
         return false;
