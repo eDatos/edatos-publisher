@@ -32,7 +32,7 @@ La plantilla consta de una aplicación con interfaz web y un servicio web REST i
 
 ### Gestión de roles y permisos
 
-* En la v1, esta aplicación no tiene interfaz web por lo que no requiere permisos a usuarios. Todos los procesos son en background.
+* Esta aplicación no tiene interfaz web por lo que no requiere permisos a usuarios. Todos los procesos son en background.
 
 ----------
 
