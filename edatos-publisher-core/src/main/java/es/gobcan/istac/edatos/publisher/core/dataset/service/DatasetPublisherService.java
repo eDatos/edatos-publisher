@@ -7,7 +7,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVers
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 
-public interface DatasetService {
+public interface DatasetPublisherService {
 
     CkanPackage retrieveNewCkanPackage(DatasetVersionAvro datasetVersion);
     CkanPackage retrieveUpdateCkanPackage(DatasetVersionAvro datasetVersion, String id);

@@ -7,7 +7,7 @@ import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 
-public interface CategorySchemeService {
+public interface CategorySchemePublisherService {
 
     CkanPackage retrieveNewCkanPackage(CategorySchemeAvro categoryScheme);
     CkanPackage retrieveUpdateCkanPackage(CategorySchemeAvro categoryScheme, String id);

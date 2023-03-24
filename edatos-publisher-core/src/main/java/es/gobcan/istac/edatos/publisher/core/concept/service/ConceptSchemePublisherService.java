@@ -7,7 +7,7 @@ import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 
-public interface ConceptSchemeService {
+public interface ConceptSchemePublisherService {
 
     CkanPackage retrieveNewCkanPackage(ConceptSchemeAvro conceptScheme);
     CkanPackage retrieveUpdateCkanPackage(ConceptSchemeAvro conceptScheme, String id);

@@ -16,9 +16,9 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Service
-public class DatasetServiceImpl implements DatasetService {
+public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
-    private final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(DatasetPublisherServiceImpl.class);
 
     @Autowired
     private MetadataConfigurationService metadataConfigurationService;

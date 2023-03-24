@@ -16,9 +16,9 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Service
-public class ConceptSchemeServiceImpl implements ConceptSchemeService {
+public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisherService {
 
-    private final Logger log = LoggerFactory.getLogger(ConceptSchemeServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ConceptSchemePublisherServiceImpl.class);
 
     @Autowired
     private MetadataConfigurationService metadataConfigurationService;

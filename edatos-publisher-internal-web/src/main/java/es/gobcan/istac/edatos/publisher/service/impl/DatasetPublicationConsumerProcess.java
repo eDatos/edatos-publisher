@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetService;
+import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetPublisherService;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
 @Component
@@ -18,7 +18,7 @@ public class DatasetPublicationConsumerProcess implements ConsumerProcess<Datase
     @Autowired
     CkanSenderService ckanSenderService;
     @Autowired
-    DatasetService datasetService;
+    DatasetPublisherService datasetService;
 
     @Override
     public boolean processPublicationEvent(DatasetVersionAvro datasetVersion) {

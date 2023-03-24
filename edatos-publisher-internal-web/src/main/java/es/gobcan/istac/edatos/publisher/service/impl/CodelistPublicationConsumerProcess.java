@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.codelist.service.CodelistService;
+import es.gobcan.istac.edatos.publisher.core.codelist.service.CodelistPublisherService;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
 @Component
@@ -18,7 +18,7 @@ public class CodelistPublicationConsumerProcess implements ConsumerProcess<Codel
     @Autowired
     CkanSenderService ckanSenderService;
     @Autowired
-    CodelistService codelistService;
+    CodelistPublisherService codelistService;
 
     @Override
     public boolean processPublicationEvent(CodelistAvro codelist) {

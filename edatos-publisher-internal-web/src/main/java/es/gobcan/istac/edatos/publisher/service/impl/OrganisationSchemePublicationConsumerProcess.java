@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.organisation.service.OrganisationSchemeService;
+import es.gobcan.istac.edatos.publisher.core.organisation.service.OrganisationSchemePublisherService;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
 @Component
@@ -18,7 +18,7 @@ public class OrganisationSchemePublicationConsumerProcess implements ConsumerPro
     @Autowired
     CkanSenderService ckanSenderService;
     @Autowired
-    OrganisationSchemeService organisationSchemeService;
+    OrganisationSchemePublisherService organisationSchemeService;
 
     @Override
     public boolean processPublicationEvent(OrganisationSchemeAvro organisationScheme) {

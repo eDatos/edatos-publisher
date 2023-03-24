@@ -7,7 +7,7 @@ import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 
-public interface CodelistService {
+public interface CodelistPublisherService {
 
     CkanPackage retrieveNewCkanPackage(CodelistAvro codelist);
     CkanPackage retrieveUpdateCkanPackage(CodelistAvro codelist, String id);

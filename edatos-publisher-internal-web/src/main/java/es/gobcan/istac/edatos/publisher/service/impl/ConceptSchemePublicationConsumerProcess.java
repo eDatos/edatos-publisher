@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.concept.service.ConceptSchemeService;
+import es.gobcan.istac.edatos.publisher.core.concept.service.ConceptSchemePublisherService;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
 @Component
@@ -18,7 +18,7 @@ public class ConceptSchemePublicationConsumerProcess implements ConsumerProcess<
     @Autowired
     CkanSenderService ckanSenderService;
     @Autowired
-    ConceptSchemeService conceptSchemeService;
+    ConceptSchemePublisherService conceptSchemeService;
 
     @Override
     public boolean processPublicationEvent(ConceptSchemeAvro conceptScheme) {

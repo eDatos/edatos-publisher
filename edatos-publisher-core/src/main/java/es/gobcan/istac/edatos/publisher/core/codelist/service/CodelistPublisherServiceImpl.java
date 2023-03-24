@@ -15,9 +15,9 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Service
-public class CodelistServiceImpl implements CodelistService {
+public class CodelistPublisherServiceImpl implements CodelistPublisherService {
 
-    private final Logger log = LoggerFactory.getLogger(CodelistServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(CodelistPublisherServiceImpl.class);
 
     @Autowired
     private MetadataConfigurationService metadataConfigurationService;
