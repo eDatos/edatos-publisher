@@ -26,7 +26,6 @@ En este apartado se especifican los requisitos necesarios, referidos al entorno,
 - Java. 1.8.x
 - PostgreSQL 12.2
 - Apache Kafka Confluent Community 6.1.1
-- Apache 2.4.29
 
 
 #### Dependencias
