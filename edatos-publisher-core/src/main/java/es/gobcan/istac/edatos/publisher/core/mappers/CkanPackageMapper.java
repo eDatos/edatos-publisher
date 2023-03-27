@@ -17,7 +17,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Internation
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.ResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
@@ -169,9 +169,9 @@ public abstract class CkanPackageMapper {
         resource.setPackage_id(packageId);
         resource.setUrl(getUrlResource(ckanUrlResource, resourceFormat));
         resource.setDescription(description);
-        resource.setFormat((DatasetResourcesFormat.getFormat(resourceFormat)));
+        resource.setFormat((ResourcesFormat.getFormat(resourceFormat)));
         resource.setName(getNameResource(nameResourceBase, resourceFormat));
-        resource.setMimetype(DatasetResourcesFormat.getMimeType(resourceFormat));
+        resource.setMimetype(ResourcesFormat.getMimeType(resourceFormat));
         resource.setCreated(CkanDateUtil.getNowInIso());
         return resource;
     }
@@ -198,7 +198,7 @@ public abstract class CkanPackageMapper {
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
         resource.setFormat(format);
-        resource.setMimetype(DatasetResourcesFormat.getFormat(format));
+        resource.setMimetype(ResourcesFormat.getFormat(format));
         return resource;
     }
 

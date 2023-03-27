@@ -115,7 +115,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private List<CkanExtra> getDatasetExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String packageName) {
-        List<CkanExtra> extraFields = getExtraFields(InternationalStringUtil.generateTextI18n(messageSource, URL_DATASET_BASE_IDENTIFIER, null), metadataConfigurationService, packageName);
+        List<CkanExtra> extraFields = getExtraFields(URL_DATASET_BASE_IDENTIFIER, metadataConfigurationService, packageName);
 
         String theme = getThemeFromStatisticalOperation(externalCategoryService, externalOperationService);
         if (theme != null) {
@@ -165,7 +165,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private String getResourceUrlBase() {
-        return CkanUtil.getStatisticalResourceUrlBase(metadataConfigurationService) + "/" + InternationalStringUtil.generateTextI18n(messageSource, URL_BASE_DATASETS, null);
+        return CkanUtil.getStatisticalResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_DATASETS;
     }
 
 }
