@@ -42,12 +42,20 @@ public class CategorySchemePublicationConsumerProcess implements ConsumerProcess
             Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
             if (Boolean.TRUE.equals(resultado)) {
                 if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = categorySchemePublisherService.retrieveUpdatedResources(categoryScheme, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
+                    createOrUpdateCkanResources(categoryScheme, actualPackage, packageName, urn);
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    private void createOrUpdateCkanResources(CategorySchemeAvro categoryScheme, CkanPackage actualPackage, String packageName, String urn) {
+        List<CkanResource> resources = categorySchemePublisherService.retrieveUpdatedResources(categoryScheme, actualPackage, packageName);
+        ckanSenderService.updateResources(resources, urn);
+        resources = categorySchemePublisherService.retrieveNewResources(categoryScheme, actualPackage);
+        if (!resources.isEmpty()) {
+            ckanSenderService.createResources(resources, urn);
+        }
     }
 }

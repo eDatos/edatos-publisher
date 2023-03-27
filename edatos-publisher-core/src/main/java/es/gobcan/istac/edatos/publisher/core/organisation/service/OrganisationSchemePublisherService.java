@@ -13,5 +13,5 @@ public interface OrganisationSchemePublisherService {
     CkanPackage retrieveUpdateCkanPackage(OrganisationSchemeAvro organisationScheme, String id);
     String retrieveCkanPackageName(OrganisationSchemeAvro organisationScheme);
     List<CkanResource> retrieveUpdatedResources(OrganisationSchemeAvro organisationScheme, CkanPackage existingPackage, String packageId);
-    List<CkanResource> retrieveNewResources(OrganisationSchemeAvro organisationScheme, String packageId);
+    List<CkanResource> retrieveNewResources(OrganisationSchemeAvro organisationScheme, CkanPackage existingPackage);
 }

@@ -74,7 +74,7 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
             OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
                     messageSource);
 
-            return organisationSchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
+            return organisationSchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage.getResources());
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -82,12 +82,12 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
     }
 
     @Override
-    public List<CkanResource> retrieveNewResources(OrganisationSchemeAvro organisationScheme, String packageId) {
+    public List<CkanResource> retrieveNewResources(OrganisationSchemeAvro organisationScheme, CkanPackage existingPackage) {
         try {
             OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
                     messageSource);
 
-            return organisationSchemeAvro2CkanPackageMapper.createResources(packageId);
+            return organisationSchemeAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

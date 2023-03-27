@@ -42,13 +42,21 @@ public class CodelistPublicationConsumerProcess implements ConsumerProcess<Codel
             Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
             if (Boolean.TRUE.equals(resultado)) {
                 if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = codelistService.retrieveUpdatedResources(codelist, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
+                    createOrUpdateCkanResources(codelist, actualPackage, packageName, urn);
                 }
                 return true;
             }
 
         }
         return false;
+    }
+
+    private void createOrUpdateCkanResources(CodelistAvro codelist, CkanPackage actualPackage, String packageName, String urn) {
+        List<CkanResource> resources = codelistService.retrieveUpdatedResources(codelist, actualPackage, packageName);
+        ckanSenderService.updateResources(resources, urn);
+        resources = codelistService.retrieveNewResources(codelist, actualPackage);
+        if (!resources.isEmpty()) {
+            ckanSenderService.createResources(resources, urn);
+        }
     }
 }

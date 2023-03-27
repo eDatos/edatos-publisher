@@ -13,6 +13,6 @@ public interface CategorySchemePublisherService {
     CkanPackage retrieveUpdateCkanPackage(CategorySchemeAvro categoryScheme, String id);
     String retrieveCkanPackageName(CategorySchemeAvro categoryScheme);
     List<CkanResource> retrieveUpdatedResources(CategorySchemeAvro categoryScheme, CkanPackage existingPackage, String packageId);
-    List<CkanResource> retrieveNewResources(CategorySchemeAvro categoryScheme, String packageId);
+    List<CkanResource> retrieveNewResources(CategorySchemeAvro categoryScheme, CkanPackage existingPackage);
 
 }

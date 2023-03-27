@@ -13,6 +13,6 @@ public interface CodelistPublisherService {
     CkanPackage retrieveUpdateCkanPackage(CodelistAvro codelist, String id);
     String retrieveCkanPackageName(CodelistAvro codelist);
     List<CkanResource> retrieveUpdatedResources(CodelistAvro codelist, CkanPackage existingPackage, String packageId);
-    List<CkanResource> retrieveNewResources(CodelistAvro codelist, String packageId);
+    List<CkanResource> retrieveNewResources(CodelistAvro codelist, CkanPackage existingPackage);
 
 }

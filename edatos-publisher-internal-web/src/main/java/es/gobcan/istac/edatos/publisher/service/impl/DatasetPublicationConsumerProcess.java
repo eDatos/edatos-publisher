@@ -43,14 +43,22 @@ public class DatasetPublicationConsumerProcess implements ConsumerProcess<Datase
             Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
             if (Boolean.TRUE.equals(resultado)) {
                 if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
+                    createOrUpdateCkanResources(datasetVersion, actualPackage, packageName, urn);
                 }
                 return true;
             }
 
         }
         return false;
+    }
+
+    private void createOrUpdateCkanResources(DatasetVersionAvro datasetVersion, CkanPackage actualPackage, String packageName, String urn) {
+        List<CkanResource> resources = datasetService.retrieveUpdatedResources(datasetVersion, actualPackage, packageName);
+        ckanSenderService.updateResources(resources, urn);
+        resources = datasetService.retrieveNewResources(datasetVersion, actualPackage);
+        if (!resources.isEmpty()) {
+            ckanSenderService.createResources(resources, urn);
+        }
     }
 
 }

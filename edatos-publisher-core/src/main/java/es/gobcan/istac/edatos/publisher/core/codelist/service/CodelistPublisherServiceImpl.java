@@ -70,7 +70,7 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
         try {
             CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
 
-            return codelistAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
+            return codelistAvro2CkanPackageMapper.updateResources(packageId, existingPackage.getResources());
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -78,11 +78,11 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
     }
 
     @Override
-    public List<CkanResource> retrieveNewResources(CodelistAvro codelist, String packageId) {
+    public List<CkanResource> retrieveNewResources(CodelistAvro codelist, CkanPackage existingPackage) {
         try {
             CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
 
-            return codelistAvro2CkanPackageMapper.createResources(packageId);
+            return codelistAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

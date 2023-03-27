@@ -76,7 +76,7 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
         try {
             DatasetAvro2CkanPackageMapper datasetAvro2CkanPackageMapper = new DatasetAvro2CkanPackageMapper(datasetVersion, metadataConfigurationService, messageSource);
 
-            return datasetAvro2CkanPackageMapper.updateResourcesFromDatasetVersion(packageId, existingPackage);
+            return datasetAvro2CkanPackageMapper.updateResources(packageId, existingPackage.getResources());
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -84,12 +84,12 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
     }
 
     @Override
-    public List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, String packageId) {
+    public List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, CkanPackage existingPackage) {
         try {
 
             DatasetAvro2CkanPackageMapper datasetAvro2CkanPackageMapper = new DatasetAvro2CkanPackageMapper(datasetVersion, metadataConfigurationService, messageSource);
 
-            return datasetAvro2CkanPackageMapper.createResourcesFromDatasetVersion(packageId);
+            return datasetAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

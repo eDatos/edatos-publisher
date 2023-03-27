@@ -13,6 +13,6 @@ public interface ConceptSchemePublisherService {
     CkanPackage retrieveUpdateCkanPackage(ConceptSchemeAvro conceptScheme, String id);
     String retrieveCkanPackageName(ConceptSchemeAvro conceptScheme);
     List<CkanResource> retrieveUpdatedResources(ConceptSchemeAvro conceptScheme, CkanPackage existingPackage, String packageId);
-    List<CkanResource> retrieveNewResources(ConceptSchemeAvro conceptScheme, String packageId);
+    List<CkanResource> retrieveNewResources(ConceptSchemeAvro conceptScheme, CkanPackage existingPackage);
 
 }

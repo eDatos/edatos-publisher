@@ -39,7 +39,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService) {
         CkanPackage newPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
+        String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
@@ -49,7 +49,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getConceptSchemeDescription());
+        newPackage.setNotes(getResourceDescription());
 
         newPackage.setVersion(version);
 
@@ -69,18 +69,23 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return newPackage;
     }
 
+    public List<CkanResource> createResources(String packageId) {
+
+        return createResources(packageId, getAvailableFormats());
+    }
+
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(categoryScheme.getUrn());
+        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
         CkanPackage existingPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
+        String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getConceptSchemeDescription());
+        existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
 
@@ -99,19 +104,9 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
     }
 
-    public List<CkanResource> createResources(String packageId) {
-
-        String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
-
-        return createResources(getConceptSchemeDescription(), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
-    }
-
-    public List<CkanResource> updateResources(String packageId, CkanPackage existingPackage) {
-        return updateResources(getCkanUrlResource(), packageId, existingPackage.getResources());
-    }
-
-    private CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(categoryScheme.getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CATEGORIES, null);
+    @Override
+    protected CkanUrlResource getCkanUrlResource() {
+        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CATEGORIES, null);
     }
 
     private List<CkanExtra> getCategorySchemeExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
@@ -122,15 +117,27 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return extraFields;
     }
 
-    private String getConceptSchemeDescription() {
+    @Override
+    protected String getResourceDescription() {
         if (categoryScheme.getDescription() != null) {
             return getDescriptionFromLocalisedStringAvro(categoryScheme.getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         }
         return null;
     }
 
-    private String getNameResourceBase(String agency, String code) {
+    @Override
+    protected String getNameResourceBase(String agency, String code) {
         return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_CATEGORY_RESOURCE, null) + agency + ":" + code;
+    }
+
+    @Override
+    protected String getUrn() {
+        return categoryScheme.getUrn();
+    }
+
+    @Override
+    protected List<String> getAvailableFormats() {
+        return SrmResourcesFormat.getEnumList();
     }
 
     private String getResourceUrlBase() {

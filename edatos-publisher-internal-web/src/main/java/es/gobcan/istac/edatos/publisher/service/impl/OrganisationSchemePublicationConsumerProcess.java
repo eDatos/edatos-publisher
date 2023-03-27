@@ -42,12 +42,20 @@ public class OrganisationSchemePublicationConsumerProcess implements ConsumerPro
             Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
             if (Boolean.TRUE.equals(resultado)) {
                 if (actualPackage.getId() != null) {
-                    List<CkanResource> resources = organisationSchemeService.retrieveUpdatedResources(organisationScheme, actualPackage, packageName);
-                    ckanSenderService.updateResources(resources, urn);
+                    createOrUpdateCkanResources(organisationScheme, actualPackage, packageName, urn);
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    private void createOrUpdateCkanResources(OrganisationSchemeAvro organisationScheme, CkanPackage actualPackage, String packageName, String urn) {
+        List<CkanResource> resources = organisationSchemeService.retrieveUpdatedResources(organisationScheme, actualPackage, packageName);
+        ckanSenderService.updateResources(resources, urn);
+        resources = organisationSchemeService.retrieveNewResources(organisationScheme, actualPackage);
+        if (!resources.isEmpty()) {
+            ckanSenderService.createResources(resources, urn);
+        }
     }
 }

@@ -71,7 +71,7 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
         try {
             CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
 
-            return categorySchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
+            return categorySchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage.getResources());
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -79,11 +79,11 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
     }
 
     @Override
-    public List<CkanResource> retrieveNewResources(CategorySchemeAvro categoryScheme, String packageId) {
+    public List<CkanResource> retrieveNewResources(CategorySchemeAvro categoryScheme, CkanPackage existingPackage) {
         try {
             CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
 
-            return categorySchemeAvro2CkanPackageMapper.createResources(packageId);
+            return categorySchemeAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

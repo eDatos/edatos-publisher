@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
@@ -15,6 +16,7 @@ import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
@@ -29,6 +31,12 @@ public abstract class CkanPackageMapper {
 
     protected CkanPackageMapper() {
     }
+
+    protected abstract String getResourceDescription();
+    protected abstract CkanUrlResource getCkanUrlResource();
+    protected abstract String getNameResourceBase(String agency, String code);
+    protected abstract String getUrn();
+    protected abstract List<String> getAvailableFormats();
 
     protected List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
         List<CkanExtra> extraFields = new ArrayList<>();
@@ -177,12 +185,33 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    protected List<CkanResource> updateResources(CkanUrlResource ckanUrlResource, String packageId, List<CkanResource> existingResources) {
+    public List<CkanResource> createResources(String packageId, List<String> formats) {
+
+        String[] params = UrnUtils.splitUrnItem(getUrn());
+
+        return createResources(getResourceDescription(), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, formats);
+    }
+
+    public List<CkanResource> createResources(CkanPackage existingPackage) {
+        List<CkanResource> newResources = new ArrayList<>();
+
+        Set<String> existingFormats = existingPackage.getResources().stream().map(CkanResource::getFormat).collect(Collectors.toSet());
+
+        List<String> formats = getAvailableFormats().stream().filter(format -> !existingFormats.contains(format)).collect(Collectors.toList());
+
+        if (!formats.isEmpty()) {
+            newResources = createResources(existingPackage.getId(), formats);
+        }
+        return newResources;
+    }
+
+    public List<CkanResource> updateResources(String packageId, List<CkanResource> existingResources) {
         List<CkanResource> resources = new ArrayList<>();
 
         for (CkanResource existingResource : existingResources) {
-            resources.add(updateResource(existingResource.getId(), packageId, ckanUrlResource, existingResource.getFormat(), existingResource.getName()));
+            resources.add(updateResource(existingResource.getId(), packageId, getCkanUrlResource(), existingResource.getFormat(), existingResource.getName()));
         }
+
         return resources;
     }
 

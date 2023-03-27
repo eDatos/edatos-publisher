@@ -74,7 +74,7 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
         try {
             ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
 
-            return conceptSchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
+            return conceptSchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage.getResources());
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -82,11 +82,11 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
     }
 
     @Override
-    public List<CkanResource> retrieveNewResources(ConceptSchemeAvro conceptScheme, String packageId) {
+    public List<CkanResource> retrieveNewResources(ConceptSchemeAvro conceptScheme, CkanPackage existingPackage) {
         try {
             ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
 
-            return conceptSchemeAvro2CkanPackageMapper.createResources(packageId);
+            return conceptSchemeAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

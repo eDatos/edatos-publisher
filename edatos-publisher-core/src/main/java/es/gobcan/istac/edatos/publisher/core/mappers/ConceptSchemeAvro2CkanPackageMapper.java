@@ -41,7 +41,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
         CkanPackage newPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(conceptScheme.getUrn());
+        String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
@@ -51,7 +51,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getConceptSchemeDescription(Constants.CKAN_LANGUAGE));
+        newPackage.setNotes(getResourceDescription());
 
         newPackage.setVersion(version);
 
@@ -73,17 +73,17 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(conceptScheme.getUrn());
+        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String id) {
         CkanPackage existingPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(conceptScheme.getUrn());
+        String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getConceptSchemeDescription(Constants.CKAN_LANGUAGE));
+        existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
 
@@ -100,22 +100,16 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.CONCEPT_TAG, null)));
 
         return tags;
-
     }
 
     public List<CkanResource> createResources(String packageId) {
 
-        String[] params = UrnUtils.splitUrnItem(conceptScheme.getUrn());
-
-        return createResources(getConceptSchemeDescription(Constants.CKAN_LANGUAGE), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
+        return createResources(packageId, getAvailableFormats());
     }
 
-    public List<CkanResource> updateResources(String packageId, CkanPackage existingPackage) {
-        return updateResources(getCkanUrlResource(), packageId, existingPackage.getResources());
-    }
-
-    private CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(conceptScheme.getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, null);
+    @Override
+    protected CkanUrlResource getCkanUrlResource() {
+        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, null);
     }
 
     private List<CkanExtra> getConceptSchemeExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, ConceptSchemeTypeEnumAvro conceptSchemeType,
@@ -136,15 +130,27 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         }
     }
 
-    private String getConceptSchemeDescription(String defaultLanguage) {
+    @Override
+    protected String getResourceDescription() {
         if (conceptScheme.getDescription() != null) {
-            return getDescriptionFromLocalisedStringAvro(conceptScheme.getDescription().getLocalisedStrings(), defaultLanguage);
+            return getDescriptionFromLocalisedStringAvro(conceptScheme.getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         }
         return null;
     }
 
-    private String getNameResourceBase(String agency, String code) {
+    @Override
+    protected String getNameResourceBase(String agency, String code) {
         return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_CONCEPT_RESOURCE, null) + agency + ":" + code;
+    }
+
+    @Override
+    protected String getUrn() {
+        return conceptScheme.getUrn();
+    }
+
+    @Override
+    protected List<String> getAvailableFormats() {
+        return SrmResourcesFormat.getEnumList();
     }
 
     private String getResourceUrlBase() {
