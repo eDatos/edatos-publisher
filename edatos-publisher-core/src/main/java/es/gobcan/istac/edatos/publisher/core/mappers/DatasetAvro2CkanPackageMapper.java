@@ -44,15 +44,14 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         CkanPackage newPackage = new CkanPackage();
         newPackage.setName(getCkanPackageName());
         newPackage.setTitle(getDefaultLocalisedStringFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
-                .getVersionableStatisticalResource().getNameableStatisticalResource().getTitle().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
+                .getVersionableStatisticalResource().getNameableStatisticalResource().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         newPackage.setPrivates(false);
-        newPackage.setAuthor(getDefaultLocalisedStringFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getCreator().getTitle().getLocalisedStrings(),
-                metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setAuthor(
+                getDefaultLocalisedStringFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getCreator().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         newPackage.setMaintainer(getDefaultLocalisedStringFromInternationalStringItemAvro(
-                datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getTitle().getLocalisedStrings(),
-                metadataConfigurationService.retrieveCkanDefaultLanguage()));
+                datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getDatasetDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setNotes(getDatasetDescription(Constants.CKAN_LANGUAGE));
 
         newPackage.setUrl(datasetVersion.getVisualizerHtmlLink());
         newPackage.setVersion(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getVersionLogic());
@@ -84,7 +83,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
         existingPackage.setId(id);
         existingPackage.setNotes(getDescriptionFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
-                .getVersionableStatisticalResource().getNameableStatisticalResource().getDescription().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
+                .getVersionableStatisticalResource().getNameableStatisticalResource().getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
 
         existingPackage.setUrl(datasetVersion.getVisualizerHtmlLink());
         existingPackage.setVersion(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getVersionLogic());
@@ -100,8 +99,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
         String[] params = UrnUtils.splitUrnItem(urn);
-        return createResources(getDatasetDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(urn), getNameResourceBase(params[0], params[1]), packageId,
-                DatasetResourcesFormat.getEnumList());
+        return createResources(getDatasetDescription(Constants.CKAN_LANGUAGE), getCkanUrlResource(urn), getNameResourceBase(params[0], params[1]), packageId, DatasetResourcesFormat.getEnumList());
     }
 
     public List<CkanResource> updateResourcesFromDatasetVersion(String packageId, CkanPackage existingDataset) {

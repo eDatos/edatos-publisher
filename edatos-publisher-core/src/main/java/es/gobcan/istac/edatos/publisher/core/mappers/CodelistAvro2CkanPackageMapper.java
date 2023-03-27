@@ -43,13 +43,13 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         newPackage.setPrivates(false);
-        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage());
+        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getCodelistDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setNotes(getCodelistDescription(Constants.CKAN_LANGUAGE));
 
         newPackage.setVersion(version);
 
@@ -80,7 +80,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getCodelistDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        existingPackage.setNotes(getCodelistDescription(Constants.CKAN_LANGUAGE));
 
         existingPackage.setVersion(version);
 
@@ -103,8 +103,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(codelist.getUrn());
 
-        return createResources(getCodelistDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId,
-                SrmResourcesFormat.getEnumList());
+        return createResources(getCodelistDescription(Constants.CKAN_LANGUAGE), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
     }
 
     public List<CkanResource> updateResources(String packageId, CkanPackage existingPackage) {

@@ -43,14 +43,13 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getName().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         newPackage.setPrivates(false);
-        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getMaintainer().getTitle().getLocalisedStrings(),
-                metadataConfigurationService.retrieveCkanDefaultLanguage());
+        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getConceptSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setNotes(getConceptSchemeDescription());
 
         newPackage.setVersion(version);
 
@@ -81,7 +80,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getConceptSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        existingPackage.setNotes(getConceptSchemeDescription());
 
         existingPackage.setVersion(version);
 
@@ -104,8 +103,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(categoryScheme.getUrn());
 
-        return createResources(getConceptSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId,
-                SrmResourcesFormat.getEnumList());
+        return createResources(getConceptSchemeDescription(), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
     }
 
     public List<CkanResource> updateResources(String packageId, CkanPackage existingPackage) {
@@ -124,9 +122,9 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return extraFields;
     }
 
-    private String getConceptSchemeDescription(String defaultLanguage) {
+    private String getConceptSchemeDescription() {
         if (categoryScheme.getDescription() != null) {
-            return getDescriptionFromLocalisedStringAvro(categoryScheme.getDescription().getLocalisedStrings(), defaultLanguage);
+            return getDescriptionFromLocalisedStringAvro(categoryScheme.getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         }
         return null;
     }

@@ -19,5 +19,4 @@ public final class DataConfigurationConstants extends ConfigurationConstants {
     public static final String CKAN_ENI_URL_BASE = "edatos.publisher.ckan.eni.url.base";
     public static final String CKAN_DEFAULT_URN_CATEGORY = "edatos.publisher.ckan.default.urn.category";
     public static final String CKAN_DEFAULT_ORGANISATION = "edatos.publisher.ckan.default.organisation";
-    public static final String CKAN_DEFAULT_LANGUAGE = "edatos.publisher.ckan.default.language";
 }

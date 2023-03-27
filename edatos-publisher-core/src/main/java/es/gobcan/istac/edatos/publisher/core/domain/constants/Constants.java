@@ -9,6 +9,11 @@ public class Constants {
     public static final String URL_RESOURCES_CONCEPTS = "concepts";
     public static final String URL_RESOURCES_ORGANISATIONS = "organisations";
 
+    /*
+     * Currently, Ckan is only available in ISTAC. Ckan API only allows string for texts. InternationalStrings are not allowed. Text in Ckan for ISTAC are only in Spanish.
+     */
+    public static final String CKAN_LANGUAGE = "es";
+
     // Datasets
     public static final String BASE_DATASET_RESOURCE = "constant.publisher.dataset.base.resource";
 

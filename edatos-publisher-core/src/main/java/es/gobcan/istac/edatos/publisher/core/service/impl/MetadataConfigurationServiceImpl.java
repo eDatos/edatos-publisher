@@ -49,9 +49,4 @@ public class MetadataConfigurationServiceImpl extends ConfigurationServiceImpl i
     public String retrieveCkanDefaultOrganisation() throws EDatosException {
         return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_ORGANISATION);
     }
-
-    @Override
-    public String retrieveCkanDefaultLanguage() throws EDatosException {
-        return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_LANGUAGE);
-    }
 }

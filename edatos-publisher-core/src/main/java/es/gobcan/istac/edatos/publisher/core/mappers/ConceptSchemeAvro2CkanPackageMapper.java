@@ -45,14 +45,13 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         newPackage.setPrivates(false);
-        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getMaintainer().getTitle().getLocalisedStrings(),
-                metadataConfigurationService.retrieveCkanDefaultLanguage());
+        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getConceptSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setNotes(getConceptSchemeDescription(Constants.CKAN_LANGUAGE));
 
         newPackage.setVersion(version);
 
@@ -84,7 +83,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getConceptSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        existingPackage.setNotes(getConceptSchemeDescription(Constants.CKAN_LANGUAGE));
 
         existingPackage.setVersion(version);
 
@@ -108,8 +107,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         String[] params = UrnUtils.splitUrnItem(conceptScheme.getUrn());
 
-        return createResources(getConceptSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId,
-                SrmResourcesFormat.getEnumList());
+        return createResources(getConceptSchemeDescription(Constants.CKAN_LANGUAGE), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
     }
 
     public List<CkanResource> updateResources(String packageId, CkanPackage existingPackage) {

@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Internation
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
+import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.ResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
@@ -34,7 +35,7 @@ public abstract class CkanPackageMapper {
 
         extraFields.add(new CkanExtra("identifier", getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName)));
 
-        extraFields.add(new CkanExtra("language", metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        extraFields.add(new CkanExtra("language", Constants.CKAN_LANGUAGE));
 
         extraFields.add(new CkanExtra("publisher_uri", metadataConfigurationService.retrieveCkanPublisherUri()));
 

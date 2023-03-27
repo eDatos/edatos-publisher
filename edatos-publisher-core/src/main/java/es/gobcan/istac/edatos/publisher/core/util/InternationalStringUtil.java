@@ -3,7 +3,8 @@ package es.gobcan.istac.edatos.publisher.core.util;
 import java.util.Locale;
 
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
+
+import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 
 public class InternationalStringUtil {
 
@@ -12,7 +13,8 @@ public class InternationalStringUtil {
     }
 
     public static String generateTextI18n(MessageSource messageSource, String text, String[] args) {
-        Locale locale = LocaleContextHolder.getLocale();
+
+        Locale locale = Locale.forLanguageTag(Constants.CKAN_LANGUAGE);
 
         return messageSource.getMessage(text, args, locale);
     }
