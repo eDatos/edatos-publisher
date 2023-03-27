@@ -6,6 +6,7 @@ import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -29,10 +30,15 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
     @Autowired
     ExternalOperationService externalOperationService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public CkanPackage retrieveNewCkanPackage(ConceptSchemeAvro conceptScheme) {
         try {
-            return ConceptSchemeAvro2CkanPackageMapper.toNewCkanPackage(conceptScheme, metadataConfigurationService, externalCategoryService, externalOperationService);
+            ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
+
+            return conceptSchemeAvro2CkanPackageMapper.toNewCkanPackage(externalCategoryService, externalOperationService);
         } catch (Exception e) {
             log.debug("Error in new concept scheme publication into ckan: {}", e);
         }
@@ -42,7 +48,9 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
     @Override
     public CkanPackage retrieveUpdateCkanPackage(ConceptSchemeAvro conceptScheme, String id) {
         try {
-            return ConceptSchemeAvro2CkanPackageMapper.toExistingCkanPackage(conceptScheme, metadataConfigurationService, externalCategoryService, externalOperationService, id);
+            ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
+
+            return conceptSchemeAvro2CkanPackageMapper.toExistingCkanPackage(externalCategoryService, externalOperationService, id);
         } catch (Exception e) {
             log.debug("Error in existing concept scheme publication into ckan: {}", e);
         }
@@ -52,7 +60,9 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
     @Override
     public String retrieveCkanPackageName(ConceptSchemeAvro conceptScheme) {
         try {
-            return ConceptSchemeAvro2CkanPackageMapper.getCkanPackageName(conceptScheme);
+            ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
+
+            return conceptSchemeAvro2CkanPackageMapper.getCkanPackageName();
         } catch (Exception e) {
             log.debug("Error in retrieve concept scheme name: {}", e);
         }
@@ -62,7 +72,9 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
     @Override
     public List<CkanResource> retrieveUpdatedResources(ConceptSchemeAvro conceptScheme, CkanPackage existingPackage, String packageId) {
         try {
-            return ConceptSchemeAvro2CkanPackageMapper.updateResources(conceptScheme, metadataConfigurationService, packageId, existingPackage);
+            ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
+
+            return conceptSchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -72,7 +84,9 @@ public class ConceptSchemePublisherServiceImpl implements ConceptSchemePublisher
     @Override
     public List<CkanResource> retrieveNewResources(ConceptSchemeAvro conceptScheme, String packageId) {
         try {
-            return ConceptSchemeAvro2CkanPackageMapper.createResources(conceptScheme, metadataConfigurationService, packageId);
+            ConceptSchemeAvro2CkanPackageMapper conceptSchemeAvro2CkanPackageMapper = new ConceptSchemeAvro2CkanPackageMapper(conceptScheme, metadataConfigurationService, messageSource);
+
+            return conceptSchemeAvro2CkanPackageMapper.createResources(packageId);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

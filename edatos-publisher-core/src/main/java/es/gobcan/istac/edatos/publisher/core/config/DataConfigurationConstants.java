@@ -1,6 +1,8 @@
 package es.gobcan.istac.edatos.publisher.core.config;
 
-public final class DataConfigurationConstants {
+import org.siemac.edatos.core.common.constants.shared.ConfigurationConstants;
+
+public final class DataConfigurationConstants extends ConfigurationConstants {
 
     private DataConfigurationConstants() {
     }
@@ -12,7 +14,6 @@ public final class DataConfigurationConstants {
     public static final String DB_DRIVER_NAME = "edatos.publisher.db.driver_name";
     public static final String CKAN_LICENCE_ID = "edatos.publisher.ckan.licence.id";
     public static final String CKAN_API_KEY = "edatos.publisher.ckan.api.key";
-    public static final String CKAN_URL_BASE = "metamac.edatos_publisher.ckan.url.base";
     public static final String CKAN_PUBLISHER_URI = "edatos.publisher.ckan.publisher.uri";
     public static final String CKAN_SPATIAL_URI = "edatos.publisher.ckan.spatial.uri";
     public static final String CKAN_ENI_URL_BASE = "edatos.publisher.ckan.eni.url.base";

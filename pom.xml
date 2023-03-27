@@ -155,6 +155,7 @@
         <metamac-common-metadata-rest-external-api.version>3.1.1-SNAPSHOT</metamac-common-metadata-rest-external-api.version>
         <metamac-srm-rest-internal-api.version>2.6.1-SNAPSHOT</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>2.6.1-SNAPSHOT</metamac-srm-rest-external-api.version>
+        <edatos-core-common.version>1.0.2-SNAPSHOT</edatos-core-common.version>
         <metamac-srm-kafka.version>4.0.1-SNAPSHOT</metamac-srm-kafka.version>
 
         <hibernate-types.version>2.10.4</hibernate-types.version>

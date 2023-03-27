@@ -6,6 +6,7 @@ import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -25,10 +26,16 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
     @Autowired
     private ExternalCategoryService externalCategoryService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public CkanPackage retrieveNewCkanPackage(CategorySchemeAvro categoryScheme) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.toNewCkanPackage(categoryScheme, metadataConfigurationService, externalCategoryService);
+
+            CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
+
+            return categorySchemeAvro2CkanPackageMapper.toNewCkanPackage(externalCategoryService);
         } catch (Exception e) {
             log.debug("Error in new category scheme publication into ckan: {}", e);
         }
@@ -38,7 +45,9 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
     @Override
     public CkanPackage retrieveUpdateCkanPackage(CategorySchemeAvro categoryScheme, String id) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.toExistingCkanPackage(categoryScheme, metadataConfigurationService, externalCategoryService, id);
+            CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
+
+            return categorySchemeAvro2CkanPackageMapper.toExistingCkanPackage(externalCategoryService, id);
         } catch (Exception e) {
             log.debug("Error in existing category scheme publication into ckan: {}", e);
         }
@@ -48,7 +57,9 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
     @Override
     public String retrieveCkanPackageName(CategorySchemeAvro categoryScheme) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.getCkanPackageName(categoryScheme);
+            CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
+
+            return categorySchemeAvro2CkanPackageMapper.getCkanPackageName();
         } catch (Exception e) {
             log.debug("Error in retrieve category scheme name: {}", e);
         }
@@ -58,7 +69,9 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
     @Override
     public List<CkanResource> retrieveUpdatedResources(CategorySchemeAvro categoryScheme, CkanPackage existingPackage, String packageId) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.updateResources(categoryScheme, metadataConfigurationService, packageId, existingPackage);
+            CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
+
+            return categorySchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -68,7 +81,9 @@ public class CategorySchemePublisherServiceImpl implements CategorySchemePublish
     @Override
     public List<CkanResource> retrieveNewResources(CategorySchemeAvro categoryScheme, String packageId) {
         try {
-            return CategorySchemeAvro2CkanPackageMapper.createResources(categoryScheme, metadataConfigurationService, packageId);
+            CategorySchemeAvro2CkanPackageMapper categorySchemeAvro2CkanPackageMapper = new CategorySchemeAvro2CkanPackageMapper(categoryScheme, metadataConfigurationService, messageSource);
+
+            return categorySchemeAvro2CkanPackageMapper.createResources(packageId);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

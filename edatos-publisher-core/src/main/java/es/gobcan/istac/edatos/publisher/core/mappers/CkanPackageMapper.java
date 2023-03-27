@@ -29,7 +29,7 @@ public abstract class CkanPackageMapper {
     protected CkanPackageMapper() {
     }
 
-    protected static List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
+    protected List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
         List<CkanExtra> extraFields = new ArrayList<>();
 
         extraFields.add(new CkanExtra("identifier", getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName)));
@@ -43,25 +43,25 @@ public abstract class CkanPackageMapper {
         return extraFields;
     }
 
-    protected static String getCkanPackageName(String urn) {
+    protected String getCkanPackageName(String urn) {
         return CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
     }
 
-    protected static String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
+    protected String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
             return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
         }
         return null;
     }
 
-    protected static String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
+    protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
             return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
         }
         return null;
     }
 
-    protected static String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
+    protected String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
 
         if (localisedString.stream().anyMatch(x -> x.getLocale().equals(defaultLanguage))) {
             return localisedString.stream().filter(x -> x.getLocale().equals(defaultLanguage)).findFirst().get().getLabel();
@@ -69,7 +69,7 @@ public abstract class CkanPackageMapper {
         return null;
     }
 
-    protected static String getDefaultLocalisedStringFromLocalisedStringAvro(List<LocalisedStringAvro> localisedString, String defaultLanguage) {
+    protected String getDefaultLocalisedStringFromLocalisedStringAvro(List<LocalisedStringAvro> localisedString, String defaultLanguage) {
 
         if (localisedString.stream().anyMatch(x -> x.getLocale().equals(defaultLanguage))) {
             return localisedString.stream().filter(x -> x.getLocale().equals(defaultLanguage)).findFirst().get().getLabel();
@@ -77,7 +77,7 @@ public abstract class CkanPackageMapper {
         return null;
     }
 
-    protected static String getIdentifierCkan(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
+    protected String getIdentifierCkan(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
         String url = metadataConfigurationService.retrieveCkanUrlBase();
         if (url != null) {
             url += "/" + urlBaseIdentifier + "/" + packageName;
@@ -85,13 +85,13 @@ public abstract class CkanPackageMapper {
         return url;
     }
 
-    public static String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String urnCategory) {
+    public String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String urnCategory) {
         String[] params = UrnUtils.splitUrnItem(urnCategory);
 
         return addTheme(externalCategoryService, eniUrlBase, params[0], params[1], params[2], params[3]);
     }
 
-    public static String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
+    public String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
         Category category = externalCategoryService.getCategory(agency, resourceId, version, categoryId);
         if (category != null && category.getEniSchemeType() != null) {
             return getUrlEniTheme(eniUrlBase, category.getEniSchemeType().getId());
@@ -99,7 +99,7 @@ public abstract class CkanPackageMapper {
         return null;
     }
 
-    public static String getDefaultTheme(ExternalCategoryService externalCategoryService, MetadataConfigurationService metadataConfigurationService, String eniUrlBase) {
+    public String getDefaultTheme(ExternalCategoryService externalCategoryService, MetadataConfigurationService metadataConfigurationService, String eniUrlBase) {
         String[] urnCategoryWithoutVersion = UrnUtils.splitUrnItem(metadataConfigurationService.retrieveCkanDefaultUrnCategory());
 
         String urnLastVersionDefaultCategoryScheme = getLastVersionDefaultUrnCategory(externalCategoryService, urnCategoryWithoutVersion[0], urnCategoryWithoutVersion[1]);
@@ -111,8 +111,8 @@ public abstract class CkanPackageMapper {
         return null;
     }
 
-    protected static String getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService,
-            ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+    protected String getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
+            ExternalOperationService externalOperationService) {
 
         Set<String> eniThemes = new HashSet<>();
         String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
@@ -141,7 +141,7 @@ public abstract class CkanPackageMapper {
         return null;
     }
 
-    private static String getLastVersionDefaultUrnCategory(ExternalCategoryService externalCategoryService, String agency, String resourceId) {
+    private String getLastVersionDefaultUrnCategory(ExternalCategoryService externalCategoryService, String agency, String resourceId) {
         String query = "LATEST EQ 'true'";
         CategorySchemes categoryScheme = externalCategoryService.getCategoryByQuery(agency, resourceId, query);
         if (categoryScheme != null && !categoryScheme.getCategorySchemes().isEmpty()) {
@@ -150,11 +150,11 @@ public abstract class CkanPackageMapper {
         return null;
     }
 
-    protected static String getUrlEniTheme(String urlBase, String eniId) {
+    protected String getUrlEniTheme(String urlBase, String eniId) {
         return urlBase + "/" + eniId;
     }
 
-    protected static List<CkanResource> createResources(String description, CkanUrlResource ckanUrlResource, String code, String packageId, List<String> formatValues) {
+    protected List<CkanResource> createResources(String description, CkanUrlResource ckanUrlResource, String code, String packageId, List<String> formatValues) {
         List<CkanResource> resources = new ArrayList<>();
 
         for (String resourceFormat : formatValues) {
@@ -163,7 +163,7 @@ public abstract class CkanPackageMapper {
         return resources;
     }
 
-    private static CkanResource createResource(String packageId, String description, String resourceFormat, String nameResourceBase, CkanUrlResource ckanUrlResource) {
+    private CkanResource createResource(String packageId, String description, String resourceFormat, String nameResourceBase, CkanUrlResource ckanUrlResource) {
         CkanResource resource = new CkanResource();
 
         resource.setPackage_id(packageId);
@@ -176,7 +176,7 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    protected static List<CkanResource> updateResources(CkanUrlResource ckanUrlResource, String packageId, List<CkanResource> existingResources) {
+    protected List<CkanResource> updateResources(CkanUrlResource ckanUrlResource, String packageId, List<CkanResource> existingResources) {
         List<CkanResource> resources = new ArrayList<>();
 
         for (CkanResource existingResource : existingResources) {
@@ -185,11 +185,11 @@ public abstract class CkanPackageMapper {
         return resources;
     }
 
-    protected static String getDefaultOrganisation(MetadataConfigurationService metadataConfigurationService) {
+    protected String getDefaultOrganisation(MetadataConfigurationService metadataConfigurationService) {
         return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
     }
 
-    private static CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name) {
+    private CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name) {
         CkanResource resource = new CkanResource();
 
         resource.setPackage_id(packageId);
@@ -202,13 +202,13 @@ public abstract class CkanPackageMapper {
         return resource;
     }
 
-    protected static String getResourceUrlBase(String urn, String urlBaseIdentifier) {
+    protected String getResourceUrlBase(String urn, String urlBaseIdentifier) {
 
         String[] params = UrnUtils.splitUrnItem(urn);
         return urlBaseIdentifier + "/" + params[0] + "/" + params[1] + "/" + params[2];
     }
 
-    private static String getUrlResource(CkanUrlResource ckanUrlResource, String format) {
+    private String getUrlResource(CkanUrlResource ckanUrlResource, String format) {
         String urlResource = ckanUrlResource.getUrlBaseResource();
 
         if (!StringUtils.isEmpty(ckanUrlResource.getUrlSuffixResource())) {
@@ -224,7 +224,7 @@ public abstract class CkanPackageMapper {
         return urlResource;
     }
 
-    private static String getNameResource(String nameResourceBase, String format) {
+    private String getNameResource(String nameResourceBase, String format) {
         return nameResourceBase + " (" + format + ")";
     }
 

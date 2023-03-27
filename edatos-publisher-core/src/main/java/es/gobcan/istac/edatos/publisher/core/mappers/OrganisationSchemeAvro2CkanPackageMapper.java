@@ -6,6 +6,7 @@ import java.util.List;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeTypeEnumAvro;
+import org.springframework.context.MessageSource;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -19,42 +20,44 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
+import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
 public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
-    private OrganisationSchemeAvro2CkanPackageMapper() {
+    private OrganisationSchemeAvro organisationScheme;
+    private MetadataConfigurationService metadataConfigurationService;
+    private MessageSource messageSource;
+
+    public OrganisationSchemeAvro2CkanPackageMapper(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
+        this.organisationScheme = organisationScheme;
+        this.metadataConfigurationService = metadataConfigurationService;
+        this.messageSource = messageSource;
     }
 
     private static final String URL_BASE_ORGANISATION_SCHEME = "organisationschemes";
     private static final String URL_BASE_IDENTIFIER = "dataset";
-    private static final String BASE_ORGANISATION_RESOURCE = "Esquema de organizaciones. ";
-    private static final String ORGANISATION_TAG = "Organización";
-    private static final String ORGANISATION_UNIT_TAG = "Unidad organizativa";
-    private static final String ORGANISATION_AGENCY_TAG = "Agencia";
-    private static final String ORGANISATION_DATA_PROVIDER_TAG = "Proveedor de datos";
-    private static final String ORGANISATION_DATA_CONSUMER_TAG = "Consumidor de datos";
 
-    public static CkanPackage toNewCkanPackage(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService) {
+    public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService) {
         CkanPackage newPackage = new CkanPackage();
 
         String[] params = UrnUtils.splitUrnItem(organisationScheme.getUrn());
         String version = params[2];
 
-        newPackage.setName(getCkanPackageName(organisationScheme));
+        newPackage.setName(getCkanPackageName());
         newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getName().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage()));
         newPackage.setPrivates(false);
-        String maintainer = getMaintainer(organisationScheme, metadataConfigurationService);
+        String maintainer = getMaintainer();
 
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getOrganisationSchemeDescription(organisationScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        newPackage.setNotes(getOrganisationSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         newPackage.setVersion(version);
 
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
         newPackage.setOwner_org(getDefaultOrganisation(metadataConfigurationService));
-        newPackage.setResources(createResources(organisationScheme, metadataConfigurationService, newPackage.getName()));
+        newPackage.setResources(createResources(newPackage.getName()));
         newPackage.setTags(getTags(organisationScheme.getOrganisationSchemeType()));
 
         // empty metadata
@@ -63,12 +66,12 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         newPackage.setGroups(new ArrayList<>());
 
         // extra fields
-        newPackage.setExtras(getOrganisationSchemeExtraFields(metadataConfigurationService, externalCategoryService, newPackage.getName()));
+        newPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, newPackage.getName()));
 
         return newPackage;
     }
 
-    private static String getMaintainer(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService) {
+    private String getMaintainer() {
         if (organisationScheme.getMaintainer() != null) {
             return getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getMaintainer().getTitle().getLocalisedStrings(), metadataConfigurationService.retrieveCkanDefaultLanguage());
         } else {
@@ -76,45 +79,44 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         }
     }
 
-    public static String getCkanPackageName(OrganisationSchemeAvro organisationScheme) {
+    public String getCkanPackageName() {
         return CkanFormatUtil.formatCkanNameFromDatasetUrn(organisationScheme.getUrn());
     }
 
-    public static CkanPackage toExistingCkanPackage(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService,
-            ExternalCategoryService externalCategoryService, String id) {
+    public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
         CkanPackage existingPackage = new CkanPackage();
 
         String[] params = UrnUtils.splitUrnItem(organisationScheme.getUrn());
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setNotes(getOrganisationSchemeDescription(organisationScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()));
+        existingPackage.setNotes(getOrganisationSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()));
 
         existingPackage.setVersion(version);
 
         // extra fields
-        existingPackage.setExtras(getOrganisationSchemeExtraFields(metadataConfigurationService, externalCategoryService, getCkanPackageName(organisationScheme)));
+        existingPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, getCkanPackageName()));
 
         return existingPackage;
     }
 
-    private static List<CkanTag> getTags(OrganisationSchemeTypeEnumAvro organisationSchemeTypeEnumAvro) {
+    private List<CkanTag> getTags(OrganisationSchemeTypeEnumAvro organisationSchemeTypeEnumAvro) {
         List<CkanTag> tags = new ArrayList<>();
 
-        tags.add(new CkanTag(ORGANISATION_TAG));
+        tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.ORGANISATION_TAG, null)));
 
         switch (organisationSchemeTypeEnumAvro) {
             case ORGANISATION_UNIT_SCHEME:
-                tags.add(new CkanTag(ORGANISATION_UNIT_TAG));
+                tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.ORGANISATION_UNIT_TAG, null)));
                 break;
             case AGENCY_SCHEME:
-                tags.add(new CkanTag(ORGANISATION_AGENCY_TAG));
+                tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.ORGANISATION_AGENCY_TAG, null)));
                 break;
             case DATA_PROVIDER_SCHEME:
-                tags.add(new CkanTag(ORGANISATION_DATA_PROVIDER_TAG));
+                tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.ORGANISATION_DATA_PROVIDER_TAG, null)));
                 break;
             case DATA_CONSUMER_SCHEME:
-                tags.add(new CkanTag(ORGANISATION_DATA_CONSUMER_TAG));
+                tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.ORGANISATION_DATA_CONSUMER_TAG, null)));
                 break;
         }
 
@@ -122,24 +124,23 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
     }
 
-    public static List<CkanResource> createResources(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService, String packageId) {
+    public List<CkanResource> createResources(String packageId) {
 
         String[] params = UrnUtils.splitUrnItem(organisationScheme.getUrn());
 
-        return createResources(getOrganisationSchemeDescription(organisationScheme, metadataConfigurationService.retrieveCkanDefaultLanguage()),
-                getCkanUrlResource(organisationScheme, metadataConfigurationService), getNameResourceBase(params[0], params[1]), packageId, SrmResourcesFormat.getEnumList());
+        return createResources(getOrganisationSchemeDescription(metadataConfigurationService.retrieveCkanDefaultLanguage()), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId,
+                SrmResourcesFormat.getEnumList());
     }
 
-    public static List<CkanResource> updateResources(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService, String packageId,
-            CkanPackage existingPackage) {
-        return updateResources(getCkanUrlResource(organisationScheme, metadataConfigurationService), packageId, existingPackage.getResources());
+    public List<CkanResource> updateResources(String packageId, CkanPackage existingPackage) {
+        return updateResources(getCkanUrlResource(), packageId, existingPackage.getResources());
     }
 
-    private static CkanUrlResource getCkanUrlResource(OrganisationSchemeAvro organisationScheme, MetadataConfigurationService metadataConfigurationService) {
-        return new CkanUrlResource(getResourceUrlBase(organisationScheme.getUrn(), getResourceUrlBase(metadataConfigurationService)), Constants.URL_RESOURCES_ORGANISATIONS, null);
+    private CkanUrlResource getCkanUrlResource() {
+        return new CkanUrlResource(getResourceUrlBase(organisationScheme.getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_ORGANISATIONS, null);
     }
 
-    private static List<CkanExtra> getOrganisationSchemeExtraFields(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService, String packageName) {
+    private List<CkanExtra> getOrganisationSchemeExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
         List<CkanExtra> extraFields = getExtraFields(URL_BASE_IDENTIFIER, metadataConfigurationService, packageName);
 
         extraFields.add(new CkanExtra("theme", getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase())));
@@ -147,18 +148,18 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         return extraFields;
     }
 
-    private static String getOrganisationSchemeDescription(OrganisationSchemeAvro organisationScheme, String defaultLanguage) {
+    private String getOrganisationSchemeDescription(String defaultLanguage) {
         if (organisationScheme.getDescription() != null) {
             return getDescriptionFromLocalisedStringAvro(organisationScheme.getDescription().getLocalisedStrings(), defaultLanguage);
         }
         return null;
     }
 
-    private static String getNameResourceBase(String agency, String code) {
-        return BASE_ORGANISATION_RESOURCE + agency + ":" + code;
+    private String getNameResourceBase(String agency, String code) {
+        return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_ORGANISATION_RESOURCE, null) + agency + ":" + code;
     }
 
-    private static String getResourceUrlBase(MetadataConfigurationService metadataConfigurationService) {
+    private String getResourceUrlBase() {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_ORGANISATION_SCHEME;
     }
 }

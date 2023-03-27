@@ -6,6 +6,7 @@ import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -25,10 +26,15 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
     @Autowired
     private ExternalCategoryService externalCategoryService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public CkanPackage retrieveNewCkanPackage(CodelistAvro codelist) {
         try {
-            return CodelistAvro2CkanPackageMapper.toNewCkanPackage(codelist, metadataConfigurationService, externalCategoryService);
+            CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
+
+            return codelistAvro2CkanPackageMapper.toNewCkanPackage(externalCategoryService);
         } catch (Exception e) {
             log.debug("Error in new codelist  version publication into ckan: {}", e);
         }
@@ -38,7 +44,9 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
     @Override
     public CkanPackage retrieveUpdateCkanPackage(CodelistAvro codelist, String id) {
         try {
-            return CodelistAvro2CkanPackageMapper.toExistingCkanPackage(codelist, metadataConfigurationService, externalCategoryService, id);
+            CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
+
+            return codelistAvro2CkanPackageMapper.toExistingCkanPackage(externalCategoryService, id);
         } catch (Exception e) {
             log.debug("Error in existing codelist publication into ckan: {}", e);
         }
@@ -48,7 +56,9 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
     @Override
     public String retrieveCkanPackageName(CodelistAvro codelist) {
         try {
-            return CodelistAvro2CkanPackageMapper.getCkanPackageName(codelist);
+            CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
+
+            return codelistAvro2CkanPackageMapper.getCkanPackageName();
         } catch (Exception e) {
             log.debug("Error in retrieve codelist name: {}", e);
         }
@@ -58,7 +68,9 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
     @Override
     public List<CkanResource> retrieveUpdatedResources(CodelistAvro codelist, CkanPackage existingPackage, String packageId) {
         try {
-            return CodelistAvro2CkanPackageMapper.updateResources(codelist, metadataConfigurationService, packageId, existingPackage);
+            CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
+
+            return codelistAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -68,7 +80,9 @@ public class CodelistPublisherServiceImpl implements CodelistPublisherService {
     @Override
     public List<CkanResource> retrieveNewResources(CodelistAvro codelist, String packageId) {
         try {
-            return CodelistAvro2CkanPackageMapper.createResources(codelist, metadataConfigurationService, packageId);
+            CodelistAvro2CkanPackageMapper codelistAvro2CkanPackageMapper = new CodelistAvro2CkanPackageMapper(codelist, metadataConfigurationService, messageSource);
+
+            return codelistAvro2CkanPackageMapper.createResources(packageId);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }

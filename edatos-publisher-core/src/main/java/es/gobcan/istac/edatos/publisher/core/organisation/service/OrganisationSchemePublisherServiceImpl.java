@@ -6,6 +6,7 @@ import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
@@ -25,10 +26,16 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
     @Autowired
     private ExternalCategoryService externalCategoryService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public CkanPackage retrieveNewCkanPackage(OrganisationSchemeAvro organisationScheme) {
         try {
-            return OrganisationSchemeAvro2CkanPackageMapper.toNewCkanPackage(organisationScheme, metadataConfigurationService, externalCategoryService);
+            OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
+                    messageSource);
+
+            return organisationSchemeAvro2CkanPackageMapper.toNewCkanPackage(externalCategoryService);
         } catch (Exception e) {
             log.debug("Error in new organisation scheme publication into ckan: {}", e);
         }
@@ -38,7 +45,10 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
     @Override
     public CkanPackage retrieveUpdateCkanPackage(OrganisationSchemeAvro organisationScheme, String id) {
         try {
-            return OrganisationSchemeAvro2CkanPackageMapper.toExistingCkanPackage(organisationScheme, metadataConfigurationService, externalCategoryService, id);
+            OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
+                    messageSource);
+
+            return organisationSchemeAvro2CkanPackageMapper.toExistingCkanPackage(externalCategoryService, id);
         } catch (Exception e) {
             log.debug("Error in existing organisation scheme publication into ckan: {}", e);
         }
@@ -48,7 +58,10 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
     @Override
     public String retrieveCkanPackageName(OrganisationSchemeAvro organisationScheme) {
         try {
-            return OrganisationSchemeAvro2CkanPackageMapper.getCkanPackageName(organisationScheme);
+            OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
+                    messageSource);
+
+            return organisationSchemeAvro2CkanPackageMapper.getCkanPackageName();
         } catch (Exception e) {
             log.debug("Error in retrieve organisation scheme name: {}", e);
         }
@@ -58,7 +71,10 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
     @Override
     public List<CkanResource> retrieveUpdatedResources(OrganisationSchemeAvro organisationScheme, CkanPackage existingPackage, String packageId) {
         try {
-            return OrganisationSchemeAvro2CkanPackageMapper.updateResources(organisationScheme, metadataConfigurationService, packageId, existingPackage);
+            OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
+                    messageSource);
+
+            return organisationSchemeAvro2CkanPackageMapper.updateResources(packageId, existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve updated resources: {}", e);
         }
@@ -68,7 +84,10 @@ public class OrganisationSchemePublisherServiceImpl implements OrganisationSchem
     @Override
     public List<CkanResource> retrieveNewResources(OrganisationSchemeAvro organisationScheme, String packageId) {
         try {
-            return OrganisationSchemeAvro2CkanPackageMapper.createResources(organisationScheme, metadataConfigurationService, packageId);
+            OrganisationSchemeAvro2CkanPackageMapper organisationSchemeAvro2CkanPackageMapper = new OrganisationSchemeAvro2CkanPackageMapper(organisationScheme, metadataConfigurationService,
+                    messageSource);
+
+            return organisationSchemeAvro2CkanPackageMapper.createResources(packageId);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
         }
