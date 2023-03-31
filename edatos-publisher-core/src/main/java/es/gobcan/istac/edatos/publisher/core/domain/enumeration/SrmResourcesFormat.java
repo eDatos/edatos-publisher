@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum SrmResourcesFormat {
-    JSON, XML, TSV, CSV;
+    JSON, XML, TSV, CSV, XLS;
 
     public static List<String> getEnumList() {
         return Stream.of(SrmResourcesFormat.values()).map(SrmResourcesFormat::name).collect(Collectors.toList());

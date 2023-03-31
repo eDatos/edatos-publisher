@@ -4,6 +4,7 @@ public class Constants {
 
     public static final String MIME_TYPE_TSV = "text/tab-separated-values";
     public static final String MIME_TYPE_CSV = "text/csv";
+    public static final String MIME_TYPE_XLS = "application/vnd.ms-excel";
     public static final String URL_RESOURCES_CODELIST_CODES = "codes";
     public static final String URL_RESOURCES_CATEGORIES = "categories";
     public static final String URL_RESOURCES_CONCEPTS = "concepts";
