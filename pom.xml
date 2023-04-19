@@ -140,7 +140,7 @@
 
         <arte-libs-grammar.version>2.3.1-SNAPSHOT</arte-libs-grammar.version>
 
-        <commons-io.version>2.5</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>3.5</commons-lang.version>
         <commons-collections4.version>4.4</commons-collections4.version>
 
