@@ -92,9 +92,6 @@ jhipster:
                 token-validity-in-seconds: 36001
                 # 30 days
                 token-validity-in-seconds-for-remember-me: 2592000
-    mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: edatos_external_users@localhost
-        base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         logs: # Reports Dropwizard metrics in the logs
@@ -130,11 +127,6 @@ environment:
                 username: FILL_ME         
                 password: FILL_ME
 application:
-    metadata:
-        endpoint: http://localhost:4200
-    endpoint:
-        # Required: Aplication URL
-        app-url: http://localhost:4200
     jobs:
         cron:
             enabledTokens: "0 0/1 * * * *"

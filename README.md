@@ -25,10 +25,10 @@ En este apartado se especifican los requisitos necesarios, referidos al entorno,
 La aplicación requiere de determinados servicios para poder estar completamente operativa. Algunos de ellos son necesarios de manera directa y otros de manera indirecta:
 Los servicios necesarios de manera directa (son atacados directamente por la aplicación):
 - Base de datos common-metadata. Se utiliza para obtener todas las propiedades de conexión con la base de datos de la aplicación.
-- Resto de aplicaciones de la infraestructura de eDatos: metamac-notifications, metamac-statistical-operations, metamac-common-metadata y metamac-srm.
+- Resto de aplicaciones de la infraestructura de eDatos: metamac-notifications, metamac-statistical-operations, metamac-common-metadata metamac-statistical-resources y metamac-srm.
 
 ### Componentes de la instalación
-La plantilla consta de una aplicación con interfaz web y un servicio web REST interno.
+La plantilla consta de una aplicación con un servicio web REST interno.
 
 ### Gestión de roles y permisos
 
@@ -47,14 +47,14 @@ La plantilla consta de una aplicación con interfaz web y un servicio web REST i
     4. De esta forma la aplicación, en el momento de arrancar, llevará a cabo la creación de todos los objetos que sean necesarios sobre la base de datos.
 
 ### Paso 2. Despliegue en servidor de aplicaciones.
-- Ubicar el archivo *.war compilado con el perfil adecuado en el servidor de aplicaciones. Se pueden obtener más detalles en el [Anexo de perfiles de compilación](#anexo-perfiles-de-compilaci%C3%B3n). 
+- Ubicar el archivo *.war compilado con el perfil adecuado en el servidor de aplicaciones. Se pueden obtener más detalles en el [Anexo de perfiles de compilación](#anexo-perfiles-de-compilación). 
 - Definir si se desea externalizar la configuración de la aplicación o mantener dentro del propio archivo war.
     1. Si no se desea externalizar la configuración de las propiedades a un directorio DATA se puede omitir este paso.
     2. Si se desea externalizar la configuración de las propiedades a un directorio DATA se tendrán que realizar los siguientes pasos:
         - Se hará una copia del archivo **edatos-publisher.war/WEB-INF/classes/config/application-env.yml** a un directorio externalizado de su elección.
         - Se editará el archivo **edatos-publisher.war/WEB-INF/classes/config/data-location.properties** y se especificará la ruta anterior.
-- Se cumplimentarán las propiedades del fichero **application-env.yml**. Se puede consultar el detalle sobre cada una de las propiedades en el [Anexo de descripción de propiedades de configuración](#anexo-descripci%C3%B3n-de-las-propiedades-de-configuraci%C3%B3n).
-
+- Se cumplimentarán las propiedades del fichero **application-env.yml**. Se puede consultar el detalle sobre cada una de las propiedades en el [Anexo de descripción de propiedades de configuración](#anexo-descripción-de-las-propiedades-de-configuración).
+- Ejecutar los scripts indicados en el anexo "## Anexo. Propiedades common-metadata"
 
 ### Paso 3. Configuración de logging.
 Pueden modificarse los ficheros relacionados con la configuración de logging en **edatos-publisher.war/WEB-INF/classes/logback.xml**.
@@ -69,13 +69,23 @@ Pueden modificarse los ficheros relacionados con la configuración de logging en
 
 ----------
 
+## Anexo. Descripción de las propiedades de configuración
+- `environment.edatos.configuration.db.driverName`
+   - driver para conexión a bd postgresql de common-metadata
+- `environment.edatos.configuration.db.url`
+   - url de conexión a la bd postgresql de common-metadata
+- `environment.edatos.configuration.db.username`
+   - usuario para conexión a bd postgresql de common-metadata
+- `environment.edatos.configuration.db.password`
+   - password para conexión a bd postgresql de common-metadata
+   
 ## Anexo. Propiedades common-metadata
 - Será necesario ejecutar los scripts contenidos en la carpeta:
 ```
 etc/db/common-metadata/db/common-metadata/postgresql/*.sql
 ```
 !!Atención!!
-Por otro lado, esta aplicación consumer los servicios de la api del ckan. Para consumir dichos servicios se requiere la base de los endpoints del ckan. Dicha url base se mantendrá en el proyecto del ckan a través de una propiedad del common-metadata "edatos.ckan.url.base". Será necesario ejecutar el script .sql que se encuentra en dicho proyecto.
+Por otro lado, esta aplicación consume los servicios de la api del ckan. Para consumir dichos servicios se requiere la base de los endpoints del ckan. Dicha url base se mantendrá en el proyecto del ckan a través de una propiedad del common-metadata "edatos.ckan.url.base". Será necesario ejecutar el script .sql que se encuentra en dicho proyecto.
 
 
 ## Anexo. Perfiles de compilación
@@ -114,7 +124,7 @@ Hay que tener presente que si la aplicación se compila con el perfil de desarro
 
 A continuación se describen los pasos a seguir para configurar el entorno de desarrollo sobre el cual podamos arrancar y modificar la aplicación.
 
-En primer lugar, tal y como se describe en el [Anexo Perfiles de compilación](#anexo-perfiles-de-compilaci%C3%B3n), debemos compilar la aplicación con Maven.  Para trabajar en un entorno de desarrollo, basta que la compilemos con el perfil `dev`.
+En primer lugar, tal y como se describe en el [Anexo Perfiles de compilación](#anexo-perfiles-de-compilación), debemos compilar la aplicación con Maven.  Para trabajar en un entorno de desarrollo, basta que la compilemos con el perfil `dev`.
 
 A continuación, para terminar de construir la aplicación, es necesario instalar las siguientes dependencias:
 

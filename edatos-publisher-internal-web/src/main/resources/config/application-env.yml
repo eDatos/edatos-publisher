@@ -10,14 +10,6 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-# comprobar si las propiedades del mail se usan en algún lado y borrarlas
-# buscar en el metadata los datos en datasource: están bajo metamac.edatos_external_users.db y se llama en DatabaseConfiguration
-# cambiar el datasource para tener el common metadata
-
-# application.metadata y application.endpoint probablemente no hace falta
-# las del cas están en common metadata
-# añadir cron
-
 spring:
     profiles:
         active: dev
