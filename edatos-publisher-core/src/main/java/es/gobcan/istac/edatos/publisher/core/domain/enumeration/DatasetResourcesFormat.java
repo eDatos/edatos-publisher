@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum DatasetResourcesFormat {
-    JSON, XML, JSONSTAT, TSV, CSV;
+    JSON, XML, JSONSTAT, TSV, CSV, XLS;
 
     public static List<String> getEnumList() {
         return Stream.of(DatasetResourcesFormat.values()).map(DatasetResourcesFormat::name).collect(Collectors.toList());
