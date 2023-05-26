@@ -4,6 +4,9 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+	 <property name="now" value="now()" dbms="h2" />
+    <property name="now" value="current_timestamp" dbms="postgresql" />
+
     <changeSet id="00000000000000" author="arte">
         <createSequence sequenceName="seq_admin_audit_event" startValue="1" incrementBy="50" />
     </changeSet>
