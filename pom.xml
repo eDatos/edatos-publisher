@@ -140,22 +140,23 @@
 
         <arte-libs-grammar.version>2.3.1-SNAPSHOT</arte-libs-grammar.version>
 
-        <commons-io.version>2.5</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>3.5</commons-lang.version>
         <commons-collections4.version>4.4</commons-collections4.version>
 
-        <edatos-core-common.version>0.0.1-SNAPSHOT</edatos-core-common.version>
-        <edatos-rest-common.version>0.0.1-SNAPSHOT</edatos-rest-common.version>
+        <edatos-core-common.version>1.0.2-SNAPSHOT</edatos-core-common.version>
+        <edatos-rest-common.version>1.0.1-SNAPSHOT</edatos-rest-common.version>
 
-        <metamac-notifications-rest-internal-api.version>3.1.1-SNAPSHOT</metamac-notifications-rest-internal-api.version>
-        <metamac-statistical-operations-rest-internal-api.version>2.2.0</metamac-statistical-operations-rest-internal-api.version>
-        <metamac-statistical-operations-rest-external-api.version>3.2.0</metamac-statistical-operations-rest-external-api.version>
-        <metamac-statistical-operations.version>2.5.2-SNAPSHOT</metamac-statistical-operations.version>
-        <metamac-statistical-resources.version>3.12.0</metamac-statistical-resources.version>
-        <metamac-common-metadata-rest-external-api.version>2.3.0</metamac-common-metadata-rest-external-api.version>
-        <metamac-srm-rest-internal-api.version>2.2.0</metamac-srm-rest-internal-api.version>
-        <metamac-srm-rest-external-api.version>2.2.0</metamac-srm-rest-external-api.version>
-        <metamac-srm-kafka.version>2.9.1-SNAPSHOT</metamac-srm-kafka.version>
+        <metamac-notifications-rest-internal-api.version>3.5.1-SNAPSHOT</metamac-notifications-rest-internal-api.version>
+        <metamac-statistical-operations-rest-internal-api.version>2.4.1-SNAPSHOT</metamac-statistical-operations-rest-internal-api.version>
+        <metamac-statistical-operations-rest-external-api.version>3.4.1-SNAPSHOT</metamac-statistical-operations-rest-external-api.version>
+        <metamac-statistical-operations.version>3.1.1-SNAPSHOT</metamac-statistical-operations.version>
+        <metamac-statistical-resources.version>7.0.2-SNAPSHOT</metamac-statistical-resources.version>
+        <metamac-common-metadata-rest-external-api.version>3.2.1-SNAPSHOT</metamac-common-metadata-rest-external-api.version>
+        <metamac-srm-rest-internal-api.version>2.7.1-SNAPSHOT</metamac-srm-rest-internal-api.version>
+        <metamac-srm-rest-external-api.version>2.7.1-SNAPSHOT</metamac-srm-rest-external-api.version>
+        <edatos-core-common.version>1.0.2-SNAPSHOT</edatos-core-common.version>
+        <metamac-srm-kafka.version>5.0.2-SNAPSHOT</metamac-srm-kafka.version>
 
         <hibernate-types.version>2.10.4</hibernate-types.version>
         <h2.version>1.4.200</h2.version>
@@ -638,13 +639,6 @@
                 <version>${h2.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <dependency>
-                <groupId>org.siemac.metamac</groupId>
-                <artifactId>edatos-rest-common</artifactId>
-                <version>${edatos-rest-common.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 </project>

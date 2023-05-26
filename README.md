@@ -1,5 +1,5 @@
 
-# Arte Application Template
+# edatos-Publisher
 
 En este tutorial se explica el proceso a seguir para llevar a cabo el proceso de instalación de la aplicación. Se recomienda llevar a cabo una lectura rápida de todo el tutorial antes de comenzar con el proceso de instalación.
 Además, podrá encontrar otros anexos de utilidad en los que se detallan algunas cuestiones relacionadas con el desarrollo, los diferentes perfiles de compilación,...
@@ -9,31 +9,30 @@ Además, podrá encontrar otros anexos de utilidad en los que se detallan alguna
 ## Introducción
 
 ### Descripción de la aplicación
-Arte Application Template es la plantilla base de aplicaciones web de gestión sobre la que Arte Consultores S.L. crea sus proyectos.
-
-La plantilla está basada en el nuevo stack (ver [Más Información](#M%C3%A1s-informaci%C3%B3n)) aportando toda la arquitectura y configuración necesaria sobre la que trabajar en nuevos proyectos. Para mantenerlo lo más simple posible solo implementa el manejo de los usuarios y roles con acceso a la aplicación. 
+Este proyecto obtendrá mensajes de topics de kafka de los distintos recursos de edatos (datasets, clasificaciones, temas, organizaciones o conceptos)  y los mapeará a un recurso de ckan para permitir enviarlos a través de la api de ckan para su publicación. 
 
 ### Requerimientos previos
-
+Esta aplicación se integra dentro de la infraestructura de eDatos, con lo que es necesario que los sistemas que lo componen se encuentren disponibles.
 #### Requisitos del entorno
 En este apartado se especifican los requisitos necesarios, referidos al entorno, para que la aplicación funcione adecuadamente:
 - Apache Tomcat.  8.5
 - Java. 1.8.x
-- PostgreSQL.  **TODO**
+- PostgreSQL 12.2
+- Apache Kafka Confluent Community 6.1.1
 
 
 #### Dependencias
 La aplicación requiere de determinados servicios para poder estar completamente operativa. Algunos de ellos son necesarios de manera directa y otros de manera indirecta:
 Los servicios necesarios de manera directa (son atacados directamente por la aplicación):
-- CAS. Se utiliza para llevar a cabo las labores de autenticación.
-
+- Base de datos common-metadata. Se utiliza para obtener todas las propiedades de conexión con la base de datos de la aplicación.
+- Resto de aplicaciones de la infraestructura de eDatos: metamac-notifications, metamac-statistical-operations, metamac-common-metadata metamac-statistical-resources y metamac-srm.
 
 ### Componentes de la instalación
-La plantilla consta de una aplicación con interfaz web y un servicio web REST.
+La plantilla consta de una aplicación con un servicio web REST interno.
 
 ### Gestión de roles y permisos
 
-* :construction: **_TODO_**
+* Esta aplicación no tiene interfaz web por lo que no requiere permisos a usuarios. Todos los procesos son en background.
 
 ----------
 
@@ -48,33 +47,19 @@ La plantilla consta de una aplicación con interfaz web y un servicio web REST.
     4. De esta forma la aplicación, en el momento de arrancar, llevará a cabo la creación de todos los objetos que sean necesarios sobre la base de datos.
 
 ### Paso 2. Despliegue en servidor de aplicaciones.
-- Ubicar el archivo *.war compilado con el perfil adecuado en el servidor de aplicaciones. Se pueden obtener más detalles en el [Anexo de perfiles de compilación](#anexo-perfiles-de-compilaci%C3%B3n). 
+- Ubicar el archivo *.war compilado con el perfil adecuado en el servidor de aplicaciones. Se pueden obtener más detalles en el [Anexo de perfiles de compilación](#anexo-perfiles-de-compilación). 
 - Definir si se desea externalizar la configuración de la aplicación o mantener dentro del propio archivo war.
     1. Si no se desea externalizar la configuración de las propiedades a un directorio DATA se puede omitir este paso.
     2. Si se desea externalizar la configuración de las propiedades a un directorio DATA se tendrán que realizar los siguientes pasos:
         - Se hará una copia del archivo **edatos-publisher.war/WEB-INF/classes/config/application-env.yml** a un directorio externalizado de su elección.
         - Se editará el archivo **edatos-publisher.war/WEB-INF/classes/config/data-location.properties** y se especificará la ruta anterior.
-- Se cumplimentarán las propiedades del fichero **application-env.yml**. Se puede consultar el detalle sobre cada una de las propiedades en el [Anexo de descripción de propiedades de configuración](#anexo-descripci%C3%B3n-de-las-propiedades-de-configuraci%C3%B3n).
-
+- Se cumplimentarán las propiedades del fichero **application-env.yml**. Se puede consultar el detalle sobre cada una de las propiedades en el [Anexo de descripción de propiedades de configuración](#anexo-descripción-de-las-propiedades-de-configuración).
+- Ejecutar los scripts indicados en el anexo "## Anexo. Propiedades common-metadata"
 
 ### Paso 3. Configuración de logging.
 Pueden modificarse los ficheros relacionados con la configuración de logging en **edatos-publisher.war/WEB-INF/classes/logback.xml**.
 
 ### Paso 4. Arrancar la aplicación.
-
-### Paso 5. Crear usuario administador
-Para poder acceder a la aplicación __*es necesario dar de alta un usuario*__.  A continuación, se enumerarán y  explicarán los procesos a realizar para llevar a cabo esta tarea:
-
-1. Crear un usuario y asignarle un rol, para ello es necesario ejecutar la siguiente instrucción SQL:
-
-   ```sql
-   -- Crea un usuario y se le asigna un rol existente
-   SELECT add_usuario_with_existing_rol('RELLENAR_USUARIO_LDAP', 'RELLENAR_NOMBRE_USUARIO', 'RELLENAR_PRIMER_APPELLIDO_USUARIO', 'RELLENAR_SEGUNDO_APPELLIDO_USUARIO', 'RELLENAR_CORREO_ELECTRONICO_USUARIO', 'RELLENAR_CODIGO_ROL_EXISTENTE');
-   ```
-
-Una vez generado este usuario administrador (con todos los permisos), este tendrá los permisos necesario para dar de alta el resto de usuarios mediante la aplicación, en la sección de **Gestión de usuarios**.
-
->  **Importante:** Existe un fichero script SQL sobre el que basarse para realizar las acciones anteriores. Dicho fichero se encuentra en: [etc/db/01-configuraciones/01-insercion-roles-y-usuarios.sql](etc/db/01-configuraciones/01-insercion-roles-y-usuarios.sql "Fichero de inserción de roles y usuarios").
 
 ----------
 
@@ -85,48 +70,22 @@ Una vez generado este usuario administrador (con todos los permisos), este tendr
 ----------
 
 ## Anexo. Descripción de las propiedades de configuración
-- `spring.datasource.url`
-   - Cadena de conexión a la base de datos.
-- `spring.datasource.username`
-   - Nombre del usuario de conexión a la base de datos.
-- `spring.datasource.password`
-   - Password de conexión a la base de datos.
-- `spring.jpa.show-sql`
-   - Permite añadir al log las sentencias SQL.
-- `spring.mail.host`
-   - Host del servidor para el envío del mail.
-- `spring.mail.port`
-   - Puerto del servidor para el envío del mail.
-- `spring.mail.username`
-   - Nombre del usuario para el envío del mail.
-- `spring.mail.password`
-   - Contraseña del usuario especificado anteriormente.
-- `jhipster.mail.from`
-   - Cuenta desde la que se quiere especificar que se envían los e-mails.
-- `jhipster.mail.base-url`
-   - URL de acceso a la aplicación. Esta URL se usará para enviarla por correo a los nuevos usuarios que sean dados de alta en la aplicación.
-- `application.cas.endpoint`
-   - Endpoint donde se localiza el CAS.
-- `application.cas.service`
-   - URL absoluta del endpoint de la aplicación donde se va a validar el usuario tras la autenticación en el CAS ('login/cas'). Si la URL de la aplicación es http://miaplicacion.com, esta propiedad debe tomar el valor http://miaplicacion.com/login/cas.
-- `application.cas.login`
-   - URL a la que se debe acceder para realizar la acción de login. Sólo debe cumplimentarse en el caso se que su valor sea distinto a `application.cas.endopoint`+ '/login'.
-- `application.cas.logout`
-   - URL a la que se debe acceder para realizar la acción de logout. Sólo debe cumplimentarse en el caso se que su valor sea distinto a `application.cas.endopoint`+ '/logout'.
-- `application.cas.validate`
-   - URL a la que se debe acceder para realizar la acción de logout. Sólo debe cumplimentarse en el caso se que su valor sea distinto a `application.cas.endopoint`+ '/logout'.
-- `debug`
-   - Permite aumentar el nivel de log a DEBUG.    
-- `application.ldap.url`
-   - URL del servidor LDAP. Ejemplo: ldap://ldap.miorganizacion.com
-- `application.ldap.username`
-   - Usuario que se usar para conectarse al servidor LDAP. Ejemplo: cn=username,dc=miorganizacion,dc=com
-- `application.ldap.password`: 
-   - Contraseña del usuario LDAP. 
-- `application.ldap.base`
-   - Ruta relativa dónde se realizarán las operaciones. Ejemplo ou=usuarios,dc=miorganizacion,dc=com
-- `application.ldap.searchUsersProperty`
-   - Propiedad de LDAP por la que se buscará el usuario mediante su _username_. Valores admitidos: sAMAccountName, cn, uid
+- `environment.edatos.configuration.db.driverName`
+   - driver para conexión a bd postgresql de common-metadata
+- `environment.edatos.configuration.db.url`
+   - url de conexión a la bd postgresql de common-metadata
+- `environment.edatos.configuration.db.username`
+   - usuario para conexión a bd postgresql de common-metadata
+- `environment.edatos.configuration.db.password`
+   - password para conexión a bd postgresql de common-metadata
+   
+## Anexo. Propiedades common-metadata
+- Será necesario ejecutar los scripts contenidos en la carpeta:
+```
+etc/db/common-metadata/db/common-metadata/postgresql/*.sql
+```
+!!Atención!!
+Por otro lado, esta aplicación consume los servicios de la api del ckan. Para consumir dichos servicios se requiere la base de los endpoints del ckan. Dicha url base se mantendrá en el proyecto del ckan a través de una propiedad del common-metadata "edatos.ckan.url.base". Será necesario ejecutar el script .sql que se encuentra en dicho proyecto.
 
 
 ## Anexo. Perfiles de compilación
@@ -165,7 +124,7 @@ Hay que tener presente que si la aplicación se compila con el perfil de desarro
 
 A continuación se describen los pasos a seguir para configurar el entorno de desarrollo sobre el cual podamos arrancar y modificar la aplicación.
 
-En primer lugar, tal y como se describe en el [Anexo Perfiles de compilación](#anexo-perfiles-de-compilaci%C3%B3n), debemos compilar la aplicación con Maven.  Para trabajar en un entorno de desarrollo, basta que la compilemos con el perfil `dev`.
+En primer lugar, tal y como se describe en el [Anexo Perfiles de compilación](#anexo-perfiles-de-compilación), debemos compilar la aplicación con Maven.  Para trabajar en un entorno de desarrollo, basta que la compilemos con el perfil `dev`.
 
 A continuación, para terminar de construir la aplicación, es necesario instalar las siguientes dependencias:
 

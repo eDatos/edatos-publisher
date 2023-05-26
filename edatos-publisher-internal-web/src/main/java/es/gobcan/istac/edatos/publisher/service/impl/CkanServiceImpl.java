@@ -1,54 +1,67 @@
 package es.gobcan.istac.edatos.publisher.service.impl;
 
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.*;
-import es.gobcan.istac.edatos.publisher.service.CkanService;
-import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageCreateUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchResourceUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByNameUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceCreateUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.getBaseHttpHeader;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-
-import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.*;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResourceResponse;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanSearchResponse;
+import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
+import es.gobcan.istac.edatos.publisher.service.CkanService;
 
 @Service
 public class CkanServiceImpl implements CkanService {
 
-    RestTemplate restTemplate;
+    private final MetadataConfigurationService metadataConfigurationService;
 
-    public CkanServiceImpl() {
+    HttpHeaders httpHeaders;
+    RestTemplate restTemplate;
+    String urlBase;
+    String apiKey;
+
+    public CkanServiceImpl(MetadataConfigurationService metadataConfigurationService) {
+        this.metadataConfigurationService = metadataConfigurationService;
         restTemplate = new RestTemplate();
+        httpHeaders = getBaseHttpHeader(apiKey);
+        urlBase = this.metadataConfigurationService.retrieveCkanUrlBase();
+        apiKey = this.metadataConfigurationService.retrieveCkanApiKey();
     }
 
     @Override
-    public CkanSearchResponse getDatasetByUrn(String urn) {
-        String packageSearchUrl = buildPackageSearchByUrnUrl(urn);
+    public CkanSearchResponse getDatasetByName(String name) {
+        String packageSearchUrl = buildPackageSearchByNameUrl(urlBase, name);
 
-        HttpHeaders httpHeaders = getBaseHttpHeader(restTemplate, packageSearchUrl);
         ResponseEntity<CkanSearchResponse> response = restTemplate.getForEntity(packageSearchUrl, CkanSearchResponse.class, httpHeaders);
 
         return response.getBody();
     }
 
     @Override
-    public CkanPackageResponse createDataset(CkanPackage dataset) {
-        String packageCreateUrl = buildPackageCreateUrl();
-        HttpEntity<CkanPackage> request = new HttpEntity<>(dataset, getBaseHttpHeader(restTemplate, packageCreateUrl));
+    public CkanPackageResponse createPackage(CkanPackage ckanPackage) {
+        String packageCreateUrl = buildPackageCreateUrl(urlBase);
+        HttpEntity<CkanPackage> request = new HttpEntity<>(ckanPackage, getBaseHttpHeader(apiKey));
         ResponseEntity<CkanPackageResponse> response = restTemplate.postForEntity(packageCreateUrl, request, CkanPackageResponse.class);
-
-        //createResource(response.getBody().getResult().getId(), "https://www.stats.govt.nz/assets/Uploads/Annual-enterprise-survey/Annual-enterprise-survey-2020-financial-year-provisional/Download-data/annual-enterprise-survey-2020-financial-year-provisional-csv.csv"); // TODO EDATOS-3460
 
         return response.getBody();
     }
 
     @Override
-    public CkanResourceResponse createResource(String package_id, String url) {
-        CkanResource resource = new CkanResource(package_id, url, "Nombre del recursos porque sí"); // TODO EDATOS-3460
+    public CkanResourceResponse createResource(CkanResource ckanResource) {
 
-        String resourceCreateUrl = buildResourceCreateUrl();
-        HttpEntity<CkanResource> request = new HttpEntity<>(resource, getBaseHttpHeader(restTemplate, resourceCreateUrl));
+        String resourceCreateUrl = buildResourceCreateUrl(urlBase);
+        HttpEntity<CkanResource> request = new HttpEntity<>(ckanResource, getBaseHttpHeader(apiKey));
 
         ResponseEntity<CkanResourceResponse> response = restTemplate.postForEntity(resourceCreateUrl, request, CkanResourceResponse.class);
 
@@ -56,16 +69,23 @@ public class CkanServiceImpl implements CkanService {
     }
 
     @Override
-    public CkanGenericResponse updateDataset(String id, CategorySchemeAvro category) {
-        createResource(id, "https://www.stats.govt.nz/assets/Uploads/Annual-enterprise-survey/Annual-enterprise-survey-2020-financial-year-provisional/Download-data/annual-enterprise-survey-2020-financial-year-provisional-csv.csv"); // TODO EDATOS-3460
+    public CkanPackageResponse updatePackage(CkanPackage ckanPackage) {
 
-        CkanPackage newPackage = new CkanPackage();
-        newPackage.setResources(new ArrayList<>());
-
-        String packagePatchUrl = buildPackagePatchUrl(id);
-        HttpEntity<CkanPackage> request = new HttpEntity<>(newPackage, getBaseHttpHeader(restTemplate, packagePatchUrl));
-        ResponseEntity<CkanGenericResponse> response = restTemplate.postForEntity(packagePatchUrl, request, CkanGenericResponse.class);
+        String packagePatchUrl = buildPackagePatchUrl(urlBase);
+        HttpEntity<CkanPackage> request = new HttpEntity<>(ckanPackage, getBaseHttpHeader(apiKey));
+        ResponseEntity<CkanPackageResponse> response = restTemplate.postForEntity(packagePatchUrl, request, CkanPackageResponse.class);
 
         return response.getBody();
     }
+
+    @Override
+    public CkanResourceResponse updateResource(CkanResource resource) {
+
+        String resourcePatchUrl = buildPackagePatchResourceUrl(urlBase);
+        HttpEntity<CkanResource> request = new HttpEntity<>(resource, getBaseHttpHeader(apiKey));
+        ResponseEntity<CkanResourceResponse> response = restTemplate.postForEntity(resourcePatchUrl, request, CkanResourceResponse.class);
+
+        return response.getBody();
+    }
+
 }

@@ -12,6 +12,8 @@
 
 
 spring:
+    application:
+        name: publisher
     profiles:
         active: dev
     devtools:
@@ -27,19 +29,27 @@ spring:
         show-sql: true
         properties:
             hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
     messages:
         cache-seconds: 1
     thymeleaf:
         cache: false
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+    view:
+        prefix: /WEB-INF/jsp/
+        suffix: .jsp
 
 liquibase:
     contexts: dev
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
-# keytool -genkey -alias edatos_publisher -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
+# keytool -genkey -alias edatos_external_users -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
 #
 # You can also use Let's Encrypt:
 # https://maximilian-boehm.com/hp2121/Create-a-Java-Keystore-JKS-from-Let-s-Encrypt-Certificates.htm
@@ -52,7 +62,7 @@ liquibase:
 #        key-store: keystore.p12
 #        key-store-password: <your-password>
 #        keyStoreType: PKCS12
-#        keyAlias: edatos_publisher
+#        keyAlias: edatos_external_users
 # ===================================================================
 server:
     port: 8080
@@ -112,7 +122,12 @@ environment:
     edatos:
         configuration:
             db:
-                driverName: FILL_ME
-                url: FILL_ME
-                username: FILL_ME
+                driverName: FILL_ME              # Ejemplo: org.postgresql.Driver
+                url: FILL_ME                     # Ejemplo: postgresql://servidor:puerto/bd_schema
+                username: FILL_ME         
                 password: FILL_ME
+application:
+    jobs:
+        cron:
+            enabledTokens: "0 0/1 * * * *"
+    

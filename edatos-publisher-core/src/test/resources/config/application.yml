@@ -36,6 +36,7 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
             hibernate.hbm2ddl.auto: validate
+            hibernate.dialect: org.hibernate.dialect.PostgreSQL82Dialect
     messages:
         basename: i18n/test_messages, i18n/messages-publisher
     mvc:
@@ -94,16 +95,14 @@ jhipster:
 # https://jhipster.github.io/common-application-properties/
 # ===================================================================
 
+
 application:
-    ldap:
-        url: FILL_URL # Ejemplo: ldap://ldap.miorganizacion.com
-        username: FILL_USERNAME # Ejemplo: cn=username,dc=miorganizacion,dc=com
-        password: FILL_PASSWORD # Ejemplo: mipassword
-        base: ou=usuarios,dc=miorganizacion,dc=com # Ejemplo ou=usuarios,dc=miorganizacion,dc=com
-        searchUsersProperty: FILL_SEARCH_USERS_PROPERTY # Ejemplo: uid
     jobs:
         cron:
+            disabledTokens: 0 0 3 * * *
             enabledTokens: 0 0 4 * * *
+            registrationTokens: 0 0 5 * * *
+            captchaResponses: 0 0/30 * * * ?
 
 environment:
     edatos:
