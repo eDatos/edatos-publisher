@@ -1,7 +1,11 @@
 package es.gobcan.istac.edatos.publisher.core.ckan.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CkanResource {
 
+    private String id;
     private String package_id;
     private String url;
     private String name;
@@ -17,7 +21,8 @@ public class CkanResource {
     private String last_modified;
     private String cache_last_updated;
 
-    public CkanResource() {}
+    public CkanResource() {
+    }
 
     public CkanResource(String package_id, String url, String name) {
         this.package_id = package_id;
@@ -135,5 +140,13 @@ public class CkanResource {
 
     public void setCache_last_updated(String cache_last_updated) {
         this.cache_last_updated = cache_last_updated;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -1,11 +1,18 @@
 package es.gobcan.istac.edatos.publisher.core.ckan.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class CkanPackage {
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CkanPackage implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private String name;
     private String title;
 
@@ -28,6 +35,7 @@ public class CkanPackage {
     private List<CkanRelationship> relationships_as_subject;
     private List<CkanGroup> groups;
     private String owner_org;
+    private String id;
 
     public String getName() {
         return name;
@@ -187,5 +195,13 @@ public class CkanPackage {
 
     public void setOwner_org(String owner_org) {
         this.owner_org = owner_org;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
