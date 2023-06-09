@@ -18,10 +18,10 @@
     <name>eDatos Publisher</name>
 
     <scm>
-        <connection>scm:git:http://git.arte-consultores.com/istac/edatos-publisher/</connection>
-        <developerConnection>scm:git:http://git.arte-consultores.com/istac/edatos-publisher/</developerConnection>
+        <connection>scm:git:https://git.arte-consultores.com/istac/edatos-publisher/</connection>
+        <developerConnection>scm:git:https://git.arte-consultores.com/istac/edatos-publisher/</developerConnection>
         <tag>HEAD</tag>
-        <url>http://git.arte-consultores.com/istac/edatos-publisher</url>
+        <url>https://git.arte-consultores.com/istac/edatos-publisher</url>
     </scm>
     <issueManagement>
         <system>Jira</system>
