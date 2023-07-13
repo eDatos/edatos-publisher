@@ -15,8 +15,7 @@ public class ExternalCategoryServiceImpl implements ExternalCategoryService {
     /**
      * Amount of resources that can be obtained in a request.
      */
-    private static final String LIMIT = String.valueOf(Integer.MAX_VALUE);
-    private static final Logger LOG = LoggerFactory.getLogger(ExternalCategoryServiceImpl.class);
+    private static final Logger     LOG = LoggerFactory.getLogger(ExternalCategoryServiceImpl.class);
 
     private final EDatosApisLocator eDatosApisLocator;
 
@@ -26,16 +25,16 @@ public class ExternalCategoryServiceImpl implements ExternalCategoryService {
 
     @Override
     public Category getCategory(String agency, String resourceId, String version, String categoryId) {
-        LOG.info("Making request to Structural Resources Manager to GET a category. agency: {}, resourceId: {}, version: {}, categoryId: {}",
+        LOG.debug("Making request to Structural Resources Manager to GET a category. agency: {}, resourceId: {}, version: {}, categoryId: {}",
                 agency + "/" + resourceId + "/" + version + "/" + categoryId);
 
-        return eDatosApisLocator.srmExternal().retrieveCategory(agency, resourceId, version, categoryId);
+        return eDatosApisLocator.srmExternal().retrieveCategory(agency, resourceId, version, categoryId, null);
 
     }
 
     @Override
     public CategorySchemes getCategoryByQuery(String agency, String resourceId, String query) {
-        LOG.info("Making request to Structural Resources Manager to GET a category. agency: {}, resourceId: {}, query: {}", agency + "/" + resourceId + "/" + query);
+        LOG.debug("Making request to Structural Resources Manager to GET a category. agency: {}, resourceId: {}, query: {}", agency + "/" + resourceId + "/" + query);
 
         return eDatosApisLocator.srmExternal().findCategorySchemes(agency, resourceId, query, null, null, null);
 

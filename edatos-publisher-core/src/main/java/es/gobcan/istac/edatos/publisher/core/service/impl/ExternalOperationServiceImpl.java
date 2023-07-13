@@ -11,7 +11,7 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 @Service
 public class ExternalOperationServiceImpl implements ExternalOperationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExternalCategoryServiceImpl.class);
+    private static final Logger     LOG = LoggerFactory.getLogger(ExternalCategoryServiceImpl.class);
 
     private final EDatosApisLocator eDatosApisLocator;
 
@@ -21,7 +21,7 @@ public class ExternalOperationServiceImpl implements ExternalOperationService {
 
     @Override
     public Operation retrieveStatisticalOperationById(String statisticalOperationId) {
-        LOG.info("Making request to internal statistical operation Manager to GET operation by Id. OperationId: {}", statisticalOperationId);
+        LOG.debug("Making request to internal statistical operation Manager to GET operation by Id. OperationId: {}", statisticalOperationId);
 
         return eDatosApisLocator.operationsInternal().retrieveOperationById(statisticalOperationId);
 

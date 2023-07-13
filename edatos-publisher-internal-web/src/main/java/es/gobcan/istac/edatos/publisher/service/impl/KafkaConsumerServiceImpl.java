@@ -20,11 +20,11 @@ import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
 @Service
 public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
-    private final Logger log = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
+    private final Logger                  log = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
 
-    private final ExternalCkanItemMapper externalCkanItemMapper;
+    private final ExternalCkanItemMapper  externalCkanItemMapper;
     private final ExternalCkanItemService externalCkanItemService;
-    private final ConsumerProcessFacade consumerProcessFacade;
+    private final ConsumerProcessFacade   consumerProcessFacade;
 
     public KafkaConsumerServiceImpl(ConsumerProcessFacade consumerProcessFacade, ExternalCkanItemService externalCkanItemService, ExternalCkanItemMapper externalCkanItemMapper) {
         this.consumerProcessFacade = consumerProcessFacade;
@@ -47,7 +47,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getCodelistsPublicationTopic()}")
     public void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord) {
         CodelistAvro codelist = consumerRecord.value();
-        if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(codelist.getProcStatus())) {
+        if (checkCanBePublished(codelist.getProcStatus(), codelist.getLatestVersionNumberPublic())) {
             boolean isProcessed = consumerProcessFacade.processCodelistPublicationMessage(codelist);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(codelist, isProcessed ? CkanState.SENT : CkanState.FAILED));
@@ -60,7 +60,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getConceptSchemesPublicationTopic()}")
     public void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord) {
         ConceptSchemeAvro conceptScheme = consumerRecord.value();
-        if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(conceptScheme.getProcStatus())) {
+        if (checkCanBePublished(conceptScheme.getProcStatus(), conceptScheme.getLatestVersionNumberPublic())) {
             boolean isProcessed = consumerProcessFacade.processConceptSchemePublicationMessage(conceptScheme);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(conceptScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
@@ -73,7 +73,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
     public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
         CategorySchemeAvro categoryScheme = consumerRecord.value();
-        if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(categoryScheme.getProcStatus())) {
+        if (checkCanBePublished(categoryScheme.getProcStatus(), categoryScheme.getLatestVersionNumberPublic())) {
             boolean isProcessed = consumerProcessFacade.processCategorySchemePublicationMessage(categoryScheme);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
@@ -86,7 +86,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
         OrganisationSchemeAvro organisationScheme = consumerRecord.value();
-        if (ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(organisationScheme.getProcStatus())) {
+        if (checkCanBePublished(organisationScheme.getProcStatus(), organisationScheme.getLatestVersionNumberPublic())) {
             boolean isProcessed = consumerProcessFacade.processOrganisationSchemePublicationMessage(organisationScheme);
             try {
                 externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(organisationScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
@@ -94,6 +94,10 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
                 log.error("ERROR. organisation scheme metadata were not saved in externalCkanItem ", e);
             }
         }
+    }
+
+    private boolean checkCanBePublished(ProcStatusEnumAvro resourceStatus, Boolean isLatestNumberVersionExternallyPublished) {
+        return ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(resourceStatus) && Boolean.TRUE.equals(isLatestNumberVersionExternallyPublished);
     }
 
 }
