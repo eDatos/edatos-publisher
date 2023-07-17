@@ -195,7 +195,14 @@ public abstract class CkanPackageMapper {
     public List<CkanResource> createResources(CkanPackage existingPackage) {
         List<CkanResource> newResources = new ArrayList<>();
 
-        Set<String> existingFormats = existingPackage.getResources().stream().map(CkanResource::getFormat).collect(Collectors.toSet());
+        Set<String> existingFormats = new HashSet<>();
+        for (CkanResource existingResource : existingPackage.getResources()) {
+            if (isJsonStatFormat(existingResource.getFormat(), existingResource.getName())) {
+                existingFormats.add(ResourcesFormat.JSONSTAT.name());
+            } else {
+                existingFormats.add(existingResource.getFormat());
+            }
+        }
 
         List<String> formats = getAvailableFormats().stream().filter(format -> !existingFormats.contains(format)).collect(Collectors.toList());
 
@@ -215,12 +222,21 @@ public abstract class CkanPackageMapper {
         return resources;
     }
 
+    private boolean isJsonStatFormat(String format, String name) {
+        // in ckan, jsonstat is converted to json. Because of this, we must ckeck de name to verify if the real format is jsonstat.
+        return ResourcesFormat.JSON.name().equals(format) && name.indexOf(ResourcesFormat.JSONSTAT.name()) > -1;
+    }
+
     protected String getDefaultOrganisation(MetadataConfigurationService metadataConfigurationService) {
         return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
     }
 
     private CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name) {
         CkanResource resource = new CkanResource();
+
+        if (isJsonStatFormat(format, name)) {
+            format = ResourcesFormat.JSONSTAT.name();
+        }
 
         resource.setPackage_id(packageId);
         resource.setId(resourceId);

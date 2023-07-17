@@ -26,12 +26,12 @@ import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
 public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
-    private DatasetVersionAvro datasetVersion;
+    private DatasetVersionAvro           datasetVersion;
     private MetadataConfigurationService metadataConfigurationService;
-    private MessageSource messageSource;
+    private MessageSource                messageSource;
 
-    public static final String URL_BASE_DATASETS = "datasets";
-    public static final String URL_DATASET_BASE_IDENTIFIER = "dataset";
+    public static final String           URL_BASE_DATASETS           = "datasets";
+    public static final String           URL_DATASET_BASE_IDENTIFIER = "dataset";
 
     public DatasetAvro2CkanPackageMapper(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.datasetVersion = datasetVersion;
@@ -81,6 +81,8 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         CkanPackage existingPackage = new CkanPackage();
 
         existingPackage.setId(id);
+        existingPackage.setTitle(getDefaultLocalisedStringFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
+                .getVersionableStatisticalResource().getNameableStatisticalResource().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         existingPackage.setNotes(getDescriptionFromInternationalStringItemAvro(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource()
                 .getVersionableStatisticalResource().getNameableStatisticalResource().getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
 

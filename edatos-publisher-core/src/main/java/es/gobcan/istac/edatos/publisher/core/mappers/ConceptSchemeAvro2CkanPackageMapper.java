@@ -25,9 +25,9 @@ import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
 public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
-    private ConceptSchemeAvro conceptScheme;
+    private ConceptSchemeAvro            conceptScheme;
     private MetadataConfigurationService metadataConfigurationService;
-    private MessageSource messageSource;
+    private MessageSource                messageSource;
 
     public ConceptSchemeAvro2CkanPackageMapper(ConceptSchemeAvro conceptScheme, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.conceptScheme = conceptScheme;
@@ -36,7 +36,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private static final String URL_BASE_CONCEPT_SCHEME = "conceptschemes";
-    private static final String URL_BASE_IDENTIFIER = "dataset";
+    private static final String URL_BASE_IDENTIFIER     = "dataset";
 
     public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
         CkanPackage newPackage = new CkanPackage();
@@ -83,6 +83,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
+        existingPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
