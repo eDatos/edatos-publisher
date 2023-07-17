@@ -23,9 +23,9 @@ import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
 public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
-    private CodelistAvro codelist;
+    private CodelistAvro                 codelist;
     private MetadataConfigurationService metadataConfigurationService;
-    private MessageSource messageSource;
+    private MessageSource                messageSource;
 
     public CodelistAvro2CkanPackageMapper(CodelistAvro codelist, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.codelist = codelist;
@@ -33,7 +33,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         this.messageSource = messageSource;
     }
 
-    private static final String URL_BASE_CODELISTS = "codelists";
+    private static final String URL_BASE_CODELISTS  = "codelists";
     private static final String URL_BASE_IDENTIFIER = "dataset";
 
     public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService) {
@@ -80,6 +80,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
+        existingPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
         existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
