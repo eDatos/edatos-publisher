@@ -65,9 +65,18 @@ public abstract class CkanPackageMapper {
 
     protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
-            return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
+            String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
+            return removeUnsupportedCharaters(localeDescription);
+
         }
         return null;
+    }
+
+    public static String removeUnsupportedCharaters(String string) {
+        if (StringUtils.isNotBlank(string)) {
+            return string.replace(Constants.BR_TAG, Constants.DOUBLE_SPACE);
+        }
+        return string;
     }
 
     protected String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
@@ -214,9 +223,9 @@ public abstract class CkanPackageMapper {
 
     public List<CkanResource> updateResources(String packageId, List<CkanResource> existingResources) {
         List<CkanResource> resources = new ArrayList<>();
-
+        String description = getResourceDescription();
         for (CkanResource existingResource : existingResources) {
-            resources.add(updateResource(existingResource.getId(), packageId, getCkanUrlResource(), existingResource.getFormat(), existingResource.getName()));
+            resources.add(updateResource(existingResource.getId(), packageId, getCkanUrlResource(), existingResource.getFormat(), existingResource.getName(), description));
         }
 
         return resources;
@@ -231,7 +240,7 @@ public abstract class CkanPackageMapper {
         return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
     }
 
-    private CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name) {
+    private CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name, String description) {
         CkanResource resource = new CkanResource();
 
         if (isJsonStatFormat(format, name)) {
@@ -245,6 +254,7 @@ public abstract class CkanPackageMapper {
         resource.setName(name);
         resource.setFormat(format);
         resource.setMimetype(ResourcesFormat.getFormat(format));
+        resource.setDescription(description);
         return resource;
     }
 
