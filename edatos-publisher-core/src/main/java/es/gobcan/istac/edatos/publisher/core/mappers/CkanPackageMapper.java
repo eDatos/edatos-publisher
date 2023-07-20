@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
@@ -58,7 +60,8 @@ public abstract class CkanPackageMapper {
 
     protected String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
-            return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+            String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+            return stringHtmlToTextPlain(localeDescription);
         }
         return null;
     }
@@ -66,17 +69,10 @@ public abstract class CkanPackageMapper {
     protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
-            return removeUnsupportedCharaters(localeDescription);
+            return stringHtmlToTextPlain(localeDescription);
 
         }
         return null;
-    }
-
-    public static String removeUnsupportedCharaters(String string) {
-        if (StringUtils.isNotBlank(string)) {
-            return string.replace(Constants.BR_TAG, Constants.DOUBLE_SPACE);
-        }
-        return string;
     }
 
     protected String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
@@ -284,4 +280,13 @@ public abstract class CkanPackageMapper {
         return nameResourceBase + " (" + format + ")";
     }
 
+    public String stringHtmlToTextPlain(String source) {
+        if (source == null) {
+            return source;
+        }
+
+        String labelTarget = Jsoup.clean(source, Constants.WHITELIST);
+        labelTarget = StringEscapeUtils.unescapeHtml(labelTarget);
+        return labelTarget.replace(Constants.BR_TAG, Constants.LINE_BREAK_CKAN);
+    }
 }
