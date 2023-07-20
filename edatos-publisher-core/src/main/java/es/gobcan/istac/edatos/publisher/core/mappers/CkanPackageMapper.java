@@ -287,6 +287,12 @@ public abstract class CkanPackageMapper {
 
         String labelTarget = Jsoup.clean(source, Constants.WHITELIST);
         labelTarget = StringEscapeUtils.unescapeHtml(labelTarget);
-        return labelTarget.replace(Constants.BR_TAG, Constants.LINE_BREAK_CKAN);
+        return htmlToMarkdownCkan(labelTarget);
+    }
+
+    private String htmlToMarkdownCkan(String source) {
+        String target = source.replace(Constants.LINE_BREAK, "");
+        return target.replace(Constants.BR_TAG, Constants.LINE_BREAK_CKAN).replace(Constants.DIV_END_TAG, "").replace(Constants.DIV_TAG, Constants.LINE_BREAK_CKAN);
+
     }
 }

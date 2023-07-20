@@ -12,10 +12,13 @@ public class Constants {
     public static final String    URL_RESOURCES_CONCEPTS         = "concepts";
     public static final String    URL_RESOURCES_ORGANISATIONS    = "organisations";
 
-    public static final Whitelist WHITELIST                      = Whitelist.none().addTags(new String[]{"br"});
+    public static final Whitelist WHITELIST                      = Whitelist.none().addTags(new String[]{"br", "div"});
 
     public static final String    BR_TAG                         = "<br />";
+    public static final String    DIV_TAG                        = "<div>";
+    public static final String    DIV_END_TAG                    = "</div>";
     public static final String    LINE_BREAK_CKAN                = "\n\n";
+    public static final String    LINE_BREAK                     = "\n";
 
     /*
      * Currently, Ckan is only available in ISTAC. Ckan API only allows string for texts. InternationalStrings are not allowed. Text in Ckan for ISTAC are only in Spanish.
