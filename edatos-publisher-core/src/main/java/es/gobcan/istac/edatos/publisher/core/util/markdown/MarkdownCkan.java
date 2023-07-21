@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 
 public class MarkdownCkan {
 
-    private static final Whitelist WHITELIST       = Whitelist.none().addTags(new String[]{"br", "a", "b", "i"}).addAttributes("a", "href");
+    private static final Whitelist WHITELIST       = Whitelist.none().addTags(new String[]{"br", "a", "b", "i", "div"}).addAttributes("a", "href");
     public static final String     BR_TAG          = "<br />";
     public static final String     DIV_TAG         = "<div>";
     public static final String     DIV_END_TAG     = "</div>";
