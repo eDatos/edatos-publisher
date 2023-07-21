@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
@@ -28,6 +26,7 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
+import es.gobcan.istac.edatos.publisher.core.util.markdown.MarkdownCkan;
 
 public abstract class CkanPackageMapper {
 
@@ -61,7 +60,7 @@ public abstract class CkanPackageMapper {
     protected String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
-            return stringHtmlToTextPlain(localeDescription);
+            return MarkdownCkan.stringHtmlToTextPlain(localeDescription);
         }
         return null;
     }
@@ -69,7 +68,7 @@ public abstract class CkanPackageMapper {
     protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
-            return stringHtmlToTextPlain(localeDescription);
+            return MarkdownCkan.stringHtmlToTextPlain(localeDescription);
 
         }
         return null;
@@ -278,21 +277,5 @@ public abstract class CkanPackageMapper {
 
     private String getNameResource(String nameResourceBase, String format) {
         return nameResourceBase + " (" + format + ")";
-    }
-
-    public String stringHtmlToTextPlain(String source) {
-        if (source == null) {
-            return source;
-        }
-
-        String labelTarget = Jsoup.clean(source, Constants.WHITELIST);
-        labelTarget = StringEscapeUtils.unescapeHtml(labelTarget);
-        return htmlToMarkdownCkan(labelTarget);
-    }
-
-    private String htmlToMarkdownCkan(String source) {
-        String target = source.replace(Constants.LINE_BREAK, "");
-        return target.replace(Constants.BR_TAG, Constants.LINE_BREAK_CKAN).replace(Constants.DIV_END_TAG, "").replace(Constants.DIV_TAG, Constants.LINE_BREAK_CKAN);
-
     }
 }
