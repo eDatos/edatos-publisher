@@ -60,7 +60,7 @@ public abstract class CkanPackageMapper {
     protected String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
-            return MarkdownCkan.stringHtmlToTextPlain(localeDescription);
+            return MarkdownCkan.stringHtmlToMarkdown(localeDescription);
         }
         return null;
     }
@@ -68,7 +68,7 @@ public abstract class CkanPackageMapper {
     protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
-            return MarkdownCkan.stringHtmlToTextPlain(localeDescription);
+            return MarkdownCkan.stringHtmlToMarkdown(localeDescription);
 
         }
         return null;
