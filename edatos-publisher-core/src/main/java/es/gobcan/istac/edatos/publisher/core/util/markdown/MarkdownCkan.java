@@ -23,25 +23,23 @@ public class MarkdownCkan {
     }
 
     private static String cleanHtmlTags(String source) {
+        Document doc = Jsoup.parse(source);
 
-        String target = cleanUnderlineHtmlTag(source);
-        target = cleanEmptyLineHtmlTag(target, "b");
-        target = cleanEmptyLineHtmlTag(target, "i");
+        cleanUnderlineHtmlTag(doc);
+        cleanEmptyLineHtmlTag(doc, BOLD_TAG);
+        cleanEmptyLineHtmlTag(doc, ITALIC_TAG);
 
-        return target;
+        return doc.html();
 
     }
 
     // ckan does not support underline and flexmark converts html underline to ++some text++
-    private static String cleanUnderlineHtmlTag(String source) {
-        Document doc = Jsoup.parse(source);
+    private static void cleanUnderlineHtmlTag(Document doc) {
         Elements selector = doc.select(UNDERLINED_TAG);
 
         for (Element element : selector) {
             element.unwrap();
         }
-
-        return doc.html();
     }
 
     /*
@@ -59,8 +57,7 @@ public class MarkdownCkan {
      * <b> some bold text</b><br />some another bold text<br />
      * <i> some italic text </i><br />some italic text<br />
      */
-    private static String cleanEmptyLineHtmlTag(String source, String tag) {
-        Document doc = Jsoup.parse(source);
+    private static void cleanEmptyLineHtmlTag(Document doc, String tag) {
         Elements selector = doc.select(tag);
 
         for (Element element : selector) {
@@ -68,8 +65,6 @@ public class MarkdownCkan {
                 element.unwrap();
             }
         }
-
-        return doc.html();
     }
 
     private static boolean existTextInHtmlTag(Element htmlTag) {
