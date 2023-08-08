@@ -322,11 +322,6 @@
             <artifactId>metamac-srm-kafka</artifactId>
             <version>${metamac-srm-kafka.version}</version>
         </dependency>
-        <dependency>
-            <groupId>es.gobcan.istac.indicators</groupId>
-            <artifactId>indicators-kafka</artifactId>
-            <version>9.0.1-SNAPSHOT</version>
-        </dependency>
           <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
