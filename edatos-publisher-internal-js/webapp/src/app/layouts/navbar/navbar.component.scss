@@ -1,0 +1,81 @@
+@import 'variables';
+@import 'mixins';
+
+/* ==========================================================================
+Navbar
+========================================================================== */
+.navbar-version {
+    font-size: 10px;
+    color: $grey-lightest;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+.navbar-user-login {
+    display: inline-block;
+    vertical-align: center;
+    padding: 0.5em 1em;
+    margin-right: 1em;
+    font-size: 1rem;
+    color: $grey-light;
+
+    i {
+        margin-right: 0.2em;
+    }
+}
+
+.admin-color {
+    color: #4ea8ff;
+}
+
+.navbar {
+    min-height: $navbar-content-height;
+    position: fixed;
+    top: $primary-navbar-height;
+    z-index: $secondary-navbar-zindex;
+    width: 100%;
+    height: $secondary-navbar-height;
+    background-color: $istac-gray;
+    padding-left: $page-padding-left;
+    padding-right: $page-padding-right;
+    .dropdown-item.active,
+    .dropdown-item.active:focus,
+    .dropdown-item.active:hover {
+        background-color: $istac-gray-dark;
+    }
+    ul.navbar-nav {
+        .nav-item {
+            white-space: nowrap;
+            &.active {
+                background: $istac-gray-dark;
+            }
+        }
+    }
+}
+
+.navbar-title {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+Logo styles
+========================================================================== */
+
+.navbar-brand {
+    &.logo {
+        .logo-img {
+            height: $navbar-content-height;
+            margin-right: 15px;
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    $page-padding-left: 15px;
+    $page-padding-right: 15px;
+    .navbar {
+        padding-left: $page-padding-left;
+        padding-right: $page-padding-right;
+    }
+}

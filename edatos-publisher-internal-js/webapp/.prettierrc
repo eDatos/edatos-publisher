@@ -1,0 +1,34 @@
+{
+    "useTabs": false,
+    "tabWidth": 4,
+    "endOfLine": "auto",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "singleQuote": true,
+    "printWidth": 180,
+    "semi": true,
+    "parser": "typescript",
+    "overrides": [
+        {
+            "files": "*.scss",
+            "options": {
+                "parser": "scss",
+                "printWidth": 180
+            }
+        },
+        {
+            "files": "*.html",
+            "options": {
+                "parser": "html",
+                "printWidth": 180
+            }
+        },
+        {
+            "files": "*.json",
+            "options": {
+                "parser": "json",
+                "printWidth": 100
+            }
+        }
+    ]
+}

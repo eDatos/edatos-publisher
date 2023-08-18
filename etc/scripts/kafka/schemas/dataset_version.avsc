@@ -1,0 +1,401 @@
+{
+    "type": "record", "name": "DatasetVersionAvro", "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages", "fields": [
+    {
+        "name": "siemacMetadataStatisticalResource", "type": [
+        "null", {
+            "type": "record", "name": "SiemacMetadataStatisticalResourceAvro", "fields": [
+                {
+                    "name": "lifecycleStatisticalResource", "type": [
+                    "null", {
+                        "type": "record", "name": "LifecycleStatisticalResourceAvro", "fields": [
+                            {
+                                "name": "versionableStatisticalResource", "type": [
+                                "null", {
+                                    "type": "record", "name": "VersionableStatisticalResourceAvro", "fields": [
+                                        {
+                                            "name": "nameableStatisticalResource", "type": [
+                                            "null", {
+                                                "type": "record", "name": "NameableStatisticalResourceAvro", "fields": [
+                                                    {
+                                                        "name": "identifiableStatisticalResource", "type": [
+                                                        "null", {
+                                                            "type": "record", "name": "IdentifiableStatisticalResourceAvro", "fields": [
+                                                                {"name": "code", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                {"name": "urn", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                {
+                                                                    "name": "statisticalOperation", "type": [
+                                                                    "null", {
+                                                                        "type": "record", "name": "ExternalItemAvro", "fields": [
+                                                                            {"name": "code", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                            {"name": "codeNested", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                            {"name": "urn", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                            {"name": "urnProvider", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                            {"name": "managementAppUrl", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                            {
+                                                                                "name": "type",
+                                                                                "type": [
+                                                                                    "null",
+                                                                                    {
+                                                                                        "type": "enum",
+                                                                                        "name": "TypeExternalArtefactsEnumAvro",
+                                                                                        "symbols": [
+                                                                                            "AGENCY",
+                                                                                            "AGENCY_SCHEME",
+                                                                                            "CATEGORY",
+                                                                                            "CATEGORY_SCHEME",
+                                                                                            "CODELIST",
+                                                                                            "CODE",
+                                                                                            "CONCEPT_SCHEME",
+                                                                                            "CONCEPT",
+                                                                                            "CONTENT_CONSTRAINTS",
+                                                                                            "CONFIGURATION",
+                                                                                            "DATA_CONSUMER",
+                                                                                            "DATA_CONSUMER_SCHEME",
+                                                                                            "DATA_PROVIDER",
+                                                                                            "DATA_PROVIDER_SCHEME",
+                                                                                            "DATASTRUCTURE",
+                                                                                            "DIMENSION",
+                                                                                            "INDICATOR",
+                                                                                            "ORGANISATION",
+                                                                                            "ORGANISATION_SCHEME",
+                                                                                            "ORGANISATION_UNIT",
+                                                                                            "ORGANISATION_UNIT_SCHEME",
+                                                                                            "STATISTICAL_OPERATION",
+                                                                                            "STATISTICAL_OPERATION_INSTANCE",
+                                                                                            "DATASET",
+                                                                                            "COLLECTION",
+                                                                                            "QUERY",
+                                                                                            "MULTIDATASET"
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "name": "title",
+                                                                                "type": [
+                                                                                    "null",
+                                                                                    {
+                                                                                        "type": "record",
+                                                                                        "name": "InternationalStringAvro",
+                                                                                        "fields": [
+                                                                                            {
+                                                                                                "name": "localisedStrings",
+                                                                                                "type": [
+                                                                                                    "null",
+                                                                                                    {
+                                                                                                        "type": "array",
+                                                                                                        "items": {
+                                                                                                            "type": "record",
+                                                                                                            "name": "InternationalStringItemAvro",
+                                                                                                            "fields": [
+                                                                                                                {"name": "locale", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                                                                                                {"name": "label", "type": ["null", {"type": "string", "avro.java.string": "String"}]}
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {"name": "selfLink", "type": ["null", {"type": "string", "avro.java.string": "String"}]}
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                    }, {"name": "title", "type": ["null", "InternationalStringAvro"]}, {"name": "description", "type": ["null", "InternationalStringAvro"]}
+                                                ]
+                                            }
+                                        ]
+                                        },
+                                        {
+                                            "name": "nextVersionDate",
+                                            "type": [
+                                                "null",
+                                                {
+                                                    "type": "record",
+                                                    "name": "DatetimeAvro",
+                                                    "fields": [
+                                                        {"name": "instant", "type": "long"},
+                                                        {"name": "timezone", "type": ["null", {"type": "string", "avro.java.string": "String"}], "default": null}
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {"name": "validFrom", "type": ["null", "DatetimeAvro"]},
+                                        {"name": "validTo", "type": ["null", "DatetimeAvro"]},
+                                        {"name": "versionRationale", "type": ["null", "InternationalStringAvro"]},
+                                        {
+                                            "name": "nextVersion",
+                                            "type": ["null", {"type": "enum", "name": "NextVersionTypeEnumAvro", "symbols": ["NO_UPDATES", "NON_SCHEDULED_UPDATE", "SCHEDULED_UPDATE"]}]
+                                        },
+                                        {"name": "versionLogic", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                        {
+                                            "name": "versionRationaleTypes",
+                                            "type": [
+                                                "null",
+                                                {
+                                                    "type": "array",
+                                                    "items": [
+                                                        "null",
+                                                        {
+                                                            "type": "enum",
+                                                            "name": "VersionRationaleTypeEnumAvro",
+                                                            "symbols": [
+                                                                "MAJOR_NEW_RESOURCE",
+                                                                "MAJOR_ESTIMATORS",
+                                                                "MAJOR_CATEGORIES",
+                                                                "MAJOR_VARIABLES",
+                                                                "MAJOR_OTHER",
+                                                                "MINOR_ERRATA",
+                                                                "MINOR_METADATA",
+                                                                "MINOR_DATA_UPDATE",
+                                                                "MINOR_SERIES_UPDATE",
+                                                                "MINOR_OTHER"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                            },
+                            {"name": "creationDate", "type": ["null", "DatetimeAvro"]},
+                            {"name": "creationUser", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                            {"name": "productionValidationDate", "type": ["null", "DatetimeAvro"]},
+                            {"name": "productionValidationUser", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                            {"name": "diffusionValidationDate", "type": ["null", "DatetimeAvro"]},
+                            {"name": "diffusionValidationUser", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                            {"name": "rejectValidationDate", "type": ["null", "DatetimeAvro"]},
+                            {"name": "rejectValidationUser", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                            {"name": "publicationDate", "type": ["null", "DatetimeAvro"]},
+                            {"name": "publicationUser", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                            {"name": "lastVersion", "type": ["null", "boolean"]},
+                            {
+                                "name": "procStatus",
+                                "type": [
+                                    "null",
+                                    {"type": "enum", "name": "ProcStatusEnumAvro", "symbols": ["DRAFT", "PRODUCTION_VALIDATION", "DIFFUSION_VALIDATION", "VALIDATION_REJECTED", "PUBLISHED"]}
+                                ]
+                            },
+                            {
+                                "name": "replacesVersion",
+                                "type": [
+                                    "null",
+                                    {
+                                        "type": "record",
+                                        "name": "RelatedResourceAvro",
+                                        "fields": [
+                                            {"name": "code", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                            {"name": "urn", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                            {"name": "title", "type": ["null", "InternationalStringAvro"]},
+                                            {"name": "statisticalOperationUrn", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                            {
+                                                "name": "type",
+                                                "type": [
+                                                    "null",
+                                                    {
+                                                        "type": "enum",
+                                                        "name": "TypeRelatedResourceEnumAvro",
+                                                        "symbols": [
+                                                            "DATASET_VERSION",
+                                                            "PUBLICATION_VERSION",
+                                                            "QUERY_VERSION",
+                                                            "DATASET",
+                                                            "QUERY",
+                                                            "PUBLICATION",
+                                                            "CHAPTER",
+                                                            "CUBE",
+                                                            "DATASOURCE",
+                                                            "CATEGORISATION",
+                                                            "MULTIDATASET",
+                                                            "MULTIDATASET_VERSION",
+                                                            "MULTIDATASET_CUBE"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {"name": "isReplacedByVersion", "type": ["null", "RelatedResourceAvro"]},
+                            {"name": "maintainer", "type": ["null", "ExternalItemAvro"]}
+                        ]
+                    }
+                ]
+                },
+                {"name": "resourceCreatedDate", "type": ["null", "DatetimeAvro"]},
+                {"name": "lastUpdate", "type": ["null", "DatetimeAvro"]},
+                {"name": "newnessUntilDate", "type": ["null", "DatetimeAvro"]},
+                {"name": "copyrightedDate", "type": ["null", "int"]},
+                {"name": "language", "type": ["null", "ExternalItemAvro"]},
+                {"name": "subtitle", "type": ["null", "InternationalStringAvro"]},
+                {"name": "titleAlternative", "type": ["null", "InternationalStringAvro"]},
+                {"name": "abstractLogic", "type": ["null", "InternationalStringAvro"]},
+                {"name": "keywords", "type": ["null", "InternationalStringAvro"]},
+                {"name": "commonMetadata", "type": ["null", "ExternalItemAvro"]},
+                {"name": "type", "type": ["null", {"type": "enum", "name": "StatisticalResourceTypeEnumAvro", "symbols": ["DATASET", "COLLECTION", "QUERY", "MULTIDATASET"]}]},
+                {"name": "creator", "type": ["null", "ExternalItemAvro"]},
+                {"name": "conformsTo", "type": ["null", "InternationalStringAvro"]},
+                {"name": "conformsToInternal", "type": ["null", "InternationalStringAvro"]},
+                {"name": "replaces", "type": ["null", "RelatedResourceAvro"]},
+                {"name": "isReplacedBy", "type": ["null", "RelatedResourceAvro"]},
+                {"name": "accessRights", "type": ["null", "InternationalStringAvro"]},
+                {"name": "languages", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+                {"name": "statisticalOperationInstances", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+                {"name": "contributors", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+                {"name": "publishers", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+                {"name": "publisherContributors", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+                {"name": "mediators", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]}
+            ]
+        }
+    ]
+    },
+    {"name": "dateStart", "type": ["null", "DatetimeAvro"]},
+    {"name": "dateEnd", "type": ["null", "DatetimeAvro"]},
+    {"name": "datasetRepositoryId", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+    {"name": "formatExtentDimensions", "type": ["null", "int"]},
+    {"name": "dateNextUpdate", "type": ["null", "DatetimeAvro"]},
+    {"name": "userModifiedDateNextUpdate", "type": ["null", "boolean"]},
+    {
+        "name": "dataset",
+        "type": [
+            "null",
+            {
+                "type": "record",
+                "name": "DatasetAvro",
+                "fields": [
+                    {"name": "identifiableStatisticalResource", "type": ["null", "IdentifiableStatisticalResourceAvro"]},
+                    {"name": "datasetVersionsUrns", "type": ["null", {"type": "array", "items": {"type": "string", "avro.java.string": "String"}}]},
+                    {
+                        "name": "dimensionRepresentationMappings",
+                        "type": [
+                            "null",
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "record",
+                                    "name": "DimensionRepresentationMappingAvro",
+                                    "fields": [
+                                        {"name": "datasourceFilename", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                        {"name": "mapping", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                                        {"name": "datasetUrn", "type": ["null", {"type": "string", "avro.java.string": "String"}]}
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {"name": "relatedDsd", "type": ["null", "ExternalItemAvro"]},
+    {"name": "updateFrequency", "type": ["null", "ExternalItemAvro"]},
+    {
+        "name": "statisticOfficiality",
+        "type": [
+            "null",
+            {
+                "type": "record",
+                "name": "StatisticOfficialityAvro",
+                "fields": [{"name": "identifier", "type": ["null", {"type": "string", "avro.java.string": "String"}]}, {"name": "description", "type": ["null", "InternationalStringAvro"]}]
+            }
+        ]
+    },
+    {"name": "bibliographicCitation", "type": ["null", "InternationalStringAvro"]},
+    {
+        "name": "dimensionsCoverage",
+        "type": [
+            "null",
+            {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "CodeDimensionAvro",
+                    "fields": [
+                        {"name": "dsdComponentId", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "identifier", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "title", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "datasetVersionUrn", "type": ["null", {"type": "string", "avro.java.string": "String"}]}
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "attributesCoverage",
+        "type": [
+            "null",
+            {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "AttributeValueAvro",
+                    "fields": [
+                        {"name": "dsdComponentId", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "identifier", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "title", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "datasetVersionUrn", "type": ["null", {"type": "string", "avro.java.string": "String"}]}
+                    ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "categorisations",
+        "type": [
+            "null",
+            {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "CategorisationAvro",
+                    "fields": [
+                        {"name": "validFromEffective", "type": ["null", "DatetimeAvro"]},
+                        {"name": "validToEffective", "type": ["null", "DatetimeAvro"]},
+                        {"name": "createdDate", "type": ["null", "DatetimeAvro"]},
+                        {"name": "createdBy", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "lastUpdated", "type": ["null", "DatetimeAvro"]},
+                        {"name": "lastUpdatedBy", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "version", "type": ["null", "long"]},
+                        {"name": "category", "type": ["null", "ExternalItemAvro"]},
+                        {"name": "datasetVersionUrn", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "versionableStatisticalResource", "type": ["null", "VersionableStatisticalResourceAvro"]},
+                        {"name": "maintainer", "type": ["null", "ExternalItemAvro"]}
+                    ]
+                }
+            }
+        ]
+    },
+    {"name": "geographicCoverage", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+    {
+        "name": "temporalCoverage",
+        "type": [
+            "null",
+            {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "TemporalCodeAvro",
+                    "fields": [
+                        {"name": "identifier", "type": ["null", {"type": "string", "avro.java.string": "String"}]},
+                        {"name": "title", "type": ["null", {"type": "string", "avro.java.string": "String"}]}
+                    ]
+                }
+            }
+        ]
+    },
+    {"name": "measureCoverage", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+    {"name": "geographicGranularities", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+    {"name": "temporalGranularities", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+    {"name": "statisticalUnit", "type": ["null", {"type": "array", "items": "ExternalItemAvro"}]},
+    {"name": "isPartOf", "type": ["null", {"type": "array", "items": "RelatedResourceAvro"}]}
+]
+}

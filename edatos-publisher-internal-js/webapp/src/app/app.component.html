@@ -1,0 +1,11 @@
+<ngx-loading-bar [includeSpinner]="false" height="3px" color="#FA6C15"></ngx-loading-bar>
+<app-edatos-navbar></app-edatos-navbar>
+<div class="app">
+    <app-navbar></app-navbar>
+    <div class="h-100 ui-fluid">
+        <p-toast [key]="errorAlertKey" styleClass="toast-errors" [autoZIndex]="false"></p-toast>
+        <p-toast key="customAlertKey" styleClass="toast-success" [autoZIndex]="false"></p-toast>
+        <router-outlet></router-outlet>
+        <router-outlet name="popup"></router-outlet>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+:host ::ng-deep arte-table {
+    @media screen and (min-width: 915px) {
+        th:nth-last-child(2),
+        td:nth-last-child(2) {
+            width: 18em;
+        }
+
+        th:nth-last-child(1),
+        td:nth-last-child(1) {
+            width: 18em;
+        }
+    }
+}
