@@ -4,7 +4,7 @@
     <parent>
         <groupId>es.gobcan.istac.edatos-publisher</groupId>
         <artifactId>edatos-publisher</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>edatos-publisher-internal-js</artifactId>
     <packaging>jar</packaging>
