@@ -63,11 +63,12 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
 
         // extra fields
         newPackage.setExtras(new ArrayList<>());
         newPackage.getExtras().addAll(getDatasetExtraFields(externalCategoryService, externalOperationService, newPackage.getName()));
+
+        newPackage.setGroups(getCkanGroups());
 
         return newPackage;
     }
@@ -92,6 +93,8 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         // extra fields
         existingPackage.setExtras(new ArrayList<>());
         existingPackage.getExtras().addAll(getDatasetExtraFields(externalCategoryService, externalOperationService, getCkanPackageName()));
+
+        existingPackage.setGroups(getCkanGroups());
 
         return existingPackage;
     }

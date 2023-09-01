@@ -16,6 +16,7 @@ import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGroup;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
@@ -32,6 +33,8 @@ public abstract class CkanPackageMapper {
 
     protected CkanPackageMapper() {
     }
+
+    private Set<String> eniThemes = new HashSet<String>();
 
     protected abstract String getResourceDescription();
     protected abstract CkanUrlResource getCkanUrlResource();
@@ -50,7 +53,13 @@ public abstract class CkanPackageMapper {
 
         extraFields.add(new CkanExtra("spatial_uri", metadataConfigurationService.retrieveCkanSpatialUri()));
 
+        extraFields.add(new CkanExtra("contact_email", metadataConfigurationService.retrieveCkanDefaultContactEmail()));
+
         return extraFields;
+    }
+
+    protected String getDefaultContactEmail(MetadataConfigurationService metadataConfigurationService) {
+        return metadataConfigurationService.retrieveCkanDefaultContactEmail();
     }
 
     protected String getCkanPackageName(String urn) {
@@ -107,6 +116,7 @@ public abstract class CkanPackageMapper {
     public String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
         Category category = externalCategoryService.getCategory(agency, resourceId, version, categoryId);
         if (category != null && category.getEniSchemeType() != null) {
+            addEniThemes(category.getEniSchemeType().getId());
             return getUrlEniTheme(eniUrlBase, category.getEniSchemeType().getId());
         }
         return null;
@@ -277,5 +287,20 @@ public abstract class CkanPackageMapper {
 
     private String getNameResource(String nameResourceBase, String format) {
         return nameResourceBase + " (" + format + ")";
+    }
+    public Set<String> getEniThemes() {
+        return eniThemes;
+    }
+    private void addEniThemes(String eniTheme) {
+        this.eniThemes.add(eniTheme);
+    }
+
+    protected List<CkanGroup> getCkanGroups() {
+        List<CkanGroup> categories = new ArrayList<CkanGroup>();
+
+        for (String eniScheme : getEniThemes()) {
+            categories.add(new CkanGroup(eniScheme));
+        }
+        return categories;
     }
 }

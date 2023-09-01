@@ -63,11 +63,12 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
 
         // extra fields
         newPackage.setExtras(getConceptSchemeExtraFields(externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(), newPackage.getName(),
                 conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
+
+        newPackage.setGroups(getCkanGroups());
 
         return newPackage;
     }
@@ -91,6 +92,8 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         // extra fields
         existingPackage.setExtras(getConceptSchemeExtraFields(externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(), getCkanPackageName(),
                 conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
+
+        existingPackage.setGroups(getCkanGroups());
 
         return existingPackage;
     }

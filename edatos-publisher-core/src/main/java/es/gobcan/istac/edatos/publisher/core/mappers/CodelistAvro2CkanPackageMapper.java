@@ -61,10 +61,11 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
 
         // extra fields
         newPackage.setExtras(getCodelistExtraFields(externalCategoryService, newPackage.getName()));
+
+        newPackage.setGroups(getCkanGroups());
 
         return newPackage;
     }
@@ -87,6 +88,8 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         // extra fields
         existingPackage.setExtras(getCodelistExtraFields(externalCategoryService, getCkanPackageName()));
+
+        existingPackage.setGroups(getCkanGroups());
 
         return existingPackage;
     }
