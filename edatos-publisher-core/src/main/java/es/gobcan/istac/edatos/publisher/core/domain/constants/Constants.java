@@ -27,6 +27,7 @@ public class Constants {
 
     // Datasets
     public static final String    BASE_DATASET_RESOURCE          = "constant.publisher.dataset.base.resource";
+    public static final String    DATASET_TAG                    = "constant.publisher.dataset.tag";
 
     // Categories
     public static final String    BASE_CATEGORY_RESOURCE         = "constant.publisher.category.scheme.resource";

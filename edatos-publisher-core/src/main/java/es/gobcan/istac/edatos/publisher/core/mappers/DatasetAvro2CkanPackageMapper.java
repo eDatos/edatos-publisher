@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
@@ -59,7 +60,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setOwner_org(getDefaultOrganisation(metadataConfigurationService));
         newPackage.setResources(new ArrayList<>());
         newPackage.getResources().addAll(createResources(newPackage.getName()));
-        newPackage.setTags(new ArrayList<>());
+        newPackage.setTags(getTags());
 
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
@@ -174,6 +175,15 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     private String getResourceUrlBase() {
         return CkanUtil.getStatisticalResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_DATASETS;
+    }
+
+    private List<CkanTag> getTags() {
+        List<CkanTag> tags = new ArrayList<>();
+
+        tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.DATASET_TAG, null)));
+
+        return tags;
+
     }
 
 }
