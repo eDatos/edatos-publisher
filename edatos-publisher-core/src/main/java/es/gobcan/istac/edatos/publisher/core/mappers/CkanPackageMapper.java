@@ -137,7 +137,7 @@ public abstract class CkanPackageMapper {
     protected String getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
             ExternalOperationService externalOperationService) {
 
-        Set<String> eniThemes = new HashSet<>();
+        Set<String> eniThemesOfStatisticalOperation = new HashSet<>();
         String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
 
         Operation operation = externalOperationService.retrieveStatisticalOperationById(stadisticalOperationCode);
@@ -145,7 +145,7 @@ public abstract class CkanPackageMapper {
         // get eniScheme from subjectArea field of statistical operation
         String eniScheme = addTheme(externalCategoryService, eniUrlBase, operation.getSubjectArea().getUrn());
         if (eniScheme != null) {
-            eniThemes.add(eniScheme);
+            eniThemesOfStatisticalOperation.add(eniScheme);
         }
 
         // get eniScheme from secondary subject area field of statistical operation. This field is optional
@@ -153,14 +153,18 @@ public abstract class CkanPackageMapper {
             for (ResourceInternal category : operation.getSecondarySubjectAreas().getSecondarySubjectAreas()) {
                 eniScheme = addTheme(externalCategoryService, eniUrlBase, category.getUrn());
                 if (eniScheme != null) {
-                    eniThemes.add(eniScheme);
+                    eniThemesOfStatisticalOperation.add(eniScheme);
                 }
             }
         }
 
-        if (!eniThemes.isEmpty()) {
-            return String.join(",", eniThemes);
+        if (!eniThemesOfStatisticalOperation.isEmpty()) {
+            return String.join(",", eniThemesOfStatisticalOperation);
+        } else {
+            // SubjectArea is mandatory in statistical operation but it could be possible that the eni scheme is no assigned for this category and the dataset could be send without theme.
+            getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
         }
+
         return null;
     }
 
