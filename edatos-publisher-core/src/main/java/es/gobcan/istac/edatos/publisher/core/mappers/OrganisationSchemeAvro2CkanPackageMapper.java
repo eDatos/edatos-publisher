@@ -80,8 +80,10 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         }
     }
 
+    @Override
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        String urn = CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        return super.getCkanPackageName(CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn()));
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {

@@ -70,8 +70,10 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         return newPackage;
     }
 
+    @Override
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        String urn = CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        return super.getCkanPackageName(urn);
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
@@ -110,7 +112,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CODELIST_CODES, null);
+        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CODELIST_CODES, "fields=+description");
     }
 
     private List<CkanExtra> getCodelistExtraFields(ExternalCategoryService externalCategoryService, String packageName) {

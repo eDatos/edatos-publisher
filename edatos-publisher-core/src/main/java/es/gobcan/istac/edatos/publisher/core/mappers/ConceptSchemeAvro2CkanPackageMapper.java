@@ -73,8 +73,10 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return newPackage;
     }
 
+    @Override
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        String urn = CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        return super.getCkanPackageName(urn);
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String id) {
@@ -113,7 +115,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, null);
+        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, "fields=+description");
     }
 
     private List<CkanExtra> getConceptSchemeExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, ConceptSchemeTypeEnumAvro conceptSchemeType,

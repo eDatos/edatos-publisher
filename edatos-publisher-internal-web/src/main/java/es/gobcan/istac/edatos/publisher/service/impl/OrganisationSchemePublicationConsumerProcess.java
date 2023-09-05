@@ -6,17 +6,15 @@ import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.organisation.service.OrganisationSchemePublisherService;
+import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
 @Component
-public class OrganisationSchemePublicationConsumerProcess implements ConsumerProcess<OrganisationSchemeAvro> {
+public class OrganisationSchemePublicationConsumerProcess extends PublicationConsumerProcess implements ConsumerProcess<OrganisationSchemeAvro> {
 
-    @Autowired
-    CkanSenderService ckanSenderService;
     @Autowired
     OrganisationSchemePublisherService organisationSchemeService;
 
@@ -25,24 +23,22 @@ public class OrganisationSchemePublicationConsumerProcess implements ConsumerPro
 
         String urn = organisationScheme.getUrn();
         CkanPackage ckanPackage = null;
-        String packageName = organisationSchemeService.retrieveCkanPackageName(organisationScheme);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
+        String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
+        CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = organisationSchemeService.retrieveUpdateCkanPackage(organisationScheme, actualPackage.getId());
+        if (existingPackageInCkan.getId() != null) {
+            ckanPackage = organisationSchemeService.retrieveUpdateCkanPackage(organisationScheme, existingPackageInCkan.getId());
         } else {
             ckanPackage = organisationSchemeService.retrieveNewCkanPackage(organisationScheme);
         }
 
         if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    createOrUpdateCkanResources(organisationScheme, actualPackage, packageName, urn);
+            CkanPackage packageResult = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, existingPackageInCkan.getId());
+            if (packageResult != null) {
+                if (existingPackageInCkan.getId() != null) {
+                    createOrUpdateCkanResources(organisationScheme, existingPackageInCkan, existingPackageInCkan.getId(), urn);
+                } else {
+                    createPackageRelationshipEntity(urnWithoutVersion, packageResult.getId());
                 }
                 return true;
             }

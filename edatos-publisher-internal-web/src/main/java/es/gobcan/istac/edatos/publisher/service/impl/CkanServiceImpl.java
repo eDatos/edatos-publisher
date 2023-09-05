@@ -3,6 +3,7 @@ package es.gobcan.istac.edatos.publisher.service.impl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageCreateUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchResourceUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePatchUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByIdUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByNameUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceCreateUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.getBaseHttpHeader;
@@ -26,10 +27,10 @@ public class CkanServiceImpl implements CkanService {
 
     private final MetadataConfigurationService metadataConfigurationService;
 
-    HttpHeaders httpHeaders;
-    RestTemplate restTemplate;
-    String urlBase;
-    String apiKey;
+    HttpHeaders                                httpHeaders;
+    RestTemplate                               restTemplate;
+    String                                     urlBase;
+    String                                     apiKey;
 
     public CkanServiceImpl(MetadataConfigurationService metadataConfigurationService) {
         this.metadataConfigurationService = metadataConfigurationService;
@@ -42,6 +43,15 @@ public class CkanServiceImpl implements CkanService {
     @Override
     public CkanSearchResponse getDatasetByName(String name) {
         String packageSearchUrl = buildPackageSearchByNameUrl(urlBase, name);
+
+        ResponseEntity<CkanSearchResponse> response = restTemplate.getForEntity(packageSearchUrl, CkanSearchResponse.class, httpHeaders);
+
+        return response.getBody();
+    }
+
+    @Override
+    public CkanSearchResponse getDatasetById(String id) {
+        String packageSearchUrl = buildPackageSearchByIdUrl(urlBase, id);
 
         ResponseEntity<CkanSearchResponse> response = restTemplate.getForEntity(packageSearchUrl, CkanSearchResponse.class, httpHeaders);
 

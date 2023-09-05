@@ -71,8 +71,9 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn((datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
+        String urn = CkanFormatUtil.formatCkanNameFromDatasetUrn((datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
                 .getNameableStatisticalResource().getIdentifiableStatisticalResource().getUrn()));
+        return super.getCkanPackageName(urn);
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String id) {

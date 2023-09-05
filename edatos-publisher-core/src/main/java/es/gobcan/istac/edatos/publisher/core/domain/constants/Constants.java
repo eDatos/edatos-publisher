@@ -12,6 +12,8 @@ public class Constants {
     public static final String    URL_RESOURCES_CONCEPTS         = "concepts";
     public static final String    URL_RESOURCES_ORGANISATIONS    = "organisations";
 
+    public static final Integer   MAX_SIZE_PACKAGE_CKAN_NAME     = 100;
+
     public static final Whitelist WHITELIST                      = Whitelist.none().addTags(new String[]{"br", "div"});
 
     public static final String    BR_TAG                         = "<br />";

@@ -8,6 +8,7 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanSearchResponse;
 
 public interface CkanService {
 
+    CkanSearchResponse getDatasetById(String id);
     CkanSearchResponse getDatasetByName(String name);
     CkanPackageResponse createPackage(CkanPackage ckanPackage);
     CkanResourceResponse createResource(CkanResource ckanResource);

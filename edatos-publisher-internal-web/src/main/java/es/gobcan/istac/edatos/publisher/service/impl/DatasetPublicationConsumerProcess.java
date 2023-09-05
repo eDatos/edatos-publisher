@@ -6,17 +6,15 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVers
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import es.gobcan.istac.edatos.publisher.ckan.service.impl.CkanSenderService;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetPublisherService;
+import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
 @Component
-public class DatasetPublicationConsumerProcess implements ConsumerProcess<DatasetVersionAvro> {
+public class DatasetPublicationConsumerProcess extends PublicationConsumerProcess implements ConsumerProcess<DatasetVersionAvro> {
 
-    @Autowired
-    CkanSenderService ckanSenderService;
     @Autowired
     DatasetPublisherService datasetService;
 
@@ -26,24 +24,22 @@ public class DatasetPublicationConsumerProcess implements ConsumerProcess<Datase
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
         CkanPackage ckanPackage = null;
-        String packageName = datasetService.retrieveCkanPackageName(datasetVersion);
-        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urn, packageName);
+        String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
+        CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
-        if (actualPackage == null) {
-            return false;
-        }
-
-        if (actualPackage.getId() != null) {
-            ckanPackage = datasetService.retrieveUpdateCkanPackage(datasetVersion, actualPackage.getId());
+        if (existingPackageInCkan.getId() != null) {
+            ckanPackage = datasetService.retrieveUpdateCkanPackage(datasetVersion, existingPackageInCkan.getId());
         } else {
             ckanPackage = datasetService.retrieveNewCkanPackage(datasetVersion);
         }
 
         if (ckanPackage != null) {
-            Boolean resultado = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, actualPackage.getId());
-            if (Boolean.TRUE.equals(resultado)) {
-                if (actualPackage.getId() != null) {
-                    createOrUpdateCkanResources(datasetVersion, actualPackage, packageName, urn);
+            CkanPackage packageResult = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, existingPackageInCkan.getId());
+            if (packageResult != null) {
+                if (existingPackageInCkan.getId() != null) {
+                    createOrUpdateCkanResources(datasetVersion, existingPackageInCkan, existingPackageInCkan.getId(), urn);
+                } else {
+                    createPackageRelationshipEntity(urnWithoutVersion, packageResult.getId());
                 }
                 return true;
             }
