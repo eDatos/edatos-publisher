@@ -88,6 +88,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         existingPackage.setUrl(datasetVersion.getVisualizerHtmlLink());
         existingPackage.setVersion(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getVersionLogic());
 
+        existingPackage.setTags(getTags());
         // extra fields
         existingPackage.setExtras(new ArrayList<>());
         existingPackage.getExtras().addAll(getDatasetExtraFields(externalCategoryService, externalOperationService, getCkanPackageName()));

@@ -98,6 +98,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
         existingPackage.setVersion(version);
 
+        existingPackage.setTags(getTags(organisationScheme.getOrganisationSchemeType()));
         // extra fields
         existingPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, getCkanPackageName()));
 

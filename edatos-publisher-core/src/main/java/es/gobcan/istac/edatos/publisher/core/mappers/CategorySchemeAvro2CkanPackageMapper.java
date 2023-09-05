@@ -93,6 +93,8 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         existingPackage.setVersion(version);
 
+        existingPackage.setTags(getTags());
+
         // extra fields
         existingPackage.setExtras(getCategorySchemeExtraFields(externalCategoryService, getCkanPackageName()));
 

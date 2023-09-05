@@ -91,6 +91,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         existingPackage.setVersion(version);
 
+        existingPackage.setTags(getTags());
         // extra fields
         existingPackage.setExtras(getConceptSchemeExtraFields(externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(), getCkanPackageName(),
                 conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
