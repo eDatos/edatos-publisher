@@ -88,6 +88,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         existingPackage.setVersion(version);
 
+        existingPackage.setTags(getTags());
         // extra fields
         existingPackage.setExtras(getCodelistExtraFields(externalCategoryService, getCkanPackageName()));
 
