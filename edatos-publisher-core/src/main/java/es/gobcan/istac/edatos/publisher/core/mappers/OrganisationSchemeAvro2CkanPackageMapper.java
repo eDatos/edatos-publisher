@@ -63,10 +63,11 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
 
         // extra fields
         newPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, newPackage.getName()));
+
+        newPackage.setGroups(getCkanGroups());
 
         return newPackage;
     }
@@ -79,8 +80,10 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         }
     }
 
+    @Override
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        String urn = CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        return super.getCkanPackageName(CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn()));
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
@@ -97,6 +100,8 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
         // extra fields
         existingPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, getCkanPackageName()));
+
+        existingPackage.setGroups(getCkanGroups());
 
         return existingPackage;
     }

@@ -3,4 +3,5 @@
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210902083432_added_entity_InternalEnabledToken.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220713090732_added_entity_ExternalCkanItemEntity.xml" relativeToChangelogFile="false"/>
+     <include file="config/liquibase/changelog/20230904143532_added_entity_CkanPackageRelationshipEntity.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
