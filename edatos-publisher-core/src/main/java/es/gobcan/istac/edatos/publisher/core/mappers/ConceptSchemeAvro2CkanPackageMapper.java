@@ -63,17 +63,20 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
 
         // extra fields
         newPackage.setExtras(getConceptSchemeExtraFields(externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(), newPackage.getName(),
                 conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
 
+        newPackage.setGroups(getCkanGroups());
+
         return newPackage;
     }
 
+    @Override
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        String urn = CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        return super.getCkanPackageName(urn);
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String id) {
@@ -88,9 +91,12 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         existingPackage.setVersion(version);
 
+        existingPackage.setTags(getTags());
         // extra fields
         existingPackage.setExtras(getConceptSchemeExtraFields(externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(), getCkanPackageName(),
                 conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
+
+        existingPackage.setGroups(getCkanGroups());
 
         return existingPackage;
     }
@@ -110,7 +116,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, null);
+        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, "fields=+description");
     }
 
     private List<CkanExtra> getConceptSchemeExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, ConceptSchemeTypeEnumAvro conceptSchemeType,

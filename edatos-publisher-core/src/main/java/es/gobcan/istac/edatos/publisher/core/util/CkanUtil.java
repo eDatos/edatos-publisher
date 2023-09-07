@@ -8,6 +8,10 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 
 public class CkanUtil {
 
+    public static String buildPackageSearchByIdUrl(String urlBase, String id) {
+        return urlBase + CkanProperties.PACKAGE_SEARCH_PATH + "?q=id:\"" + id + "\"";
+    }
+
     public static String buildPackageSearchByNameUrl(String urlBase, String name) {
         return urlBase + CkanProperties.PACKAGE_SEARCH_PATH + "?q=name:\"" + name + "\"";
     }
