@@ -15,5 +15,6 @@
 * Se debe modificar el archivo de configuración del ckan.ini situado en el proyecto de sistemas "/entornos/arte/desarrollo/ckan/config-deploy/ckan/default/ckan.ini
 Cambios a realizar:
 ** Cambiar propiedad "ckan.preview.loadable"  y dejarlar así: ckan.preview.loadable = none
+** Cambiar propiedad "ckanext.xloader.formats"  y dejarlar así: ckanext.xloader.formats = application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 ** Cambiar propiedad "ckan.datapusher.formats"  y dejarlar así: ckan.datapusher.formats = application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 La ruta para cada entorno sería a partir del path "CKAN_HOME/ckan/default/ckan.ini" para cada entorno.
