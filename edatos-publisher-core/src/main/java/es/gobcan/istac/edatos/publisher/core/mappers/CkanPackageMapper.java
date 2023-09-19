@@ -308,4 +308,8 @@ public abstract class CkanPackageMapper {
         }
         return urn;
     }
+
+    protected String getCkanTitle(String name, String agency, String resourceId) {
+        return name + " (" + agency + ": " + resourceId + ")";
+    }
 }

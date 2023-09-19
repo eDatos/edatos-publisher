@@ -45,7 +45,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        newPackage.setTitle(getConceptSchemeTitle(params[0], params[1]));
         newPackage.setPrivates(false);
         String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
@@ -164,4 +164,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_CONCEPT_SCHEME;
     }
 
+    private String getConceptSchemeTitle(String agency, String resourceId) {
+        return getCkanTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE), agency, resourceId);
+    }
 }
