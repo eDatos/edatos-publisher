@@ -86,7 +86,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(conceptScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        existingPackage.setTitle(getConceptSchemeTitle(params[0], params[1]));
         existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
