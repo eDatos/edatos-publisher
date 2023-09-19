@@ -214,6 +214,7 @@ public abstract class CkanPackageMapper {
             } else {
                 if (Constants.XLS_EXTENSION.equals(existingResource.getFormat().toUpperCase())) {
                     // for compatibility with first publisher version where xls extension existed. This code will be deprecated when the ckan resources are updated an the xls resource changes to xlsx.
+                    // TODO-EDATOS-4229
                     existingFormats.add(ResourcesFormat.XLSX.name());
                 } else {
                     existingFormats.add(existingResource.getFormat());
@@ -247,6 +248,7 @@ public abstract class CkanPackageMapper {
 
     private boolean isXlsFormat(String format) {
         // For compatibility with initial publisher version an xls resource can exists.
+        // TODO-EDATOS-4229
         return Constants.XLS_EXTENSION.equals(format.toUpperCase());
     }
 
@@ -261,6 +263,7 @@ public abstract class CkanPackageMapper {
             format = ResourcesFormat.JSONSTAT.name();
         } else if (isXlsFormat(format)) {
             // for compatibility with initial publisher version where the xls format existed. In this case, it must be changed this resource by xlsx format.
+            // TODO-EDATOS-4229
             format = ResourcesFormat.XLSX.name();
             String[] params = UrnUtils.splitUrnItem(getUrn());
             name = getNameResource(getNameResourceBase(params[0], params[1]), format);
