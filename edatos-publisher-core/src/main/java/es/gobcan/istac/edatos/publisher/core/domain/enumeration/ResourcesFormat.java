@@ -8,7 +8,7 @@ import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.errors.ServiceExceptionType;
 
 public enum ResourcesFormat {
-    JSON, XML, JSONSTAT, TSV, CSV, XLS;
+    JSON, XML, JSONSTAT, TSV, CSV, XLSX;
 
     public static String getFormat(String format) {
         if (format.equals(ResourcesFormat.JSONSTAT.name())) {
@@ -26,8 +26,8 @@ public enum ResourcesFormat {
             return Constants.MIME_TYPE_TSV;
         } else if (format.equals(ResourcesFormat.CSV.name())) {
             return Constants.MIME_TYPE_CSV;
-        } else if (format.equals(ResourcesFormat.XLS.name())) {
-            return Constants.MIME_TYPE_XLS;
+        } else if (format.equals(ResourcesFormat.XLSX.name())) {
+            return Constants.MIME_TYPE_XLSX;
         } else {
             throw new EDatosException(ServiceExceptionType.UNRECOGNIZED_MIME_TYPE, format);
         }
