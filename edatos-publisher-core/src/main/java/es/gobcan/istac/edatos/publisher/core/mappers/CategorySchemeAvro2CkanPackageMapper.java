@@ -43,7 +43,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        newPackage.setTitle(getCategorySchemeTitle(params[0], params[1]));
         newPackage.setPrivates(false);
         String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
@@ -88,7 +88,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        existingPackage.setTitle(getCategorySchemeTitle(params[0], params[1]));
         existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
@@ -152,4 +152,7 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_CATEGORY_SCHEME;
     }
 
+    private String getCategorySchemeTitle(String agency, String resourceId) {
+        return getCkanTitle(getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE), agency, resourceId);
+    }
 }

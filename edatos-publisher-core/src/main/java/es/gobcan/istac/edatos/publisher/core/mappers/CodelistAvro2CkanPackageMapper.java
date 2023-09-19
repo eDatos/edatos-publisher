@@ -43,7 +43,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        newPackage.setTitle(getCodelistTitle(params[0], params[1]));
         newPackage.setPrivates(false);
         String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
@@ -83,7 +83,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        existingPackage.setTitle(getCodelistTitle(params[0], params[1]));
         existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
@@ -149,6 +149,10 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     private String getResourceUrlBase() {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_CODELISTS;
+    }
+
+    private String getCodelistTitle(String agency, String resourceId) {
+        return getCkanTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE), agency, resourceId);
     }
 
 }
