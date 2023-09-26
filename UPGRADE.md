@@ -18,3 +18,9 @@ Cambios a realizar:
 ** Cambiar propiedad "ckanext.xloader.formats"  y dejarlar así: ckanext.xloader.formats = application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 ** Cambiar propiedad "ckan.datapusher.formats"  y dejarlar así: ckan.datapusher.formats = application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 La ruta para cada entorno sería a partir del path "CKAN_HOME/ckan/default/ckan.ini" para cada entorno.
+
+* Se debe modificar el archivo de configuración del fichero "resource_formats.json" situado en el proyecto de sistemas "/entornos/arte/desarrollo/ckan/config-deploy/ckan/default/ckan.ini
+ ** Asociar el formato jsonstat al formato json. Para ello cambiar la entrada de json para dejarla así:
+["JSON", "JavaScript Object Notation", "application/json", ["json", "jsonstat"]],
+La ruta para cada entorno sería a partir del path "CKAN_HOME/ckan/default/resource_formats.json" para cada entorno.
+
