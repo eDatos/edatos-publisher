@@ -14,5 +14,6 @@ public interface DatasetPublisherService {
     String retrieveCkanPackageName(DatasetVersionAvro datasetVersion);
     List<CkanResource> retrieveUpdatedResources(DatasetVersionAvro datasetVersion, CkanPackage existingPackage, String packageId);
     List<CkanResource> retrieveNewResources(DatasetVersionAvro datasetVersion, CkanPackage existingPackage);
+    List<String> retrieveResourcesToDelete(DatasetVersionAvro datasetVersion, CkanPackage existingPackage);
 
 }

@@ -2,9 +2,10 @@ package es.gobcan.istac.edatos.publisher.core.domain;
 
 public class CkanUrlResource {
 
-    private String urlBaseResource;
-    private String urlSuffixResource;
-    private String urlParametersFields;
+    private String  urlBaseResource;
+    private String  urlSuffixResource;
+    private String  urlParametersFields;
+    private boolean isExcelFormatVisible = true;
 
     public CkanUrlResource(String urlBaseResource, String urlSuffixResource, String urlParametersFields) {
         this.urlBaseResource = urlBaseResource;
@@ -31,4 +32,11 @@ public class CkanUrlResource {
         this.urlParametersFields = urlParametersFields;
     }
 
+    public boolean isExcelFormatVisible() {
+        return isExcelFormatVisible;
+    }
+
+    public void setExcelFormatVisible(boolean isExcelFormatVisible) {
+        this.isExcelFormatVisible = isExcelFormatVisible;
+    }
 }
