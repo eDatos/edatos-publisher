@@ -1,5 +1,6 @@
 package es.gobcan.istac.edatos.publisher.service;
 
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGenericResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -14,4 +15,5 @@ public interface CkanService {
     CkanResourceResponse createResource(CkanResource ckanResource);
     CkanPackageResponse updatePackage(CkanPackage ckanPackage);
     CkanResourceResponse updateResource(CkanResource resource);
+    CkanGenericResponse deleteResource(String idResource);
 }

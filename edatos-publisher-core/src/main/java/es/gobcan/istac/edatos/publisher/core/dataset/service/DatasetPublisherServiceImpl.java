@@ -19,19 +19,19 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 @Service
 public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
-    private final Logger log = LoggerFactory.getLogger(DatasetPublisherServiceImpl.class);
+    private final Logger                 log = LoggerFactory.getLogger(DatasetPublisherServiceImpl.class);
 
     @Autowired
     private MetadataConfigurationService metadataConfigurationService;
 
     @Autowired
-    private ExternalCategoryService externalCategoryService;
+    private ExternalCategoryService      externalCategoryService;
 
     @Autowired
-    ExternalOperationService externalOperationService;
+    ExternalOperationService             externalOperationService;
 
     @Autowired
-    private MessageSource messageSource;
+    private MessageSource                messageSource;
 
     @Override
     public CkanPackage retrieveNewCkanPackage(DatasetVersionAvro datasetVersion) {
@@ -92,6 +92,19 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
             return datasetAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
             log.debug("Error in retrieve new resources: {}", e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> retrieveResourcesToDelete(DatasetVersionAvro datasetVersion, CkanPackage existingPackage) {
+        try {
+
+            DatasetAvro2CkanPackageMapper datasetAvro2CkanPackageMapper = new DatasetAvro2CkanPackageMapper(datasetVersion, metadataConfigurationService, messageSource);
+
+            return datasetAvro2CkanPackageMapper.deleteResources(existingPackage);
+        } catch (Exception e) {
+            log.debug("Error in retrieve  resources that must be deleted: {}", e);
         }
         return null;
     }

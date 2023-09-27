@@ -14,6 +14,7 @@ import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.ResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
@@ -103,6 +104,36 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return createResources(packageId, getAvailableFormats());
     }
 
+    public List<String> deleteResources(CkanPackage existingPackage) {
+        List<String> resourcesIdToDelete = new ArrayList<>();
+
+        if (isInvalidXlsx()) {
+            for (CkanResource existingResource : existingPackage.getResources()) {
+                if (ResourcesFormat.XLSX.name().equals(existingResource.getFormat().toUpperCase())) {
+                    resourcesIdToDelete.add(existingResource.getId());
+                }
+            }
+        }
+
+        return resourcesIdToDelete;
+    }
+
+    @Override
+    protected List<String> getAvailableFormats() {
+        List<String> formats = DatasetResourcesFormat.getEnumList();
+
+        if (isInvalidXlsx()) {
+            formats.remove(DatasetResourcesFormat.XLSX.name());
+        }
+
+        return formats;
+    }
+
+    private boolean isInvalidXlsx() {
+        Long maxXlsxRows = Long.parseLong(metadataConfigurationService.retrieveMaxXlsxRows());
+        return maxXlsxRows != null && datasetVersion.getFormatExtentObservations() != null && (datasetVersion.getFormatExtentObservations() > maxXlsxRows);
+    }
+
     @Override
     protected String getUrn() {
         return datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
@@ -142,11 +173,6 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_DATASET_RESOURCE, null) + agency + ":" + code;
     }
 
-    @Override
-    protected List<String> getAvailableFormats() {
-        return DatasetResourcesFormat.getEnumList();
-    }
-
     private String getResourceUrlBase() {
         return CkanUtil.getStatisticalResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_DATASETS;
     }
@@ -159,5 +185,4 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return tags;
 
     }
-
 }

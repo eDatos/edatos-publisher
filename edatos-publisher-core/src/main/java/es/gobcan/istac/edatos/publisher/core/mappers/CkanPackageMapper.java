@@ -274,7 +274,7 @@ public abstract class CkanPackageMapper {
         resource.setUrl(getUrlResource(ckanUrlResource, format));
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
-        resource.setFormat(format);
+        resource.setFormat((ResourcesFormat.getFormat(format)));
         resource.setMimetype(ResourcesFormat.getFormat(format));
         resource.setDescription(description);
         return resource;

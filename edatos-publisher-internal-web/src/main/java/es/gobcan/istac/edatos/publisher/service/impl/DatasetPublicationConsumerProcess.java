@@ -55,6 +55,10 @@ public class DatasetPublicationConsumerProcess extends PublicationConsumerProces
         if (!resources.isEmpty()) {
             ckanSenderService.createResources(resources, urn);
         }
+        List<String> resourcesIdToDelete = datasetService.retrieveResourcesToDelete(datasetVersion, actualPackage);
+        if (!resourcesIdToDelete.isEmpty()) {
+            ckanSenderService.deleteResourcesById(resourcesIdToDelete, urn);
+        }
     }
 
 }

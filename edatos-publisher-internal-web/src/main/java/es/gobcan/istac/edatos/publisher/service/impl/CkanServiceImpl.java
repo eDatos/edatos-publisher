@@ -6,6 +6,7 @@ import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackagePa
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByIdUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildPackageSearchByNameUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceCreateUrl;
+import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.buildResourceDeleteUrl;
 import static es.gobcan.istac.edatos.publisher.core.util.CkanUtil.getBaseHttpHeader;
 
 import org.springframework.http.HttpEntity;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGenericResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -94,6 +96,21 @@ public class CkanServiceImpl implements CkanService {
         String resourcePatchUrl = buildPackagePatchResourceUrl(urlBase);
         HttpEntity<CkanResource> request = new HttpEntity<>(resource, getBaseHttpHeader(apiKey));
         ResponseEntity<CkanResourceResponse> response = restTemplate.postForEntity(resourcePatchUrl, request, CkanResourceResponse.class);
+
+        return response.getBody();
+    }
+
+    @Override
+    public CkanGenericResponse deleteResource(String resourceId) {
+
+        String resourceDeleteUrl = buildResourceDeleteUrl(urlBase);
+
+        CkanResource resource = new CkanResource();
+        resource.setId(resourceId);
+
+        HttpEntity<CkanResource> request = new HttpEntity<>(resource, getBaseHttpHeader(apiKey));
+
+        ResponseEntity<CkanGenericResponse> response = restTemplate.postForEntity(resourceDeleteUrl, request, CkanGenericResponse.class);
 
         return response.getBody();
     }
