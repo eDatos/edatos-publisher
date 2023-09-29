@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import es.gobcan.istac.edatos.publisher.ckan.notification.error.impl.NotificationError;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGenericResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -117,6 +118,31 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             return true;
         } catch (HttpStatusCodeException e) {
             notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_CREATE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_CREATE_RESOURCE, e,
+                    nameResource != null ? nameResource : "-", urn);
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean deleteResourcesById(List<String> resourcesId, String urn) {
+        String nameResource = "-";
+        try {
+
+            CkanGenericResponse resourceResponse;
+
+            for (String resourceId : resourcesId) {
+                nameResource = resourceId;
+                resourceResponse = ckanService.deleteResource(resourceId);
+
+                if (!resourceResponse.isSuccess()) {
+                    notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_RESOURCE,
+                            resourceResponse.getError(), null, nameResource, urn);
+                    return false;
+                }
+            }
+            return true;
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_RESOURCE, e,
                     nameResource != null ? nameResource : "-", urn);
         }
         return false;
