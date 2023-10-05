@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import es.gobcan.istac.edatos.publisher.ckan.notification.error.impl.NotificationError;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGenericResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -19,9 +20,9 @@ import es.gobcan.istac.edatos.publisher.service.CkanService;
 @Service
 public class CkanSenderServiceImpl implements CkanSenderService {
 
-    private final CkanService ckanService;
+    private final CkanService         ckanService;
     private final NotificationService notificationService;
-    private final NotificationError notificationError;
+    private final NotificationError   notificationError;
 
     public CkanSenderServiceImpl(CkanService ckanService, NotificationService notificationService, NotificationError notificationError) {
         this.ckanService = ckanService;
@@ -46,7 +47,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
     }
 
     @Override
-    public Boolean createOrUpdateCkanPackage(CkanPackage ckanPackage, String urn, String packageId) {
+    public CkanPackage createOrUpdateCkanPackage(CkanPackage ckanPackage, String urn, String packageId) {
         try {
 
             CkanPackageResponse packageResponse;
@@ -55,17 +56,20 @@ public class CkanSenderServiceImpl implements CkanSenderService {
                 packageResponse = ckanService.updatePackage(ckanPackage);
             } else {
                 packageResponse = ckanService.createPackage(ckanPackage);
+
             }
             if (!packageResponse.isSuccess()) {
                 notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
                         packageResponse.getError(), null, urn);
-                return false;
+                return null;
+            } else {
+                return packageResponse.getResult();
+
             }
-            return true;
         } catch (HttpStatusCodeException e) {
             notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE, e, urn);
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -117,5 +121,46 @@ public class CkanSenderServiceImpl implements CkanSenderService {
                     nameResource != null ? nameResource : "-", urn);
         }
         return false;
+    }
+
+    @Override
+    public Boolean deleteResourcesById(List<String> resourcesId, String urn) {
+        String nameResource = "-";
+        try {
+
+            CkanGenericResponse resourceResponse;
+
+            for (String resourceId : resourcesId) {
+                nameResource = resourceId;
+                resourceResponse = ckanService.deleteResource(resourceId);
+
+                if (!resourceResponse.isSuccess()) {
+                    notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_RESOURCE,
+                            resourceResponse.getError(), null, nameResource, urn);
+                    return false;
+                }
+            }
+            return true;
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_RESOURCE, e,
+                    nameResource != null ? nameResource : "-", urn);
+        }
+        return false;
+    }
+
+    @Override
+    public CkanPackage getCkanPackageById(String ckanId) {
+        CkanSearchResponse existingPackaget = ckanService.getDatasetById(ckanId);
+        if (existingPackaget != null && existingPackaget.isSuccess()) {
+            if (existingPackaget.getResult().getCount() > 0) {
+                return existingPackaget.getResult().getResults().get(0);
+            } else {
+                return new CkanPackage();
+            }
+        } else {
+            notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
+                    existingPackaget.getError(), null, ckanId);
+        }
+        return null;
     }
 }

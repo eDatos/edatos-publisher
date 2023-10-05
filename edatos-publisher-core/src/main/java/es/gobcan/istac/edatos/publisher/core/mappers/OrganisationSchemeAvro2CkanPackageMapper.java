@@ -44,7 +44,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         String version = params[2];
 
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        newPackage.setTitle(getOrganisationSchemeTitle(params[0], params[1]));
         newPackage.setPrivates(false);
         String maintainer = getMaintainer();
 
@@ -63,10 +63,11 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-        newPackage.setGroups(new ArrayList<>());
 
         // extra fields
         newPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, newPackage.getName()));
+
+        newPackage.setGroups(getCkanGroups());
 
         return newPackage;
     }
@@ -79,8 +80,9 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         }
     }
 
+    @Override
     public String getCkanPackageName() {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn());
+        return super.getCkanPackageName(CkanFormatUtil.formatCkanNameFromDatasetUrn(getUrn()));
     }
 
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
@@ -90,13 +92,16 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         String version = params[2];
 
         existingPackage.setId(id);
-        existingPackage.setTitle(getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE));
+        existingPackage.setTitle(getOrganisationSchemeTitle(params[0], params[1]));
         existingPackage.setNotes(getResourceDescription());
 
         existingPackage.setVersion(version);
 
+        existingPackage.setTags(getTags(organisationScheme.getOrganisationSchemeType()));
         // extra fields
         existingPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, getCkanPackageName()));
+
+        existingPackage.setGroups(getCkanGroups());
 
         return existingPackage;
     }
@@ -168,5 +173,9 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
     private String getResourceUrlBase() {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_ORGANISATION_SCHEME;
+    }
+
+    private String getOrganisationSchemeTitle(String agency, String resourceId) {
+        return getCkanTitle(getDefaultLocalisedStringFromLocalisedStringAvro(organisationScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE), agency, resourceId);
     }
 }

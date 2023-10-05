@@ -16,6 +16,7 @@ import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
+import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGroup;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
@@ -25,17 +26,20 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
-import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
+import es.gobcan.istac.edatos.publisher.core.util.markdown.MarkdownCkan;
 
 public abstract class CkanPackageMapper {
 
     protected CkanPackageMapper() {
     }
 
+    private Set<String> eniThemes = new HashSet<String>();
+
     protected abstract String getResourceDescription();
     protected abstract CkanUrlResource getCkanUrlResource();
     protected abstract String getNameResourceBase(String agency, String code);
     protected abstract String getUrn();
+    protected abstract String getCkanPackageName();
     protected abstract List<String> getAvailableFormats();
 
     protected List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
@@ -49,16 +53,19 @@ public abstract class CkanPackageMapper {
 
         extraFields.add(new CkanExtra("spatial_uri", metadataConfigurationService.retrieveCkanSpatialUri()));
 
+        extraFields.add(new CkanExtra("contact_email", metadataConfigurationService.retrieveCkanDefaultContactEmail()));
+
         return extraFields;
     }
 
-    protected String getCkanPackageName(String urn) {
-        return CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
+    protected String getDefaultContactEmail(MetadataConfigurationService metadataConfigurationService) {
+        return metadataConfigurationService.retrieveCkanDefaultContactEmail();
     }
 
     protected String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
-            return description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+            String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
+            return MarkdownCkan.stringHtmlToMarkdown(localeDescription);
         }
         return null;
     }
@@ -66,17 +73,10 @@ public abstract class CkanPackageMapper {
     protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
-            return removeUnsupportedCharaters(localeDescription);
+            return MarkdownCkan.stringHtmlToMarkdown(localeDescription);
 
         }
         return null;
-    }
-
-    public static String removeUnsupportedCharaters(String string) {
-        if (StringUtils.isNotBlank(string)) {
-            return string.replace(Constants.BR_TAG, Constants.DOUBLE_SPACE);
-        }
-        return string;
     }
 
     protected String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
@@ -112,6 +112,7 @@ public abstract class CkanPackageMapper {
     public String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
         Category category = externalCategoryService.getCategory(agency, resourceId, version, categoryId);
         if (category != null && category.getEniSchemeType() != null) {
+            addEniThemes(category.getEniSchemeType().getId());
             return getUrlEniTheme(eniUrlBase, category.getEniSchemeType().getId());
         }
         return null;
@@ -132,7 +133,7 @@ public abstract class CkanPackageMapper {
     protected String getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
             ExternalOperationService externalOperationService) {
 
-        Set<String> eniThemes = new HashSet<>();
+        Set<String> eniThemesOfStatisticalOperation = new HashSet<>();
         String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
 
         Operation operation = externalOperationService.retrieveStatisticalOperationById(stadisticalOperationCode);
@@ -140,7 +141,7 @@ public abstract class CkanPackageMapper {
         // get eniScheme from subjectArea field of statistical operation
         String eniScheme = addTheme(externalCategoryService, eniUrlBase, operation.getSubjectArea().getUrn());
         if (eniScheme != null) {
-            eniThemes.add(eniScheme);
+            eniThemesOfStatisticalOperation.add(eniScheme);
         }
 
         // get eniScheme from secondary subject area field of statistical operation. This field is optional
@@ -148,15 +149,17 @@ public abstract class CkanPackageMapper {
             for (ResourceInternal category : operation.getSecondarySubjectAreas().getSecondarySubjectAreas()) {
                 eniScheme = addTheme(externalCategoryService, eniUrlBase, category.getUrn());
                 if (eniScheme != null) {
-                    eniThemes.add(eniScheme);
+                    eniThemesOfStatisticalOperation.add(eniScheme);
                 }
             }
         }
 
-        if (!eniThemes.isEmpty()) {
-            return String.join(",", eniThemes);
+        if (!eniThemesOfStatisticalOperation.isEmpty()) {
+            return String.join(",", eniThemesOfStatisticalOperation);
+        } else {
+            // SubjectArea is mandatory in statistical operation but it could be possible that the eni scheme is no assigned for this category and the dataset could be send without theme.
+            return getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
         }
-        return null;
     }
 
     private String getLastVersionDefaultUrnCategory(ExternalCategoryService externalCategoryService, String agency, String resourceId) {
@@ -209,6 +212,7 @@ public abstract class CkanPackageMapper {
             if (isJsonStatFormat(existingResource.getFormat(), existingResource.getName())) {
                 existingFormats.add(ResourcesFormat.JSONSTAT.name());
             } else {
+
                 existingFormats.add(existingResource.getFormat());
             }
         }
@@ -252,8 +256,8 @@ public abstract class CkanPackageMapper {
         resource.setUrl(getUrlResource(ckanUrlResource, format));
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
-        resource.setFormat(format);
-        resource.setMimetype(ResourcesFormat.getFormat(format));
+        resource.setFormat(ResourcesFormat.getFormat(format));
+        resource.setMimetype(ResourcesFormat.getMimeType(format));
         resource.setDescription(description);
         return resource;
     }
@@ -283,5 +287,30 @@ public abstract class CkanPackageMapper {
     private String getNameResource(String nameResourceBase, String format) {
         return nameResourceBase + " (" + format + ")";
     }
+    public Set<String> getEniThemes() {
+        return eniThemes;
+    }
+    private void addEniThemes(String eniTheme) {
+        this.eniThemes.add(eniTheme);
+    }
 
+    protected List<CkanGroup> getCkanGroups() {
+        List<CkanGroup> categories = new ArrayList<CkanGroup>();
+
+        for (String eniScheme : getEniThemes()) {
+            categories.add(new CkanGroup(eniScheme));
+        }
+        return categories;
+    }
+
+    protected String getCkanPackageName(String urn) {
+        if (urn.length() > Constants.MAX_SIZE_PACKAGE_CKAN_NAME) {
+            return StringUtils.right(urn, Constants.MAX_SIZE_PACKAGE_CKAN_NAME);
+        }
+        return urn;
+    }
+
+    protected String getCkanTitle(String name, String agency, String resourceId) {
+        return name + " (" + agency + ": " + resourceId + ")";
+    }
 }

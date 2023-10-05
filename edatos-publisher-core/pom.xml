@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>es.gobcan.istac.edatos-publisher</groupId>
         <artifactId>edatos-publisher</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>edatos-publisher-core</artifactId>
@@ -322,11 +321,16 @@
             <artifactId>metamac-srm-kafka</artifactId>
             <version>${metamac-srm-kafka.version}</version>
         </dependency>
-        <dependency>
-            <groupId>es.gobcan.istac.indicators</groupId>
-            <artifactId>indicators-kafka</artifactId>
-            <version>9.0.1-SNAPSHOT</version>
+          <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.2</version>
         </dependency>
+        <dependency>
+   		 <groupId>com.vladsch.flexmark</groupId>
+  		  <artifactId>flexmark-html2md-converter</artifactId>
+   		 <version>0.62.2</version>
+		</dependency>
     </dependencies>
 
     <build>
@@ -485,7 +489,7 @@
                     </diffChangeLogFile>
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://localhost:5432/edatos_publisher</url>
-                    <defaultSchemaName/>
+                    <defaultSchemaName />
                     <username>edatos_publisher</username>
                     <password>edatos_publisher</password>
                     <referenceUrl>

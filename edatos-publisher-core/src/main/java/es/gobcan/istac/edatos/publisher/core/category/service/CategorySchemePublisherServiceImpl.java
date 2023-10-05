@@ -18,16 +18,16 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 @Service
 public class CategorySchemePublisherServiceImpl implements CategorySchemePublisherService {
 
-    private final Logger log = LoggerFactory.getLogger(CategorySchemePublisherServiceImpl.class);
+    private final Logger                 log = LoggerFactory.getLogger(CategorySchemePublisherServiceImpl.class);
 
     @Autowired
     private MetadataConfigurationService metadataConfigurationService;
 
     @Autowired
-    private ExternalCategoryService externalCategoryService;
+    private ExternalCategoryService      externalCategoryService;
 
     @Autowired
-    private MessageSource messageSource;
+    private MessageSource                messageSource;
 
     @Override
     public CkanPackage retrieveNewCkanPackage(CategorySchemeAvro categoryScheme) {
