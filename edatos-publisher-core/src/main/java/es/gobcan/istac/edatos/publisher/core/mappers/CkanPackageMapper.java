@@ -212,14 +212,8 @@ public abstract class CkanPackageMapper {
             if (isJsonStatFormat(existingResource.getFormat(), existingResource.getName())) {
                 existingFormats.add(ResourcesFormat.JSONSTAT.name());
             } else {
-                if (Constants.XLS_EXTENSION.equals(existingResource.getFormat().toUpperCase())) {
-                    // for compatibility with first publisher version where xls extension existed. This code will be deprecated when the ckan resources are updated an the xls resource changes to xlsx.
-                    // TODO-EDATOS-4229
-                    existingFormats.add(ResourcesFormat.XLSX.name());
-                } else {
-                    existingFormats.add(existingResource.getFormat());
-                }
 
+                existingFormats.add(existingResource.getFormat());
             }
         }
 
@@ -246,12 +240,6 @@ public abstract class CkanPackageMapper {
         return ResourcesFormat.JSON.name().equals(format) && name.indexOf(ResourcesFormat.JSONSTAT.name()) > -1;
     }
 
-    private boolean isXlsFormat(String format) {
-        // For compatibility with initial publisher version an xls resource can exists.
-        // TODO-EDATOS-4229
-        return Constants.XLS_EXTENSION.equals(format.toUpperCase());
-    }
-
     protected String getDefaultOrganisation(MetadataConfigurationService metadataConfigurationService) {
         return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
     }
@@ -261,12 +249,6 @@ public abstract class CkanPackageMapper {
 
         if (isJsonStatFormat(format, name)) {
             format = ResourcesFormat.JSONSTAT.name();
-        } else if (isXlsFormat(format)) {
-            // for compatibility with initial publisher version where the xls format existed. In this case, it must be changed this resource by xlsx format.
-            // TODO-EDATOS-4229
-            format = ResourcesFormat.XLSX.name();
-            String[] params = UrnUtils.splitUrnItem(getUrn());
-            name = getNameResource(getNameResourceBase(params[0], params[1]), format);
         }
 
         resource.setPackage_id(packageId);
@@ -274,8 +256,8 @@ public abstract class CkanPackageMapper {
         resource.setUrl(getUrlResource(ckanUrlResource, format));
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
-        resource.setFormat(format);
-        resource.setMimetype(ResourcesFormat.getFormat(format));
+        resource.setFormat(ResourcesFormat.getFormat(format));
+        resource.setMimetype(ResourcesFormat.getMimeType(format));
         resource.setDescription(description);
         return resource;
     }

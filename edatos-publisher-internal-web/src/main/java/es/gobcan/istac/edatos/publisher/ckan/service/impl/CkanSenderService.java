@@ -12,4 +12,5 @@ public interface CkanSenderService {
     CkanPackage getCkanPackageById(String id);
     Boolean updateResources(List<CkanResource> resources, String urn);
     Boolean createResources(List<CkanResource> resources, String urn);
+    Boolean deleteResourcesById(List<String> resources, String urn);
 }

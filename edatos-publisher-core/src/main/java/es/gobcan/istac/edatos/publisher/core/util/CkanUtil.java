@@ -32,6 +32,10 @@ public class CkanUtil {
         return urlBase + CkanProperties.RESOURCE_PATCH_PATH;
     }
 
+    public static String buildResourceDeleteUrl(String urlBase) {
+        return urlBase + CkanProperties.RESOURCE_DELETE_PATH;
+    }
+
     public static HttpHeaders getBaseHttpHeader(String apiKey) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
