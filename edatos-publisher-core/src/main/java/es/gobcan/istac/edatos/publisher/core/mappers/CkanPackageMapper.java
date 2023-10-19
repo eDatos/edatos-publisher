@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.common.v1_0.domain.Item;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
@@ -103,19 +104,26 @@ public abstract class CkanPackageMapper {
         return url;
     }
 
-    public String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String urnCategory) {
+    public Set<String> addThemes(ExternalCategoryService externalCategoryService, String eniUrlBase, String urnCategory) {
         String[] params = UrnUtils.splitUrnItem(urnCategory);
 
-        return addTheme(externalCategoryService, eniUrlBase, params[0], params[1], params[2], params[3]);
+        return addThemes(externalCategoryService, eniUrlBase, params[0], params[1], params[2], params[3]);
     }
 
-    public String addTheme(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
+    private boolean existsEniSchemas(Category category) {
+        return category != null && category.getEniSchemaTypes() != null && !category.getEniSchemaTypes().getEniSchemaTypes().isEmpty();
+    }
+
+    public Set<String> addThemes(ExternalCategoryService externalCategoryService, String eniUrlBase, String agency, String resourceId, String version, String categoryId) {
+        Set<String> eniSchemasUrl = new HashSet<>();
         Category category = externalCategoryService.getCategory(agency, resourceId, version, categoryId);
-        if (category != null && category.getEniSchemeType() != null) {
-            addEniThemes(category.getEniSchemeType().getId());
-            return getUrlEniTheme(eniUrlBase, category.getEniSchemeType().getId());
+        if (existsEniSchemas(category)) {
+            for (Item eniSchema : category.getEniSchemaTypes().getEniSchemaTypes()) {
+                addEniThemes(eniSchema.getId());
+                eniSchemasUrl.add(getUrlEniTheme(eniUrlBase, eniSchema.getId()));
+            }
         }
-        return null;
+        return eniSchemasUrl;
     }
 
     public String getDefaultTheme(ExternalCategoryService externalCategoryService, MetadataConfigurationService metadataConfigurationService, String eniUrlBase) {
@@ -124,7 +132,10 @@ public abstract class CkanPackageMapper {
         String urnLastVersionDefaultCategoryScheme = getLastVersionDefaultUrnCategory(externalCategoryService, urnCategoryWithoutVersion[0], urnCategoryWithoutVersion[1]);
         if (urnLastVersionDefaultCategoryScheme != null) {
             String[] params = UrnUtils.splitUrnItem(urnLastVersionDefaultCategoryScheme);
-            return addTheme(externalCategoryService, eniUrlBase, params[0], params[1], params[2], urnCategoryWithoutVersion[3]);
+            Set<String> defaultSchemas = addThemes(externalCategoryService, eniUrlBase, params[0], params[1], params[2], urnCategoryWithoutVersion[3]);
+            if (!defaultSchemas.isEmpty()) {
+                return String.join(",", defaultSchemas);
+            }
         }
 
         return null;
@@ -138,18 +149,18 @@ public abstract class CkanPackageMapper {
 
         Operation operation = externalOperationService.retrieveStatisticalOperationById(stadisticalOperationCode);
 
-        // get eniScheme from subjectArea field of statistical operation
-        String eniScheme = addTheme(externalCategoryService, eniUrlBase, operation.getSubjectArea().getUrn());
-        if (eniScheme != null) {
-            eniThemesOfStatisticalOperation.add(eniScheme);
+        // get eniSchemas from subjectArea field of statistical operation
+        Set<String> eniSchemas = addThemes(externalCategoryService, eniUrlBase, operation.getSubjectArea().getUrn());
+        if (!eniSchemas.isEmpty()) {
+            eniThemesOfStatisticalOperation.addAll(eniSchemas);
         }
 
-        // get eniScheme from secondary subject area field of statistical operation. This field is optional
+        // get eniSchemas from secondary subject area field of statistical operation. This field is optional
         if (operation.getSecondarySubjectAreas() != null && !operation.getSecondarySubjectAreas().getSecondarySubjectAreas().isEmpty()) {
             for (ResourceInternal category : operation.getSecondarySubjectAreas().getSecondarySubjectAreas()) {
-                eniScheme = addTheme(externalCategoryService, eniUrlBase, category.getUrn());
-                if (eniScheme != null) {
-                    eniThemesOfStatisticalOperation.add(eniScheme);
+                eniSchemas = addThemes(externalCategoryService, eniUrlBase, category.getUrn());
+                if (eniSchemas != null) {
+                    eniThemesOfStatisticalOperation.addAll(eniSchemas);
                 }
             }
         }
