@@ -131,7 +131,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     private boolean isInvalidXlsx() {
         Long maxXlsxRows = Long.parseLong(metadataConfigurationService.retrieveMaxXlsxRows());
-        return maxXlsxRows != null && datasetVersion.getFormatExtentObservations() != null && (datasetVersion.getFormatExtentObservations() > maxXlsxRows);
+        return maxXlsxRows != null && datasetVersion.getFormatExtentTableSize() != null && (datasetVersion.getFormatExtentTableSize() > maxXlsxRows);
     }
 
     @Override
