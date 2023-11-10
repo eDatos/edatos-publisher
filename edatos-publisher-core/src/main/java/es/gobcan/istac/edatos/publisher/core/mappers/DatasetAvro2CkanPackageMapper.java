@@ -138,8 +138,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         if (maxXlsxRows != null && ((datasetVersion.getFormatExtentTableSize() != null && (datasetVersion.getFormatExtentTableSize() > maxXlsxRows)) || 
                 (datasetVersion.getFormatExtentTableSize() == null && datasetVersion.getFormatExtentObservations() != null 
                     && (datasetVersion.getFormatExtentObservations() > maxXlsxRows)))) {
-            log.info("Error: xlsx resource of the dataset with urn " 
-                    + datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource() .getIdentifiableStatisticalResource().getUrn()
+            log.info("Error: xlsx resource of the dataset with urn " + getUrn()
                     + " will not be generated because the table size or number of observations exceeds the limit");
             return true;
         } else {
