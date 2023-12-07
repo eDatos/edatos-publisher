@@ -23,6 +23,8 @@ public class ExternalOperationServiceImpl implements ExternalOperationService {
     public Operation retrieveStatisticalOperationById(String statisticalOperationId) {
         LOG.debug("Making request to internal statistical operation Manager to GET operation by Id. OperationId: {}", statisticalOperationId);
 
+        LOG.info("Making request to internal statistical operation Manager to GET operation by Id. OperationId: {}", statisticalOperationId);
+
         return eDatosApisLocator.operationsInternal().retrieveOperationById(statisticalOperationId);
 
     }

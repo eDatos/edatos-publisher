@@ -15,6 +15,8 @@ import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGroup;
@@ -30,6 +32,8 @@ import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
 import es.gobcan.istac.edatos.publisher.core.util.markdown.MarkdownCkan;
 
 public abstract class CkanPackageMapper {
+
+    private final Logger log = LoggerFactory.getLogger(CkanPackageMapper.class);
 
     protected CkanPackageMapper() {
     }
