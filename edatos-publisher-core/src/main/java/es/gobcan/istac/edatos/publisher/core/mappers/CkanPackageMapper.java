@@ -207,7 +207,7 @@ public abstract class CkanPackageMapper {
         resource.setDescription(description);
         resource.setFormat((ResourcesFormat.getFormat(resourceFormat)));
         resource.setName(getNameResource(nameResourceBase, resourceFormat));
-        resource.setMimetype(ResourcesFormat.getMimeType(resourceFormat));
+        resource.setMimetype(ResourcesFormat.getMimeType(resourceFormat, false));
         resource.setCreated(CkanDateUtil.getNowInIso());
         return resource;
     }
@@ -244,12 +244,10 @@ public abstract class CkanPackageMapper {
         List<CkanResource> resources = new ArrayList<>();
         String description = getResourceDescription();
 
-        if (existingResources == null || existingResources.isEmpty()) {
-            log.info("updateResources without existingResources for dataset with package id ", packageId);
-        }
-
         for (CkanResource existingResource : existingResources) {
-            resources.add(updateResource(existingResource.getId(), packageId, getCkanUrlResource(), existingResource.getFormat(), existingResource.getName(), description));
+            if (ResourcesFormat.getMimeType(existingResource.getFormat(), true) != null) {
+                resources.add(updateResource(existingResource.getId(), packageId, getCkanUrlResource(), existingResource.getFormat(), existingResource.getName(), description));
+            }
         }
 
         return resources;
@@ -277,7 +275,7 @@ public abstract class CkanPackageMapper {
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
         resource.setFormat(ResourcesFormat.getFormat(format));
-        resource.setMimetype(ResourcesFormat.getMimeType(format));
+        resource.setMimetype(ResourcesFormat.getMimeType(format, false));
         resource.setDescription(description);
         return resource;
     }
