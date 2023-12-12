@@ -3,8 +3,6 @@ package es.gobcan.istac.edatos.publisher.ckan.service.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -25,8 +23,6 @@ public class CkanSenderServiceImpl implements CkanSenderService {
     private final CkanService         ckanService;
     private final NotificationService notificationService;
     private final NotificationError   notificationError;
-
-    private final Logger              log = LoggerFactory.getLogger(CkanSenderServiceImpl.class);
 
     public CkanSenderServiceImpl(CkanService ckanService, NotificationService notificationService, NotificationError notificationError) {
         this.ckanService = ckanService;
@@ -81,10 +77,6 @@ public class CkanSenderServiceImpl implements CkanSenderService {
         String nameResource = null;
 
         try {
-
-            if (resources == null) {
-                log.info("Sender ckan updateResources for urn " + urn);
-            }
 
             CkanResourceResponse resourceResponse;
 

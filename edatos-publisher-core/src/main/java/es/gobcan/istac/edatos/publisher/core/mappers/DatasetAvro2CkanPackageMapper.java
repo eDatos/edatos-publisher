@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.springframework.context.MessageSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
@@ -32,8 +32,8 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     public static final String           URL_BASE_DATASETS           = "datasets";
     public static final String           URL_DATASET_BASE_IDENTIFIER = "dataset";
-    
-    private final Logger log = LoggerFactory.getLogger(DatasetAvro2CkanPackageMapper.class);
+
+    private final Logger                 log                         = LoggerFactory.getLogger(DatasetAvro2CkanPackageMapper.class);
 
     public DatasetAvro2CkanPackageMapper(DatasetVersionAvro datasetVersion, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.datasetVersion = datasetVersion;
@@ -135,11 +135,9 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     private boolean isInvalidXlsx() {
         Long maxXlsxRows = Long.parseLong(metadataConfigurationService.retrieveMaxXlsxRows());
-        if (maxXlsxRows != null && ((datasetVersion.getFormatExtentTableSize() != null && (datasetVersion.getFormatExtentTableSize() > maxXlsxRows)) || 
-                (datasetVersion.getFormatExtentTableSize() == null && datasetVersion.getFormatExtentObservations() != null 
-                    && (datasetVersion.getFormatExtentObservations() > maxXlsxRows)))) {
-            log.info("Error: xlsx resource of the dataset with urn " + getUrn()
-                    + " will not be generated because the table size or number of observations exceeds the limit");
+        if (maxXlsxRows != null && ((datasetVersion.getFormatExtentTableSize() != null && (datasetVersion.getFormatExtentTableSize() > maxXlsxRows))
+                || (datasetVersion.getFormatExtentTableSize() == null && datasetVersion.getFormatExtentObservations() != null && (datasetVersion.getFormatExtentObservations() > maxXlsxRows)))) {
+            log.info("Error: xlsx resource of the dataset with urn " + getUrn() + " will not be generated because the table size or number of observations exceeds the limit");
             return true;
         } else {
             return false;
@@ -175,6 +173,7 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private String getTheme(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+        log.debug("getTheme() with statisticalOperation for process dataset urn " + getUrn());
         return getThemeFromStatisticalOperation(datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource()
                 .getNameableStatisticalResource().getIdentifiableStatisticalResource().getStatisticalOperation().getCode(), metadataConfigurationService, externalCategoryService,
                 externalOperationService);

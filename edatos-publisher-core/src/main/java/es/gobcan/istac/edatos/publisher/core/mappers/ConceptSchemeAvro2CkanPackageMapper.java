@@ -6,6 +6,8 @@ import java.util.List;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeTypeEnumAvro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
@@ -24,6 +26,8 @@ import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
 import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
 public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
+
+    private final Logger                 log = LoggerFactory.getLogger(ConceptSchemeAvro2CkanPackageMapper.class);
 
     private ConceptSchemeAvro            conceptScheme;
     private MetadataConfigurationService metadataConfigurationService;
@@ -131,6 +135,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     private String getTheme(String stadisticalOperationCode, ConceptSchemeTypeEnumAvro conceptSchemeType, MetadataConfigurationService metadataConfigurationService,
             ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
         if (ConceptSchemeTypeEnumAvro.OPERATION.equals(conceptSchemeType)) {
+            log.debug("getTheme() with statisticalOperation for process concept urn " + getUrn());
             return getThemeFromStatisticalOperation(stadisticalOperationCode, metadataConfigurationService, externalCategoryService, externalOperationService);
         } else {
             return getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
