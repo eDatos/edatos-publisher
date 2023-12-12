@@ -49,7 +49,6 @@ public class EDatosApisLocator {
     public StatisticalOperationsRestInternalFacadeV10 operationsInternal() {
         if (operationsV10 == null) {
             String baseApiUrl = metadataConfigurationService.retrieveStatisticalOperationsInternalApiUrlBase();
-            LOG.info("api alocator base for statistical operation api:" + baseApiUrl);
             operationsV10 = JAXRSClientFactory.create(baseApiUrl, StatisticalOperationsRestInternalFacadeV10.class, null, true);
         }
         WebClient.client(operationsV10).reset();
