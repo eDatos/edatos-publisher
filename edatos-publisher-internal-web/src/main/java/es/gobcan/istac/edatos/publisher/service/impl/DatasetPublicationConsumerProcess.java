@@ -3,6 +3,8 @@ package es.gobcan.istac.edatos.publisher.service.impl;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,7 @@ import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 @Component
 public class DatasetPublicationConsumerProcess extends PublicationConsumerProcess implements ConsumerProcess<DatasetVersionAvro> {
 
+    private final Logger    log = LoggerFactory.getLogger(DatasetPublicationConsumerProcess.class);
     @Autowired
     DatasetPublisherService datasetService;
 
@@ -29,6 +32,8 @@ public class DatasetPublicationConsumerProcess extends PublicationConsumerProces
 
         if (existingPackageInCkan.getId() != null) {
             ckanPackage = datasetService.retrieveUpdateCkanPackage(datasetVersion, existingPackageInCkan.getId());
+
+            log.debug("process dataset urn " + urn + " existing package id: " + existingPackageInCkan.getId());
         } else {
             ckanPackage = datasetService.retrieveNewCkanPackage(datasetVersion);
         }

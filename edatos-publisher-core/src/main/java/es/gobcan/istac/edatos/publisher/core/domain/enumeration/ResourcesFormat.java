@@ -17,7 +17,7 @@ public enum ResourcesFormat {
         return format;
     }
 
-    public static String getMimeType(String format) {
+    public static String getMimeType(String format, boolean allowAnyMimeType) {
         if (format.equals(ResourcesFormat.JSONSTAT.name()) || format.equals(ResourcesFormat.JSON.name())) {
             return MediaType.APPLICATION_JSON;
         } else if (format.equals(ResourcesFormat.XML.name())) {
@@ -29,7 +29,11 @@ public enum ResourcesFormat {
         } else if (format.equals(ResourcesFormat.XLSX.name())) {
             return Constants.MIME_TYPE_XLSX;
         } else {
-            throw new EDatosException(ServiceExceptionType.UNRECOGNIZED_MIME_TYPE, format);
+            if (!allowAnyMimeType) {
+                throw new EDatosException(ServiceExceptionType.UNRECOGNIZED_MIME_TYPE, format);
+            } else {
+                return null;
+            }
         }
     }
 }
