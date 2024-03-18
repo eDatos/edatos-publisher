@@ -3,6 +3,7 @@ package es.gobcan.istac.edatos.publisher.core.mappers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +15,12 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.ResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
+import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
 import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
 import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
@@ -124,12 +124,11 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        List<String> formats = DatasetResourcesFormat.getEnumList();
+        List<String> formats = CkanResourcesFormatOperation.getDatasetResourcesFormat();
 
         if (isInvalidXlsx()) {
-            formats.remove(DatasetResourcesFormat.XLSX.name());
+            formats.remove(ResourcesFormat.XLSX.name());
         }
-
         return formats;
     }
 

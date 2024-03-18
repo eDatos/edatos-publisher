@@ -15,10 +15,10 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.SrmResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
+import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
 import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
 import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
 
@@ -168,7 +168,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
     @Override
     protected List<String> getAvailableFormats() {
-        return SrmResourcesFormat.getEnumList();
+        return CkanResourcesFormatOperation.getSrmResourcesFormat();
     }
 
     private String getResourceUrlBase() {
