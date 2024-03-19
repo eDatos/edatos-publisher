@@ -12,8 +12,12 @@ import es.gobcan.istac.edatos.publisher.core.errors.ServiceExceptionType;
 
 public class CkanResourcesFormatOperation extends ResourcesFormatOperation {
 
+    // this formats defined in edatos-core-utils are a subset of srm formats. Srm at least must provide an implementation for this formats for the resources that are linked in ckan.
     private static final String[] srmResourcesFormat     = {ResourcesFormat.JSON.name(), ResourcesFormat.XML.name(), ResourcesFormat.TSV.name(), ResourcesFormat.CSV.name(),
             ResourcesFormat.XLSX.name()};
+
+    // this formats defined in edatos-core-utils are a subset of statistical-resources formats. At least, statistical-resources must provide an implementation for this formats for the resources that
+    // are linked in ckan.
     private static final String[] datasetResourcesFormat = {ResourcesFormat.JSON.name(), ResourcesFormat.XML.name(), ResourcesFormat.JSONSTAT.name(), ResourcesFormat.TSV.name(),
             ResourcesFormat.CSV.name(), ResourcesFormat.XLSX.name()};
 
@@ -27,6 +31,7 @@ public class CkanResourcesFormatOperation extends ResourcesFormatOperation {
 
     public String getMimeType(String format, boolean allowAnyMimeType) {
         String mimeType = null;
+        // ckan do not admit jsonstat mime. it must be JSON. the rest of formats must use global mime type stablished in edatos-core-utils.
         if (format.equals(ResourcesFormat.JSONSTAT.name())) {
             mimeType = FormatConstants.MIME_TYPE_JSON;
         } else {
