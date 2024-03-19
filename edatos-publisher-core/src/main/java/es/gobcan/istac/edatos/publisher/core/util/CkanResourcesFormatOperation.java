@@ -3,11 +3,10 @@ package es.gobcan.istac.edatos.publisher.core.util;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-
 import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
 import org.siemac.edatos.core.common.enume.utils.ResourcesFormatOperation;
 import org.siemac.edatos.core.common.exception.EDatosException;
+import org.siemac.edatos.core.common.util.FormatConstants;
 
 import es.gobcan.istac.edatos.publisher.core.errors.ServiceExceptionType;
 
@@ -29,7 +28,7 @@ public class CkanResourcesFormatOperation extends ResourcesFormatOperation {
     public String getMimeType(String format, boolean allowAnyMimeType) {
         String mimeType = null;
         if (format.equals(ResourcesFormat.JSONSTAT.name())) {
-            mimeType = MediaType.APPLICATION_JSON;
+            mimeType = FormatConstants.MIME_TYPE_JSON;
         } else {
             mimeType = super.getMimeType(format);
         }
