@@ -211,10 +211,13 @@ public abstract class CkanPackageMapper {
     }
 
     public List<CkanResource> createResources(String packageId, List<String> formats) {
+        String[] params;
 
-        String[] params = UrnUtils.splitUrnItem(getUrn());
+        CkanUrlResource ckanUrlResource = getCkanUrlResource();
+        boolean requiredVersion = !Boolean.TRUE.equals(ckanUrlResource.getIsJaxiDataset());
+        params = UrnUtils.splitUrnItem(getUrn(), requiredVersion);
 
-        return createResources(getResourceDescription(), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, formats);
+        return createResources(getResourceDescription(), ckanUrlResource, getNameResourceBase(params[0], params[1]), packageId, formats);
     }
 
     public List<CkanResource> createResources(CkanPackage existingPackage) {
@@ -285,6 +288,11 @@ public abstract class CkanPackageMapper {
     }
 
     private String getUrlResource(CkanUrlResource ckanUrlResource, String format) {
+
+        if (Boolean.TRUE.equals(ckanUrlResource.getIsJaxiDataset())) {
+            return ckanUrlResource.getJaxiUrlByFormat().get(format);
+        }
+
         String urlResource = ckanUrlResource.getUrlBaseResource();
 
         if (!StringUtils.isEmpty(ckanUrlResource.getUrlSuffixResource())) {

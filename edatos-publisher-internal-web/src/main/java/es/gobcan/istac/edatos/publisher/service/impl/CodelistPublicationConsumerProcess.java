@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.codelist.service.CodelistPublisherService;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
@@ -19,7 +20,7 @@ public class CodelistPublicationConsumerProcess extends PublicationConsumerProce
     CodelistPublisherService codelistService;
 
     @Override
-    public boolean processPublicationEvent(CodelistAvro codelist) {
+    public PublicationConsumerProcessResult processPublicationEvent(CodelistAvro codelist) {
 
         String urn = codelist.getUrn();
         CkanPackage ckanPackage = null;
@@ -33,18 +34,20 @@ public class CodelistPublicationConsumerProcess extends PublicationConsumerProce
         }
 
         if (ckanPackage != null) {
+            String ckanId = existingPackageInCkan.getId();
             CkanPackage packageResult = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, existingPackageInCkan.getId());
             if (packageResult != null) {
                 if (existingPackageInCkan.getId() != null) {
                     createOrUpdateCkanResources(codelist, existingPackageInCkan, existingPackageInCkan.getId(), urn);
                 } else {
-                    createPackageRelationshipEntity(urnWithoutVersion, packageResult.getId());
+                    ckanId = packageResult.getId();
+                    createPackageRelationshipEntity(urnWithoutVersion, ckanId);
                 }
-                return true;
+                return new PublicationConsumerProcessResult(true, ckanId, CkanState.SENT);
             }
 
         }
-        return false;
+        return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
     }
 
     private void createOrUpdateCkanResources(CodelistAvro codelist, CkanPackage actualPackage, String packageName, String urn) {

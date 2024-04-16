@@ -20,4 +20,5 @@ public final class DataConfigurationConstants extends ConfigurationConstants {
     public static final String CKAN_DEFAULT_URN_CATEGORY  = "edatos.publisher.ckan.default.urn.category";
     public static final String CKAN_DEFAULT_ORGANISATION  = "edatos.publisher.ckan.default.organisation";
     public static final String CKAN_DEFAULT_CONTACT_EMAIL = "edatos.publisher.ckan.default.contact_email";
+    public static final String CKAN_DEFAULT_CREATOR       = "edatos.publisher.ckan.default.creator";
 }

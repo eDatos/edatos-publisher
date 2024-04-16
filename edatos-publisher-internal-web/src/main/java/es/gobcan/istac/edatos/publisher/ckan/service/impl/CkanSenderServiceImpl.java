@@ -124,6 +124,24 @@ public class CkanSenderServiceImpl implements CkanSenderService {
     }
 
     @Override
+    public Boolean deleteCkanPackage(CkanPackage ckanPackage, String urn) {
+        try {
+
+            CkanPackageResponse packageResponse = ckanService.deletePackage(ckanPackage);
+
+            if (!packageResponse.isSuccess()) {
+                notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
+                        packageResponse.getError(), null, urn);
+                return false;
+            }
+            return true;
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, e, urn);
+        }
+        return false;
+    }
+
+    @Override
     public Boolean deleteResourcesById(List<String> resourcesId, String urn) {
         String nameResource = "-";
         try {

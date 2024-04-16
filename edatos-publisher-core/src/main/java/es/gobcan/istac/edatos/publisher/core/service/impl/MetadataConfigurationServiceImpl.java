@@ -54,4 +54,9 @@ public class MetadataConfigurationServiceImpl extends ConfigurationServiceImpl i
     public String retrieveCkanDefaultContactEmail() throws EDatosException {
         return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_CONTACT_EMAIL);
     }
+
+    @Override
+    public String retrieveCkanDefaultCreator() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_CREATOR);
+    }
 }

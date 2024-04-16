@@ -12,16 +12,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
 import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
+import es.ibestat.jaxi.stream.messages.DatasetAvro;
 
 @Service
 public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
-    private final Logger                  log = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
-
+    private final Logger                  log                    = LoggerFactory.getLogger(KafkaConsumerServiceImpl.class);
+    private static final String           WHITHOUT_CKAN_ID_ERROR = " without ckanId";
     private final ExternalCkanItemMapper  externalCkanItemMapper;
     private final ExternalCkanItemService externalCkanItemService;
     private final ConsumerProcessFacade   consumerProcessFacade;
@@ -35,11 +35,24 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
-        boolean isProcessed = consumerProcessFacade.processDatasetPublicationMessage(datasetVersion);
+        PublicationConsumerProcessResult result = consumerProcessFacade.processDatasetPublicationMessage(datasetVersion);
         try {
-            externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion, isProcessed ? CkanState.SENT : CkanState.FAILED));
+            externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion, result.getStatus(), result.getCkanId()));
         } catch (Exception e) {
-            log.error("ERROR. dataset metadata were not saved in externalCkanItem ", e);
+            log.error("ERROR. dataset metadata were not saved in externalCkanItem  ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
+        }
+
+    }
+
+    @KafkaListener(topics = "#{kafkaProperties.getJaxiDatasetPublicationTopic()}")
+    public void processJaxiDatasetPublicationEvent(ConsumerRecord<String, DatasetAvro> consumerRecord) {
+        DatasetAvro jaxiDataset = consumerRecord.value();
+        PublicationConsumerProcessResult result = consumerProcessFacade.processJaxiDatasetPublicationMessage(jaxiDataset);
+
+        try {
+            externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(jaxiDataset, result.getStatus(), result.getCkanId()));
+        } catch (Exception e) {
+            log.error("ERROR. jaxi dataset metadata were not saved in externalCkanItem ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
         }
 
     }
@@ -48,11 +61,11 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord) {
         CodelistAvro codelist = consumerRecord.value();
         if (checkCanBePublished(codelist.getProcStatus(), codelist.getLatestVersionNumberPublic())) {
-            boolean isProcessed = consumerProcessFacade.processCodelistPublicationMessage(codelist);
+            PublicationConsumerProcessResult result = consumerProcessFacade.processCodelistPublicationMessage(codelist);
             try {
-                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(codelist, isProcessed ? CkanState.SENT : CkanState.FAILED));
+                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(codelist, result.getStatus(), result.getCkanId()));
             } catch (Exception e) {
-                log.error("ERROR. codelist metadata were not saved in externalCkanItem ", e);
+                log.error("ERROR. codelist metadata were not saved in externalCkanItem ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
             }
         }
     }
@@ -61,11 +74,11 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord) {
         ConceptSchemeAvro conceptScheme = consumerRecord.value();
         if (checkCanBePublished(conceptScheme.getProcStatus(), conceptScheme.getLatestVersionNumberPublic())) {
-            boolean isProcessed = consumerProcessFacade.processConceptSchemePublicationMessage(conceptScheme);
+            PublicationConsumerProcessResult result = consumerProcessFacade.processConceptSchemePublicationMessage(conceptScheme);
             try {
-                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(conceptScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
+                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(conceptScheme, result.getStatus(), result.getCkanId()));
             } catch (Exception e) {
-                log.error("ERROR. concept scheme metadata were not saved in externalCkanItem ", e);
+                log.error("ERROR. concept scheme metadata were not saved in externalCkanItem  ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
             }
         }
     }
@@ -74,11 +87,11 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
         CategorySchemeAvro categoryScheme = consumerRecord.value();
         if (checkCanBePublished(categoryScheme.getProcStatus(), categoryScheme.getLatestVersionNumberPublic())) {
-            boolean isProcessed = consumerProcessFacade.processCategorySchemePublicationMessage(categoryScheme);
+            PublicationConsumerProcessResult result = consumerProcessFacade.processCategorySchemePublicationMessage(categoryScheme);
             try {
-                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
+                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(categoryScheme, result.getStatus(), result.getCkanId()));
             } catch (Exception e) {
-                log.error("ERROR. category scheme metadata were not saved in externalCkanItem ", e);
+                log.error("ERROR. category scheme metadata were not saved in externalCkanItem ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
             }
         }
     }
@@ -87,11 +100,11 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
         OrganisationSchemeAvro organisationScheme = consumerRecord.value();
         if (checkCanBePublished(organisationScheme.getProcStatus(), organisationScheme.getLatestVersionNumberPublic())) {
-            boolean isProcessed = consumerProcessFacade.processOrganisationSchemePublicationMessage(organisationScheme);
+            PublicationConsumerProcessResult result = consumerProcessFacade.processOrganisationSchemePublicationMessage(organisationScheme);
             try {
-                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(organisationScheme, isProcessed ? CkanState.SENT : CkanState.FAILED));
+                externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(organisationScheme, result.getStatus(), result.getCkanId()));
             } catch (Exception e) {
-                log.error("ERROR. organisation scheme metadata were not saved in externalCkanItem ", e);
+                log.error("ERROR. organisation scheme metadata were not saved in externalCkanItem ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
             }
         }
     }
@@ -99,5 +112,4 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     private boolean checkCanBePublished(ProcStatusEnumAvro resourceStatus, Boolean isLatestNumberVersionExternallyPublished) {
         return ProcStatusEnumAvro.EXTERNALLY_PUBLISHED.equals(resourceStatus) && Boolean.TRUE.equals(isLatestNumberVersionExternallyPublished);
     }
-
 }

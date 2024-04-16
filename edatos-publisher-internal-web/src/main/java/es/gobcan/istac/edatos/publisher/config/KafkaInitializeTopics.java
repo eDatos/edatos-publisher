@@ -25,11 +25,11 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 @Component
 public class KafkaInitializeTopics {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaInitializeTopics.class);
-    private static final int NUM_OF_PARTITIONS = 1;
-    private static final short NUM_OF_REPLICATION = (short) 1;
-    private static final int TIMEOUT = 1000;
-    private static final String RETENTION_MS = "retention.ms";
+    private static final Logger              LOGGER             = LoggerFactory.getLogger(KafkaInitializeTopics.class);
+    private static final int                 NUM_OF_PARTITIONS  = 1;
+    private static final short               NUM_OF_REPLICATION = (short) 1;
+    private static final int                 TIMEOUT            = 1000;
+    private static final String              RETENTION_MS       = "retention.ms";
     private static final Map<String, String> TOPIC_DEFAULT_SETTINGS;
 
     static {
@@ -72,8 +72,8 @@ public class KafkaInitializeTopics {
 
     private List<NewTopic> getTopics() {
         List<NewTopic> topics = new ArrayList<>();
-        topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicOperationsPublication()));
         topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicDatasetsPublication()));
+        topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication()));
         return topics;
     }
 
@@ -99,6 +99,5 @@ public class KafkaInitializeTopics {
             Thread.currentThread().interrupt(); // See SonarLint java:S2142
         }
     }
-
 
 }

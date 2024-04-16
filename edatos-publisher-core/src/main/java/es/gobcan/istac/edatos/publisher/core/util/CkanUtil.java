@@ -20,6 +20,10 @@ public class CkanUtil {
         return urlBase + CkanProperties.PACKAGE_CREATE;
     }
 
+    public static String buildPackageDeleteUrl(String urlBase) {
+        return urlBase + CkanProperties.PACKAGE_DELETE;
+    }
+
     public static String buildResourceCreateUrl(String urlBase) {
         return urlBase + CkanProperties.RESOURCE_CREATE_PATH;
     }
