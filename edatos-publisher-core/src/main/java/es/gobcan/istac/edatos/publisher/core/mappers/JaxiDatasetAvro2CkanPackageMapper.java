@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
@@ -31,8 +29,6 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     public static final String           URL_BASE_DATASETS           = "datasets";
     public static final String           URL_DATASET_BASE_IDENTIFIER = "dataset";
-
-    private final Logger                 log                         = LoggerFactory.getLogger(JaxiDatasetAvro2CkanPackageMapper.class);
 
     public JaxiDatasetAvro2CkanPackageMapper(DatasetAvro jaxiDataset, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.jaxiDataset = jaxiDataset;
@@ -148,7 +144,6 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private String getTheme(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
-        log.debug("getTheme() with statisticalOperation for process jaxi dataset urn {}", getUrn());
         return getThemeFromStatisticalOperation(jaxiDataset.getStatisticalOperation().getCode(), metadataConfigurationService, externalCategoryService, externalOperationService);
     }
 

@@ -36,17 +36,10 @@ public class JaxiDatasetPublicationConsumerProcess extends PublicationConsumerPr
         String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
         CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
-        if (ProcStatusEnumAvro.ARCHIVED.equals(jaxiDatasetVersion.getProcStatus())) {
-            boolean isDeleted = false;
-            String ckanId = null;
-            if (existingPackageInCkan.getId() == null) {
-                log.info(String.format("process for deletion jaxi dataset urn  %s but dataset does not exists. Because of this, dataset has not been deleted", urn));
-            } else {
-                isDeleted = deleteCkanPackage(urn, urnWithoutVersion, existingPackageInCkan);
-                ckanId = existingPackageInCkan.getId();
+        PublicationConsumerProcessResult result = processArchivedDatasets(jaxiDatasetVersion, existingPackageInCkan, urn, urnWithoutVersion);
 
-            }
-            return new PublicationConsumerProcessResult(isDeleted, ckanId, isDeleted ? CkanState.SENT_UNPUBLISHING : CkanState.FAILED_UNPUBLISHING);
+        if (result != null) {
+            return result;
         }
 
         if (existingPackageInCkan.getId() != null) {
@@ -74,6 +67,24 @@ public class JaxiDatasetPublicationConsumerProcess extends PublicationConsumerPr
 
         }
         return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+    }
+
+    private PublicationConsumerProcessResult processArchivedDatasets(DatasetAvro jaxiDatasetVersion, CkanPackage existingPackageInCkan, String urn, String urnWithoutVersion) {
+        if (ProcStatusEnumAvro.ARCHIVED.equals(jaxiDatasetVersion.getProcStatus())) {
+            boolean isDeleted = false;
+            String ckanId = null;
+            if (existingPackageInCkan.getId() == null) {
+                if (log.isInfoEnabled()) {
+                    log.info(String.format("process for deletion jaxi dataset urn  %s but dataset does not exists. Because of this, dataset has not been deleted", urn));
+                }
+            } else {
+                isDeleted = deleteCkanPackage(urn, urnWithoutVersion, existingPackageInCkan);
+                ckanId = existingPackageInCkan.getId();
+
+            }
+            return new PublicationConsumerProcessResult(isDeleted, ckanId, isDeleted ? CkanState.SENT_UNPUBLISHING : CkanState.FAILED_UNPUBLISHING);
+        }
+        return null;
     }
 
     private boolean deleteCkanPackage(String urn, String urnFormatCkan, CkanPackage existingPackageInCkan) {

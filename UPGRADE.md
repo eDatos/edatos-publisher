@@ -10,7 +10,7 @@
 
 ## 1.1.1 a 1.1.2-SNAPSHOT
 * Se ha añadido un consumidor del topic JAXI_PUBLICATIONS al proyecto asociado a envíos desde jaxi ibestat. Tener en cuenta lo siguiente:
-** Se debe desplegar primero el publicador en el entorno de IBESTAT.
+** Se debe desplegar primero el publicador en el entorno de IBESTAT.Para ello seguir los pasos del fichero README.md
 ** Se debe realizar la migración de todos los recursos de eDatos del IBESTAT con la ejecución de los dos jobs disponibles y configurables con propiedades:
 *** Para los recursos del srm: propiedad metamac.srm.resend_resources_kafka_message.cron_expression 
 *** Para statistical-resources: propiedad metamac.statistical_resources.resend_dataset_kafka_message.cron_expression
