@@ -15,10 +15,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>es.gobcan.istac.edatos-publisher</groupId>
-			<artifactId>edatos-publisher-internal-rest</artifactId>
-		</dependency>
+	    <dependency>
+            <groupId>es.gobcan.istac.edatos-publisher</groupId>
+            <artifactId>edatos-publisher-rest-common</artifactId>
+        </dependency>
+		 <dependency>
+           <groupId>es.gobcan.istac.edatos-publisher</groupId>
+            <artifactId>edatos-publisher-core</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
 			<artifactId>edatos-rest-common</artifactId>

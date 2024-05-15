@@ -9,7 +9,7 @@
 		%-5level [%thread] %logger{0}: %msg%n</Pattern> </encoder> </appender> <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender"> <queueSize>512</queueSize>
 		<appender-ref ref="FILE"/> </appender> -->
 
-	<property name="LOGS_HOME" value="/data/edatos-internal/external-users/logs" />
+	<property name="LOGS_HOME" value="/data/edatos-internal/edatos-publisher/logs" />
 
 	<!-- <turboFilter class="ExpiringDuplicateMessageFilter"> -->
 	<!-- <allowedRepetitions>4</allowedRepetitions> -->

@@ -256,7 +256,6 @@
             <modules>
                 <module>edatos-publisher-core</module>
                 <module>edatos-publisher-rest-common</module>
-                <module>edatos-publisher-internal-rest</module>
                 <module>edatos-publisher-internal-js</module>
                 <module>edatos-publisher-internal-web</module>
             </modules>
@@ -267,7 +266,6 @@
             <modules>
                 <module>edatos-publisher-core</module>
                 <module>edatos-publisher-rest-common</module>
-                <module>edatos-publisher-internal-rest</module>
                 <module>edatos-publisher-internal-js</module>
                 <module>edatos-publisher-internal-web</module>
             </modules>
@@ -287,11 +285,6 @@
             <dependency>
                 <groupId>es.gobcan.istac.edatos-publisher</groupId>
                 <artifactId>edatos-publisher-rest-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>es.gobcan.istac.edatos-publisher</groupId>
-                <artifactId>edatos-publisher-internal-rest</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
