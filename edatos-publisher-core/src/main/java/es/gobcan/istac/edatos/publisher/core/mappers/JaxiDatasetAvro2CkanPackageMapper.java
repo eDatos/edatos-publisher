@@ -42,8 +42,7 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         newPackage.setName(getCkanPackageName());
         newPackage.setAuthor(metadataConfigurationService.retrieveCkanDefaultCreator());
         newPackage.setPrivates(false);
-        newPackage.setMaintainer(
-                getDefaultLocalisedStringFromInternationalStringItemAvro(InternationalStringUtil.getInternationalStringItemAvroFromGenericRecordAvro(jaxiDataset.getTitle()), Constants.CKAN_LANGUAGE));
+        newPackage.setMaintainer(getTitle());
         newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
 
         toCkanPackage(externalCategoryService, externalOperationService, newPackage);
@@ -69,8 +68,7 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     public void toCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, CkanPackage ckanPackage) {
-        ckanPackage.setTitle(
-                getDefaultLocalisedStringFromInternationalStringItemAvro(InternationalStringUtil.getInternationalStringItemAvroFromGenericRecordAvro(jaxiDataset.getTitle()), Constants.CKAN_LANGUAGE));
+        ckanPackage.setTitle(getTitle());
         ckanPackage.setAuthor(metadataConfigurationService.retrieveCkanDefaultCreator());
         ckanPackage.setNotes(getResourceDescription());
 
@@ -141,6 +139,10 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     @Override
     protected String getResourceDescription() {
         return null;
+    }
+
+    private String getTitle() {
+        return getDefaultLocalisedStringFromInternationalStringItemAvro(InternationalStringUtil.getInternationalStringItemAvroFromGenericRecordAvro(jaxiDataset.getTitle()), Constants.CKAN_LANGUAGE);
     }
 
     private String getTheme(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
