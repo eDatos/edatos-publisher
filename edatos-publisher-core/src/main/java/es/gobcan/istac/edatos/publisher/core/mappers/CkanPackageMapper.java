@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.Item;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
@@ -22,11 +23,11 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
-import es.gobcan.istac.edatos.publisher.core.domain.enumeration.ResourcesFormat;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCategoryService;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanDateUtil;
+import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
 import es.gobcan.istac.edatos.publisher.core.util.markdown.MarkdownCkan;
 
 public abstract class CkanPackageMapper {
@@ -34,7 +35,8 @@ public abstract class CkanPackageMapper {
     protected CkanPackageMapper() {
     }
 
-    private Set<String> eniThemes = new HashSet<String>();
+    private Set<String>                          eniThemes                    = new HashSet<String>();
+    protected final CkanResourcesFormatOperation ckanResourcesFormatOperation = new CkanResourcesFormatOperation();
 
     protected abstract String getResourceDescription();
     protected abstract CkanUrlResource getCkanUrlResource();
@@ -201,9 +203,9 @@ public abstract class CkanPackageMapper {
         resource.setPackage_id(packageId);
         resource.setUrl(getUrlResource(ckanUrlResource, resourceFormat));
         resource.setDescription(description);
-        resource.setFormat((ResourcesFormat.getFormat(resourceFormat)));
+        resource.setFormat((ckanResourcesFormatOperation.getFormat(resourceFormat)));
         resource.setName(getNameResource(nameResourceBase, resourceFormat));
-        resource.setMimetype(ResourcesFormat.getMimeType(resourceFormat, false));
+        resource.setMimetype(ckanResourcesFormatOperation.getMimeType(resourceFormat, false));
         resource.setCreated(CkanDateUtil.getNowInIso());
         return resource;
     }
@@ -241,7 +243,7 @@ public abstract class CkanPackageMapper {
         String description = getResourceDescription();
 
         for (CkanResource existingResource : existingResources) {
-            if (ResourcesFormat.getMimeType(existingResource.getFormat(), true) != null) {
+            if (ckanResourcesFormatOperation.getMimeType(existingResource.getFormat(), true) != null) {
                 resources.add(updateResource(existingResource.getId(), packageId, getCkanUrlResource(), existingResource.getFormat(), existingResource.getName(), description));
             }
         }
@@ -270,8 +272,8 @@ public abstract class CkanPackageMapper {
         resource.setUrl(getUrlResource(ckanUrlResource, format));
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
-        resource.setFormat(ResourcesFormat.getFormat(format));
-        resource.setMimetype(ResourcesFormat.getMimeType(format, false));
+        resource.setFormat(ckanResourcesFormatOperation.getFormat(format));
+        resource.setMimetype(ckanResourcesFormatOperation.getMimeType(format, false));
         resource.setDescription(description);
         return resource;
     }

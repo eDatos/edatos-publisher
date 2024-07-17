@@ -20,17 +20,16 @@ import org.springframework.core.env.Environment;
 
 import es.gobcan.istac.edatos.publisher.core.config.Constants;
 import es.gobcan.istac.edatos.publisher.core.config.DefaultProfileUtil;
-import es.gobcan.istac.edatos.publisher.web.config.JHipsterExtraProperties;
 import io.github.jhipster.config.JHipsterConstants;
 
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
-@EnableConfigurationProperties({LiquibaseProperties.class, JHipsterExtraProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class})
 public class EdatosPublisherInternalApp {
 
     private static final Logger log = LoggerFactory.getLogger(EdatosPublisherInternalApp.class);
 
-    private final Environment env;
+    private final Environment   env;
 
     public EdatosPublisherInternalApp(Environment env) {
         this.env = env;
