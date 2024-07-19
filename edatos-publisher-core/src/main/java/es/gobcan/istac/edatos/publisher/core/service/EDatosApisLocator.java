@@ -2,6 +2,7 @@ package es.gobcan.istac.edatos.publisher.core.service;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.siemac.edatos.core.common.constants.CoreCommonConstants;
 import org.siemac.edatos.core.common.exception.EDatosException;
 import org.siemac.metamac.notices.rest.internal.v1_0.service.NoticesV1_0;
 import org.siemac.metamac.srm.rest.external.v1_0.service.SrmRestExternalFacadeV10;
@@ -20,8 +21,10 @@ public class EDatosApisLocator {
     private NoticesV1_0                                                                noticesV10;
     private org.siemac.metamac.srm.rest.external.v1_0.service.SrmRestExternalFacadeV10 srmV10;
     private StatisticalOperationsRestInternalFacadeV10                                 operationsV10;
+    String                                                                             apiKey;
 
     public EDatosApisLocator(MetadataConfigurationService metadataConfigurationService) {
+        apiKey = metadataConfigurationService.retrievePublisherApiKey();
         this.metadataConfigurationService = metadataConfigurationService;
     }
 
@@ -31,7 +34,7 @@ public class EDatosApisLocator {
             noticesV10 = JAXRSClientFactory.create(baseApi, NoticesV1_0.class, null, true);
         }
         WebClient.client(noticesV10).reset();
-        WebClient.client(noticesV10).accept("application/xml");
+        WebClient.client(noticesV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
 
         return noticesV10;
     }
@@ -52,7 +55,7 @@ public class EDatosApisLocator {
             operationsV10 = JAXRSClientFactory.create(baseApiUrl, StatisticalOperationsRestInternalFacadeV10.class, null, true);
         }
         WebClient.client(operationsV10).reset();
-        WebClient.client(operationsV10).accept("application/xml");
+        WebClient.client(operationsV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
         return operationsV10;
     }
 }
