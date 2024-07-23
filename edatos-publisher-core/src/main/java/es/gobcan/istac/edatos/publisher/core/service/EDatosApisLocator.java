@@ -45,7 +45,7 @@ public class EDatosApisLocator {
             srmV10 = JAXRSClientFactory.create(baseApiUrl, SrmRestExternalFacadeV10.class, null, true);
         }
         WebClient.client(srmV10).reset();
-        WebClient.client(srmV10).accept("application/xml");
+        WebClient.client(srmV10).accept("application/xml").header(CoreCommonConstants.API_KEY_PARAMETER, apiKey);
         return srmV10;
     }
 
