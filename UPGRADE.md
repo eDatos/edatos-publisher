@@ -10,7 +10,7 @@
 
 
 ## 1.2.0 a 1.2.1-SNAPSHOT
-* Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.0.0/db](etc/changes-from-release/1.2.0/db) 
+* Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.2.0/db](etc/changes-from-release/1.2.0/db) 
 
 ## 1.0.0 a 1.0.1
 * Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.0.0/db](etc/changes-from-release/1.0.0/db) 
