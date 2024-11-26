@@ -1,30 +1,41 @@
 package es.gobcan.istac.edatos.publisher.core.ckan.dto;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CkanResource {
 
-    private String id;
-    private String package_id;
-    private String url;
-    private String name;
-    private String description;
-    private String format;
-    private String hash;
-    private String resource_type;
-    private String mimetype;
-    private String mimetype_inner;
-    private String cache_url;
-    private int size;
-    private String created;
-    private String last_modified;
-    private String cache_last_updated;
+    private String              id;
+    private String              package_id;
+
+    private String              url;
+
+    @JsonProperty("resource_identifier")
+    private String              resourceIdentifier; // TODO EDATOS-4447 VER SI QUITAR
+    @JsonProperty("name_translated")
+    private Map<String, String> name;
+    private Map<String, String> description;
+    private String              format;
+    private String              hash;
+
+    private String              resource_type;
+    private String              mimetype;
+    private String              mimetype_inner;
+    private String              cache_url;
+
+    @JsonProperty("byte_size")
+    private int                 size;
+    private String              created;
+    private String              last_modified;
+    private String              cache_last_updated;
 
     public CkanResource() {
     }
 
-    public CkanResource(String package_id, String url, String name) {
+    public CkanResource(String package_id, String url, Map<String, String> name) {
         this.package_id = package_id;
         this.url = url;
         this.name = name;
@@ -44,22 +55,6 @@ public class CkanResource {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getFormat() {
@@ -148,5 +143,29 @@ public class CkanResource {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Map<String, String> getDescription() {
+        return description;
+    }
+
+    public void setDescription(Map<String, String> description) {
+        this.description = description;
+    }
+
+    public Map<String, String> getName() {
+        return name;
+    }
+
+    public void setName(Map<String, String> name) {
+        this.name = name;
+    }
+
+    public String getResourceIdentifier() {
+        return resourceIdentifier;
+    }
+
+    public void setResourceIdentifier(String resourceIdentifier) {
+        this.resourceIdentifier = resourceIdentifier;
     }
 }

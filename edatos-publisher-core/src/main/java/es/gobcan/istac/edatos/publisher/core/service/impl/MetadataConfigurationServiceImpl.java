@@ -59,4 +59,9 @@ public class MetadataConfigurationServiceImpl extends ConfigurationServiceImpl i
     public String retrieveCkanDefaultCreator() throws EDatosException {
         return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_CREATOR);
     }
+
+    @Override
+    public String retrieveCkanDefaultTerritoryDescription() throws EDatosException {
+        return retrieveProperty(DataConfigurationConstants.CKAN_DEFAULT_TERRITORY_DESCRIPTION);
+    }
 }

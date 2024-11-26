@@ -1,7 +1,9 @@
 package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
@@ -10,7 +12,6 @@ import org.springframework.context.MessageSource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
@@ -19,7 +20,7 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
 import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
-import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
+import es.gobcan.istac.edatos.publisher.core.util.InternationalStringSrmUtil;
 
 public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
@@ -39,33 +40,23 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
     public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService) {
         CkanPackage newPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(getUrn());
-        String version = params[2];
-
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getCodelistTitle(params[0], params[1]));
+
+        toCkanPackage(externalCategoryService, newPackage);
+
         newPackage.setPrivates(false);
-        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
+        String maintainer = InternationalStringSrmUtil.getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
-        newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getResourceDescription());
-
-        newPackage.setVersion(version);
+        newPackage.setLicenceId(metadataConfigurationService.retrieveCkanLicenceId());
 
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
         newPackage.setOwner_org(getDefaultOrganisation(metadataConfigurationService));
         newPackage.setResources(createResources(newPackage.getName()));
-        newPackage.setTags(getTags());
 
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
-
-        // extra fields
-        newPackage.setExtras(getCodelistExtraFields(externalCategoryService, newPackage.getName()));
-
-        newPackage.setGroups(getCkanGroups());
 
         return newPackage;
     }
@@ -79,31 +70,35 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
     public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
         CkanPackage existingPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(getUrn());
-        String version = params[2];
-
         existingPackage.setId(id);
-        existingPackage.setTitle(getCodelistTitle(params[0], params[1]));
-        existingPackage.setNotes(getResourceDescription());
 
-        existingPackage.setVersion(version);
-
-        existingPackage.setTags(getTags());
-        // extra fields
-        existingPackage.setExtras(getCodelistExtraFields(externalCategoryService, getCkanPackageName()));
-
-        existingPackage.setGroups(getCkanGroups());
+        toCkanPackage(externalCategoryService, existingPackage);
 
         return existingPackage;
     }
 
-    private List<CkanTag> getTags() {
-        List<CkanTag> tags = new ArrayList<>();
+    public void toCkanPackage(ExternalCategoryService externalCategoryService, CkanPackage ckanPackage) {
+        String[] params = UrnUtils.splitUrnItem(getUrn());
+        String version = params[2];
 
-        tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.CODELIST_TAG, null)));
+        ckanPackage.setTitle(getCodelistTitle(params[0], params[1]));
+        ckanPackage.setDescription(getResourceDescription());
+        ckanPackage.setVersion(version);
 
-        return tags;
+        ckanPackage.setTags(getTags());
+        // extra fields
+        ckanPackage.setExtras(getCodelistExtraFields(externalCategoryService, getCkanPackageName()));
 
+        ckanPackage.setTheme(getTheme(externalCategoryService));
+
+        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, ckanPackage.getName());
+
+        ckanPackage.setGroups(getCkanGroups());
+    }
+
+    private Map<String, List<String>> getTags() {
+        return InternationalStringSrmUtil.generateCkanInternationalStringMessage(messageSource, Arrays.asList(Constants.CODELIST_TAG), null,
+                metadataConfigurationService.retrieveInternationalizationLanguages());
     }
 
     public List<CkanResource> createResources(String packageId) {
@@ -118,23 +113,25 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     private List<CkanExtra> getCodelistExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
         List<CkanExtra> extraFields = getExtraFields(URL_BASE_IDENTIFIER, metadataConfigurationService, packageName);
-
-        extraFields.add(new CkanExtra("theme", getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase())));
-
         return extraFields;
     }
 
+    private List<String> getTheme(ExternalCategoryService externalCategoryService) {
+        return getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
+    }
+
     @Override
-    protected String getResourceDescription() {
+    protected Map<String, String> getResourceDescription() {
         if (codelist.getDescription() != null) {
-            return getDescriptionFromLocalisedStringAvro(codelist.getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
+            return InternationalStringSrmUtil.getSrmInternationalStringToCkanInternationalStringMarkDown(codelist.getDescription(), null);
         }
         return null;
     }
 
     @Override
-    protected String getNameResourceBase(String agency, String code) {
-        return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_CODELIST_RESOURCE, null) + agency + ":" + code;
+    protected Map<String, String> getNameResourceBase(String agency, String code) {
+        return InternationalStringSrmUtil.generateCkanInternationalStringMessage(messageSource, Constants.BASE_CODELIST_RESOURCE, null,
+                metadataConfigurationService.retrieveInternationalizationLanguages(), agency + ":" + code);
     }
 
     @Override
@@ -151,8 +148,8 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_CODELISTS;
     }
 
-    private String getCodelistTitle(String agency, String resourceId) {
-        return getCkanTitle(getDefaultLocalisedStringFromLocalisedStringAvro(codelist.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE), agency, resourceId);
+    private Map<String, String> getCodelistTitle(String agency, String resourceId) {
+        return InternationalStringSrmUtil.getSrmInternationalStringToCkanInternationalString(codelist.getName(), getCkanEndTitle(agency, resourceId));
     }
 
 }

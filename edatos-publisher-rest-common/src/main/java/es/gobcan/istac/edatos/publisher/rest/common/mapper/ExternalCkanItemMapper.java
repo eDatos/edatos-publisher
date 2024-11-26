@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.gobcan.istac.edatos.publisher.core.domain.ExternalCkanItemEntity;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.mapper.config.AuditingMapperConfig;
-import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
+import es.gobcan.istac.edatos.publisher.core.util.InternationalStringStatisticalResourcesUtil;
 import es.gobcan.istac.edatos.publisher.rest.common.dto.ExternalCkanItemDto;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.resolver.GenericMapperResolver;
 import es.ibestat.jaxi.stream.messages.DatasetAvro;
@@ -45,7 +45,7 @@ public abstract class ExternalCkanItemMapper implements EntityMapper<ExternalCka
     public ExternalCkanItemEntity toExternalCkanItemEntity(DatasetAvro jaxiDataset, CkanState state, String ckanId) {
 
         // it is necessary a conversation because jaxi localised string comes as genericRecord.
-        InternationalStringAvro title = InternationalStringUtil.getInternationalStringAvroFromGenericRecordAvro(jaxiDataset.getTitle());
+        InternationalStringAvro title = InternationalStringStatisticalResourcesUtil.getInternationalStringAvroFromGenericRecordAvro(jaxiDataset.getTitle());
 
         ExternalCkanItemEntity externalCkanItem = new ExternalCkanItemEntity();
         externalCkanItem.setCkanState(state);

@@ -1,15 +1,20 @@
 package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
@@ -18,7 +23,7 @@ import es.gobcan.istac.edatos.publisher.core.service.ExternalOperationService;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
-import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
+import es.gobcan.istac.edatos.publisher.core.util.InternationalStringStatisticalResourcesUtil;
 import es.ibestat.jaxi.stream.messages.DatasetAvro;
 
 public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
@@ -26,24 +31,28 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     private DatasetAvro                  jaxiDataset;
     private MetadataConfigurationService metadataConfigurationService;
     private MessageSource                messageSource;
+    private Map<String, String>          title;
 
     public static final String           URL_BASE_DATASETS           = "datasets";
     public static final String           URL_DATASET_BASE_IDENTIFIER = "dataset";
+
+    private final Logger                 log                         = LoggerFactory.getLogger(JaxiDatasetAvro2CkanPackageMapper.class);
 
     public JaxiDatasetAvro2CkanPackageMapper(DatasetAvro jaxiDataset, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.jaxiDataset = jaxiDataset;
         this.metadataConfigurationService = metadataConfigurationService;
         this.messageSource = messageSource;
+        this.setTitle(getInternationalTitle());
     }
 
-    public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+    public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) throws JsonProcessingException {
         CkanPackage newPackage = new CkanPackage();
 
         newPackage.setName(getCkanPackageName());
         newPackage.setAuthor(metadataConfigurationService.retrieveCkanDefaultCreator());
         newPackage.setPrivates(false);
-        newPackage.setMaintainer(getTitle());
-        newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
+        newPackage.setMaintainer(newPackage.getAuthor());
+        newPackage.setLicenceId(metadataConfigurationService.retrieveCkanLicenceId());
 
         toCkanPackage(externalCategoryService, externalOperationService, newPackage);
 
@@ -58,7 +67,7 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return newPackage;
     }
 
-    public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String id) {
+    public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String id) throws JsonProcessingException {
         CkanPackage existingPackage = new CkanPackage();
 
         existingPackage.setId(id);
@@ -67,18 +76,21 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         return existingPackage;
     }
 
-    public void toCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, CkanPackage ckanPackage) {
+    public void toCkanPackage(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, CkanPackage ckanPackage) throws JsonProcessingException {
         ckanPackage.setTitle(getTitle());
-        ckanPackage.setAuthor(metadataConfigurationService.retrieveCkanDefaultCreator());
-        ckanPackage.setNotes(getResourceDescription());
+        ckanPackage.setDescription(getResourceDescription());
 
         ckanPackage.setUrl(jaxiDataset.getHtmlLink());
         ckanPackage.setVersion("0");
+
+        setCommonMetadata(URL_DATASET_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, getCkanPackageName());
 
         ckanPackage.setTags(getTags());
         // extra fields
         ckanPackage.setExtras(new ArrayList<>());
         ckanPackage.getExtras().addAll(getDatasetExtraFields(externalCategoryService, externalOperationService, getCkanPackageName()));
+
+        ckanPackage.setTheme(getTheme(externalCategoryService, externalOperationService));
 
         ckanPackage.setGroups(getCkanGroups());
     }
@@ -127,39 +139,40 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     private List<CkanExtra> getDatasetExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String packageName) {
         List<CkanExtra> extraFields = getExtraFields(URL_DATASET_BASE_IDENTIFIER, metadataConfigurationService, packageName);
-
-        String theme = getTheme(externalCategoryService, externalOperationService);
-        if (theme != null) {
-            extraFields.add(new CkanExtra("theme", theme));
-        }
-
         return extraFields;
     }
 
     @Override
-    protected String getResourceDescription() {
-        return null;
+    protected Map<String, String> getResourceDescription() {
+        return getTitle();
     }
 
-    private String getTitle() {
-        return getDefaultLocalisedStringFromInternationalStringItemAvro(InternationalStringUtil.getInternationalStringItemAvroFromGenericRecordAvro(jaxiDataset.getTitle()), Constants.CKAN_LANGUAGE);
+    private Map<String, String> getInternationalTitle() {
+        String defaultTerritory = metadataConfigurationService.retrieveCkanDefaultTerritoryDescription();
+        return InternationalStringStatisticalResourcesUtil.getStatisticalResourcesInternationalStringTitleToCkanInternationalString(jaxiDataset.getTitle(), defaultTerritory);
     }
 
-    private String getTheme(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
+    private List<String> getTheme(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService) {
         return getThemeFromStatisticalOperation(jaxiDataset.getStatisticalOperation().getCode(), metadataConfigurationService, externalCategoryService, externalOperationService);
     }
 
     @Override
-    protected String getNameResourceBase(String agency, String code) {
-        return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_DATASET_RESOURCE, null) + agency + ":" + code;
+    protected Map<String, String> getNameResourceBase(String agency, String code) {
+        return InternationalStringStatisticalResourcesUtil.generateCkanInternationalStringMessage(messageSource, Constants.BASE_DATASET_RESOURCE, null,
+                metadataConfigurationService.retrieveInternationalizationLanguages(), agency + ":" + code);
     }
 
-    private List<CkanTag> getTags() {
-        List<CkanTag> tags = new ArrayList<>();
+    private Map<String, List<String>> getTags() {
+        return InternationalStringStatisticalResourcesUtil.generateCkanInternationalStringMessage(messageSource, Arrays.asList(Constants.DATASET_TAG), null,
+                metadataConfigurationService.retrieveInternationalizationLanguages());
 
-        tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.DATASET_TAG, null)));
+    }
 
-        return tags;
+    public void setTitle(Map<String, String> title) {
+        this.title = title;
+    }
 
+    public Map<String, String> getTitle() {
+        return title;
     }
 }
