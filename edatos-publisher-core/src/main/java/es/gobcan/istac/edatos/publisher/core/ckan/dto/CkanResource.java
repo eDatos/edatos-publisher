@@ -13,10 +13,10 @@ public class CkanResource {
 
     private String              url;
 
-    @JsonProperty("resource_identifier")
-    private String              resourceIdentifier; // TODO EDATOS-4447 VER SI QUITAR
     @JsonProperty("name_translated")
     private Map<String, String> name;
+
+    @JsonProperty("description_translated")
     private Map<String, String> description;
     private String              format;
     private String              hash;
@@ -159,13 +159,5 @@ public class CkanResource {
 
     public void setName(Map<String, String> name) {
         this.name = name;
-    }
-
-    public String getResourceIdentifier() {
-        return resourceIdentifier;
-    }
-
-    public void setResourceIdentifier(String resourceIdentifier) {
-        this.resourceIdentifier = resourceIdentifier;
     }
 }

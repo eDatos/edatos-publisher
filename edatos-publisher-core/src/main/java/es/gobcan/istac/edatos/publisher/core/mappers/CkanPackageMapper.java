@@ -61,7 +61,7 @@ public abstract class CkanPackageMapper {
         ckanPackage.setLanguage(metadataConfigurationService.retrieveInternationalizationLanguages());
         ckanPackage.setIdentifier(getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName));
         ckanPackage.setContactEmail(metadataConfigurationService.retrieveCkanDefaultContactEmail());
-        ckanPackage.setPublisher(metadataConfigurationService.retrieveCkanPublisherUri()); // TODO EDATOS-4447 cambiar el valor de esta propiedad praa que sea la url cuando se arregle en ckan.
+        ckanPackage.setPublisher(metadataConfigurationService.retrieveCkanPublisherUri());
 
     }
 
@@ -177,13 +177,10 @@ public abstract class CkanPackageMapper {
 
         resource.setPackage_id(packageId);
         resource.setUrl(getUrlResource(ckanUrlResource, resourceFormat));
-        resource.setResourceIdentifier(resource.getUrl()); // TODO EDATOS-4447 Ver si dejar este valor
         resource.setDescription(description);
         resource.setFormat((ckanResourcesFormatOperation.getFormat(resourceFormat)));
 
-        // TODO EDATOS-4447 pendiente si mandar format o mime
-        // resource.setFormat((ckanResourcesFormatOperation.getFormat(resourceFormat)));
-        resource.setFormat(ckanResourcesFormatOperation.getMimeType(resourceFormat, false));
+        resource.setFormat((ckanResourcesFormatOperation.getFormat(resourceFormat)));
 
         resource.setName(getNameResource(nameResourceBase, resourceFormat));
         resource.setMimetype(ckanResourcesFormatOperation.getMimeType(resourceFormat, false));
@@ -254,7 +251,6 @@ public abstract class CkanPackageMapper {
         resource.setPackage_id(packageId);
         resource.setId(resourceId);
         resource.setUrl(getUrlResource(ckanUrlResource, format));
-        resource.setResourceIdentifier(resource.getUrl()); // TODO EDATOS-4447 Ver si dejar este valor
         resource.setLast_modified(CkanDateUtil.getNowInIso());
         resource.setName(name);
         resource.setFormat(ckanResourcesFormatOperation.getFormat(format));
