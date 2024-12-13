@@ -31,12 +31,13 @@ public class CkanPackage implements Serializable {
     @JsonProperty("contact_email")
     private String                    contactEmail;
     private String                    identifier;
-    private List<String>              spatial;
+    private String                    spatial;
     private List<String>              language;
     private List<String>              theme;
 
     private String                    author;
     private String                    maintainer;
+    @JsonProperty("description_translated")
     private Map<String, String>       description;
 
     @JsonProperty("title_translated")
@@ -262,12 +263,11 @@ public class CkanPackage implements Serializable {
         this.licenceId = licenceId;
     }
 
-    public List<String> getSpatial() {
+    public String getSpatial() {
         return spatial;
     }
 
-    public void setSpatial(List<String> spatial) {
+    public void setSpatial(String spatial) {
         this.spatial = spatial;
     }
-
 }

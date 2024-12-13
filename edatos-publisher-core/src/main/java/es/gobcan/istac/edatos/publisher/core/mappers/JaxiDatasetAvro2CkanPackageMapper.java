@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,8 +33,6 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     public static final String           URL_BASE_DATASETS           = "datasets";
     public static final String           URL_DATASET_BASE_IDENTIFIER = "dataset";
-
-    private final Logger                 log                         = LoggerFactory.getLogger(JaxiDatasetAvro2CkanPackageMapper.class);
 
     public JaxiDatasetAvro2CkanPackageMapper(DatasetAvro jaxiDataset, MetadataConfigurationService metadataConfigurationService, MessageSource messageSource) {
         this.jaxiDataset = jaxiDataset;

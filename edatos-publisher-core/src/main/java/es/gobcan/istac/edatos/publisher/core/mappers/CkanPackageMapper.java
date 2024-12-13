@@ -1,7 +1,6 @@
 package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,7 @@ public abstract class CkanPackageMapper {
     }
 
     protected void setCommonMetadata(String urlBaseIdentifier, CkanPackage ckanPackage, MetadataConfigurationService metadataConfigurationService, String packageName) {
-        ckanPackage.setSpatial(Arrays.asList(metadataConfigurationService.retrieveCkanSpatialUri()));
+        ckanPackage.setSpatial(metadataConfigurationService.retrieveCkanSpatialUri());
         ckanPackage.setLanguage(metadataConfigurationService.retrieveInternationalizationLanguages());
         ckanPackage.setIdentifier(getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName));
         ckanPackage.setContactEmail(metadataConfigurationService.retrieveCkanDefaultContactEmail());
