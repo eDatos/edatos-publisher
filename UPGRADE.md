@@ -8,13 +8,17 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 1.1.1 a 1.1.2-SNAPSHOT
-* Se ha añadido un consumidor del topic JAXI_PUBLICATIONS al proyecto asociado a envíos desde jaxi ibestat. Tener en cuenta lo siguiente:
-** Se debe desplegar primero el publicador en el entorno de IBESTAT.Para ello seguir los pasos del fichero README.md
-** Se debe realizar la migración de todos los recursos de eDatos del IBESTAT con la ejecución de los dos jobs disponibles y configurables con propiedades:
-*** Para los recursos del srm: propiedad metamac.srm.resend_resources_kafka_message.cron_expression 
-*** Para statistical-resources: propiedad metamac.statistical_resources.resend_dataset_kafka_message.cron_expression
+## 1.3.0 a 1.3.1-SNAPSHOT
+**A tener en cuenta**: Esta versión del publisher debe ir acompañada de la nueva versión de ckan preparada para la internacionalización. NO se debe desplegar el publisher sin antes haber desplegado la nueva versión del ckan (catálogo de datos abiertos)
 
+* Se ha añadido un consumidor del topic JAXI_PUBLICATIONS al proyecto asociado a envíos desde jaxi ibestat. Tener en cuenta lo siguiente:
+* Se debe desplegar primero el publicador en el entorno de IBESTAT.Para ello seguir los pasos del fichero README.md
+*Se debe realizar la migración de todos los recursos de eDatos del IBESTAT con la ejecución de los dos jobs disponibles y configurables con propiedades:
+    * Para los recursos del srm: propiedad metamac.srm.resend_resources_kafka_message.cron_expression 
+    * Para statistical-resources: propiedad metamac.statistical_resources.resend_dataset_kafka_message.cron_expression
+    * En el momento del despliegue, de IBESTAT hay que coordinar con el IBESTAT para que reenvien masivamente todos los datasets de JAXI mediante una nueva funcionalidad que han realizado. ATENCIÓN!! Antes de realizar este paso se deben desactivar las notificaciones a usuarios de external users. Para ello ejecutar el script que se encuentra en la siguiente ruta del proyecto external-users:
+        * etc\changes-from-release\X.X.0\db\helper-reenvío-datasets-ckan\postgresql\20240715_disabled_notifications_by_operations_for_datasets.sql
+    
 
 ## 1.2.1 a 1.3.0
 * Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.2.1/db](etc/changes-from-release/1.2.1/db) 
