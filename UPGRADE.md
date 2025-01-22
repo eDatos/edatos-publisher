@@ -11,6 +11,8 @@
 ## 1.3.0 a 1.3.1-SNAPSHOT
 **A tener en cuenta**: Esta versión del publisher debe ir acompañada de la nueva versión de ckan preparada para la internacionalización. NO se debe desplegar el publisher sin antes haber desplegado la nueva versión del ckan (catálogo de datos abiertos)
 
+* A realizar por equipo de consultoría antes del despliegue en PRO. Se deben asociar el valor ENI asociado a cada uno de los temas del esquema de temas que se use por defecto. Habrá un valor por defecto a configurar en propiedad "edatos.publisher.ckan.default.urn.category" y luego el resto de valores se deberán configurar para que los datasets y conceptos del tipo operación lleven los valores correctos.
+
 * Se ha añadido un consumidor del topic JAXI_PUBLICATIONS al proyecto asociado a envíos desde jaxi ibestat. Tener en cuenta lo siguiente:
 * Se debe desplegar primero el publicador en el entorno de IBESTAT.Para ello seguir los pasos del fichero README.md
 *Se debe realizar la migración de todos los recursos de eDatos del IBESTAT con la ejecución de los dos jobs disponibles y configurables con propiedades:
