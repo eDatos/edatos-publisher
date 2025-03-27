@@ -65,17 +65,19 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
         String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
+        String name = getCkanPackageName();
+
         ckanPackage.setTitle(getOrganisationSchemeTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags(organisationScheme.getOrganisationSchemeType()));
         // extra fields
-        ckanPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, getCkanPackageName()));
+        ckanPackage.setExtras(getOrganisationSchemeExtraFields(externalCategoryService, name));
 
         ckanPackage.setTheme(getTheme(externalCategoryService));
 
-        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, ckanPackage.getName());
+        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, name);
 
         ckanPackage.setGroups(getCkanGroups());
     }

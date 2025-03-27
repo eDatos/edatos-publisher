@@ -79,12 +79,14 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
         ckanPackage.setUrl(jaxiDataset.getHtmlLink());
         ckanPackage.setVersion("0");
 
-        setCommonMetadata(URL_DATASET_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, getCkanPackageName());
+        String name = getCkanPackageName();
+
+        setCommonMetadata(URL_DATASET_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, name);
 
         ckanPackage.setTags(getTags());
         // extra fields
         ckanPackage.setExtras(new ArrayList<>());
-        ckanPackage.getExtras().addAll(getDatasetExtraFields(externalCategoryService, externalOperationService, getCkanPackageName()));
+        ckanPackage.getExtras().addAll(getDatasetExtraFields(externalCategoryService, externalOperationService, name));
 
         ckanPackage.setTheme(getTheme(externalCategoryService, externalOperationService));
 

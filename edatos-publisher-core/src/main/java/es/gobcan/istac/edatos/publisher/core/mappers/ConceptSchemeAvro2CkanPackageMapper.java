@@ -80,18 +80,20 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
+        String name = getCkanPackageName();
+
         ckanPackage.setTitle(getConceptSchemeTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags());
         // extra fields
-        ckanPackage.setExtras(getConceptSchemeExtraFields(externalOperationService, getCkanPackageName()));
+        ckanPackage.setExtras(getConceptSchemeExtraFields(externalOperationService, name));
 
         ckanPackage.setTheme(getTheme(externalCategoryService, externalOperationService, conceptScheme.getConceptSchemeType(),
                 conceptScheme.getStatisticalOperation() != null ? conceptScheme.getStatisticalOperation().getCode() : null));
 
-        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, ckanPackage.getName());
+        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, name);
 
         ckanPackage.setGroups(getCkanGroups());
     }

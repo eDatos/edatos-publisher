@@ -64,17 +64,19 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         String[] params = UrnUtils.splitUrnItem(getUrn());
         String version = params[2];
 
+        String name = getCkanPackageName();
+
         ckanPackage.setTitle(getCategorySchemeTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags());
         // extra fields
-        ckanPackage.setExtras(getCategorySchemeExtraFields(externalCategoryService, getCkanPackageName()));
+        ckanPackage.setExtras(getCategorySchemeExtraFields(externalCategoryService, name));
 
         ckanPackage.setTheme(getTheme(externalCategoryService));
 
-        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, ckanPackage.getName());
+        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, name);
 
         ckanPackage.setGroups(getCkanGroups());
     }
