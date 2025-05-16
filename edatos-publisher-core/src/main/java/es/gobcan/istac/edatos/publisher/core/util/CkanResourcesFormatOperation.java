@@ -21,7 +21,7 @@ public class CkanResourcesFormatOperation extends ResourcesFormatOperation {
     private static final String[] datasetResourcesFormat     = {ResourcesFormat.JSON.name(), ResourcesFormat.XML.name(), ResourcesFormat.JSONSTAT.name(), ResourcesFormat.TSV.name(),
             ResourcesFormat.CSV.name(), ResourcesFormat.XLSX.name()};
 
-    private static final String[] jaxiDatasetResourcesFormat = {ResourcesFormat.PCAXIS.name(), ResourcesFormat.JSON.name()};
+    private static final String[] jaxiDatasetResourcesFormat = {ResourcesFormat.PCAXIS.name(), ResourcesFormat.JSON.name(), ResourcesFormat.JSONSTAT.name()};
 
     @Override
     public String getFormat(String format) {

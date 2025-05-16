@@ -116,23 +116,10 @@ public class JaxiDatasetAvro2CkanPackageMapper extends CkanPackageMapper {
     @Override
     protected CkanUrlResource getCkanUrlResource() {
         CkanUrlResource ckanUrlResource = new CkanUrlResource(true);
-        ckanUrlResource.addJaxiUrlByFormat(ResourcesFormat.PCAXIS.name(), jaxiDataset.getHtmlLink());
-        // json url does not come with extension. This is a problem in ckan because download the file with .txt extension.
-        ckanUrlResource.addJaxiUrlByFormat(ResourcesFormat.JSON.name(), getUrlWithExtensionJaxiJsonLink(jaxiDataset.getJsonLink()));
+        ckanUrlResource.addJaxiUrlByFormat(ResourcesFormat.PCAXIS.name(), jaxiDataset.getPxLink());
+        ckanUrlResource.addJaxiUrlByFormat(ResourcesFormat.JSON.name(), jaxiDataset.getJsonLink());
+        ckanUrlResource.addJaxiUrlByFormat(ResourcesFormat.JSONSTAT.name(), jaxiDataset.getJsonStatLink());
         return ckanUrlResource;
-    }
-
-    private String getUrlWithExtensionJaxiJsonLink(String url) {
-        if (url != null) {
-            String extension = "";
-            if (url.contains(".")) {
-                extension = url.substring(url.lastIndexOf(".") + 1);
-            }
-            if (!ResourcesFormat.JSON.name().equals(extension.toUpperCase())) {
-                return url + "." + ResourcesFormat.JSON.name().toLowerCase();
-            }
-        }
-        return url;
     }
 
     private List<CkanExtra> getDatasetExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String packageName) {

@@ -178,9 +178,6 @@ public abstract class CkanPackageMapper {
         resource.setUrl(getUrlResource(ckanUrlResource, resourceFormat));
         resource.setDescription(description);
         resource.setFormat((ckanResourcesFormatOperation.getFormat(resourceFormat)));
-
-        resource.setFormat((ckanResourcesFormatOperation.getFormat(resourceFormat)));
-
         resource.setName(getNameResource(nameResourceBase, resourceFormat));
         resource.setMimetype(ckanResourcesFormatOperation.getMimeType(resourceFormat, false));
         resource.setCreated(CkanDateUtil.getNowInIso());
