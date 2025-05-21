@@ -44,7 +44,7 @@ public class KafkaConsumerConfig {
         properties.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, Duration.ofHours(6).toMillis());
         properties.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, kafkaProperties.getSchemaRegistryUrl());
         properties.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
-        properties.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, Duration.ofMinutes(15).toMillis());
+        properties.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 900000);
         properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 10000); // 10 s
         properties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1); // The maximum number of records returned in a single call to poll()
 
