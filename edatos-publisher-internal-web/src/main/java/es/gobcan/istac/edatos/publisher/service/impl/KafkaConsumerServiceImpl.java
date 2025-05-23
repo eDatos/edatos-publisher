@@ -1,6 +1,9 @@
 package es.gobcan.istac.edatos.publisher.service.impl;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.record.TimestampType;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
@@ -35,6 +38,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
+
         PublicationConsumerProcessResult result = consumerProcessFacade.processDatasetPublicationMessage(datasetVersion);
         try {
             externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion, result.getStatus(), result.getCkanId()));
@@ -46,6 +50,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     @KafkaListener(topics = "#{kafkaProperties.getJaxiDatasetPublicationTopic()}")
     public void processJaxiDatasetPublicationEvent(ConsumerRecord<String, DatasetAvro> consumerRecord) {
+        logJaxi(consumerRecord);
         DatasetAvro jaxiDataset = consumerRecord.value();
         PublicationConsumerProcessResult result = consumerProcessFacade.processJaxiDatasetPublicationMessage(jaxiDataset);
 
@@ -53,6 +58,21 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
             externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(jaxiDataset, result.getStatus(), result.getCkanId()));
         } catch (Exception e) {
             log.error("ERROR. jaxi dataset metadata were not saved in externalCkanItem ckanId:" + (result.getCkanId() != null ? result.getCkanId() : WHITHOUT_CKAN_ID_ERROR), e);
+        }
+
+    }
+
+    private void logJaxi(ConsumerRecord<String, DatasetAvro> consumerRecord) {
+        try {
+            String topicName = "JAXI_PUBLICATIONS";
+            String message = "Received jaxi message from Kafka in publisher -> Topic Name: ";
+            TimestampType timestamp = consumerRecord.timestampType();
+            StringBuilder logMessageBldr = new StringBuilder(message);
+            logMessageBldr.append(topicName).append(", Partition: ").append(consumerRecord.partition()).append(", Offset: ").append(consumerRecord.offset()).append(", TimestampType: ")
+                    .append(timestamp).append(", Timestamp: ").append(timestamp).append(" [").append(new DateTime(timestamp, DateTimeZone.forID("Atlantic/Canary"))).append("]");
+            log.info(logMessageBldr.toString());
+        } catch (Exception e) {
+            log.error("ERROR IN PUBLISHER. jaxi dataset metadata were not saved in externalCkanItem because and unknown error");
         }
 
     }

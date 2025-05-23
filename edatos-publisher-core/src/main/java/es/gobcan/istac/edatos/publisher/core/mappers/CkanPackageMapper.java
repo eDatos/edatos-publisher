@@ -18,6 +18,7 @@ import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +37,8 @@ import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
 import es.gobcan.istac.edatos.publisher.core.util.markdown.MarkdownCkan;
 
 public abstract class CkanPackageMapper {
+
+    private final Logger log = LoggerFactory.getLogger(CkanPackageMapper.class);
 
     protected CkanPackageMapper() {
     }
@@ -119,6 +122,12 @@ public abstract class CkanPackageMapper {
 
     protected List<String> getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
             ExternalOperationService externalOperationService) {
+
+        if (stadisticalOperationCode == null) {
+            log.info("Publisher. la operación estadística es nula por lo que no se tratará el dataset.");
+        }
+
+        log.info("Publisher. Obteniendo el esquema ENI a partir de la operación estadística {}", stadisticalOperationCode);
 
         Set<String> eniThemesOfStatisticalOperation = new HashSet<>();
         String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
