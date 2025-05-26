@@ -125,6 +125,7 @@ public abstract class CkanPackageMapper {
 
         if (stadisticalOperationCode == null) {
             log.info("Publisher. la operación estadística es nula por lo que no se tratará el dataset.");
+            throw new NullPointerException("Ope estadística a nula no se puede enviar a eCatalogo {} " + getUrn());
         }
 
         log.info("Publisher. Obteniendo el esquema ENI a partir de la operación estadística {}", stadisticalOperationCode);

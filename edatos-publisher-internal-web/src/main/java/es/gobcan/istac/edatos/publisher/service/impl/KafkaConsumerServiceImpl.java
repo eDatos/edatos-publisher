@@ -66,10 +66,11 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         try {
             String topicName = "JAXI_PUBLICATIONS";
             String message = "Received jaxi message from Kafka in publisher -> Topic Name: ";
-            TimestampType timestamp = consumerRecord.timestampType();
+            TimestampType timestampType = consumerRecord.timestampType();
+            long timestamp = consumerRecord.timestamp();
             StringBuilder logMessageBldr = new StringBuilder(message);
             logMessageBldr.append(topicName).append(", Partition: ").append(consumerRecord.partition()).append(", Offset: ").append(consumerRecord.offset()).append(", TimestampType: ")
-                    .append(timestamp).append(", Timestamp: ").append(timestamp).append(" [").append(new DateTime(timestamp, DateTimeZone.forID("Atlantic/Canary"))).append("]");
+                    .append(timestampType).append(", Timestamp: ").append(timestamp).append(" [").append(new DateTime(timestamp, DateTimeZone.forID("Atlantic/Canary"))).append("]");
             log.info(logMessageBldr.toString());
         } catch (Exception e) {
             log.error("ERROR IN PUBLISHER. jaxi dataset metadata were not saved in externalCkanItem because and unknown error");
