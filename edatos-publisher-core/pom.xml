@@ -526,26 +526,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Executable file generation disabled -->
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>true</executable>
-                    <fork>true</fork>
-                    <!-- Enable the line below to have remote debugging of your application on port 5005 <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</jvmArguments> -->
-                </configuration>
-            </plugin>
             <!-- jhipster-needle-maven-add-plugin -->
         </plugins>
     </build>
@@ -582,24 +562,6 @@
                     <artifactId>spring-boot-starter-undertow</artifactId>
                 </dependency>
             </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <executable>true</executable>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>build-info</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>

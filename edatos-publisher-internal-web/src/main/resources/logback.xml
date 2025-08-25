@@ -9,8 +9,6 @@
 		%-5level [%thread] %logger{0}: %msg%n</Pattern> </encoder> </appender> <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender"> <queueSize>512</queueSize>
 		<appender-ref ref="FILE"/> </appender> -->
 
-	<property name="LOGS_HOME" value="/servers/metamac/data/edatos-publisher/logs" />
-
 	<!-- <turboFilter class="ExpiringDuplicateMessageFilter"> -->
 	<!-- <allowedRepetitions>4</allowedRepetitions> -->
 	<!-- <cacheSize>200</cacheSize> -->
@@ -21,17 +19,6 @@
 		<encoder>
 			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level
 				%logger{36} - %msg %n</pattern>
-		</encoder>
-	</appender>
-
-	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOGS_HOME}/edatos-publisher-${servidor}.%d{yyyy-MM-dd}.log
-			</fileNamePattern>
-		</rollingPolicy>
-		<encoder>
-			<charset>utf-8</charset>
-			<Pattern>%d %-5level [%thread] %logger{0}: %msg%n</Pattern>
 		</encoder>
 	</appender>
 
@@ -76,9 +63,12 @@
 		<resetJUL>true</resetJUL>
 	</contextListener>
 
+    <logger name="publisher" level="#logback.loglevel#">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
 	<root level="#logback.loglevel#">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</root>
 
 </configuration>
