@@ -5,7 +5,7 @@
     <parent>
         <groupId>es.gobcan.istac.edatos-publisher</groupId>
         <artifactId>edatos-publisher</artifactId>
-        <version>1.3.2-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
 
     <artifactId>edatos-publisher-rest-common</artifactId>
