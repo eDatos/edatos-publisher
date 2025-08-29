@@ -1,0 +1,20 @@
+# ===================================================================
+# Spring Boot configuration for the "env" profile.
+#
+# This configuration overrides the application.yml file.
+# ===================================================================
+server:
+    context-path: /edatos-publisher-internal
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here.
+# ===================================================================
+environment:
+    edatos:
+        configuration:
+            db:
+                driverName: FILL_ME              # Ejemplo: org.postgresql.Driver
+                url: FILL_ME                     # Ejemplo: postgresql://servidor:puerto/bd_schema
+                username: FILL_ME
+                password: FILL_ME
