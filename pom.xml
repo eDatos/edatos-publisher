@@ -152,7 +152,7 @@
         <metamac-srm-rest-internal-api.version>3.0.0</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>3.0.0</metamac-srm-rest-external-api.version>
         <metamac-srm-kafka.version>6.0.0</metamac-srm-kafka.version>
-        <edatos-core-common.version>1.8.0</edatos-core-common.version>
+        <edatos-core-common.version>1.8.1-SNAPSHOT</edatos-core-common.version>
         <edatos-rest-common.version>1.0.1</edatos-rest-common.version>
 
         <hibernate-types.version>2.10.4</hibernate-types.version>
