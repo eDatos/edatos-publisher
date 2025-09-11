@@ -8,6 +8,7 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 public interface CkanSenderService {
 
     CkanPackage createOrUpdateCkanPackage(CkanPackage ckanPackage, String urn, String packageId);
+    Boolean deleteCkanPackage(CkanPackage ckanPackage, String urn);
     CkanPackage getCkanPackageByName(String urn, String packageName);
     CkanPackage getCkanPackageById(String id);
     Boolean updateResources(List<CkanResource> resources, String urn);

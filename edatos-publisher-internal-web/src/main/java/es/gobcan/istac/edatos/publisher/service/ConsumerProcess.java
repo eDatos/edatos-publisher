@@ -1,6 +1,8 @@
 package es.gobcan.istac.edatos.publisher.service;
 
+import es.gobcan.istac.edatos.publisher.service.impl.PublicationConsumerProcessResult;
+
 public interface ConsumerProcess<T> {
 
-    boolean processPublicationEvent(T resource);
+    PublicationConsumerProcessResult processPublicationEvent(T resource);
 }

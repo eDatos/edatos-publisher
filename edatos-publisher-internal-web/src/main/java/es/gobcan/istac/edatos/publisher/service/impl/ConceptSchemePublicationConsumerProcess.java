@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.concept.service.ConceptSchemePublisherService;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
@@ -19,7 +20,7 @@ public class ConceptSchemePublicationConsumerProcess extends PublicationConsumer
     ConceptSchemePublisherService conceptSchemeService;
 
     @Override
-    public boolean processPublicationEvent(ConceptSchemeAvro conceptScheme) {
+    public PublicationConsumerProcessResult processPublicationEvent(ConceptSchemeAvro conceptScheme) {
 
         String urn = conceptScheme.getUrn();
         CkanPackage ckanPackage = null;
@@ -33,18 +34,20 @@ public class ConceptSchemePublicationConsumerProcess extends PublicationConsumer
         }
 
         if (ckanPackage != null) {
+            String ckanId = existingPackageInCkan.getId();
             CkanPackage packageResult = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, existingPackageInCkan.getId());
             if (packageResult != null) {
                 if (existingPackageInCkan.getId() != null) {
                     createOrUpdateCkanResources(conceptScheme, existingPackageInCkan, existingPackageInCkan.getId(), urn);
                 } else {
-                    createPackageRelationshipEntity(urnWithoutVersion, packageResult.getId());
+                    ckanId = packageResult.getId();
+                    createPackageRelationshipEntity(urnWithoutVersion, ckanId);
                 }
-                return true;
+                return new PublicationConsumerProcessResult(true, ckanId, CkanState.SENT);
             }
 
         }
-        return false;
+        return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
     }
 
     private void createOrUpdateCkanResources(ConceptSchemeAvro conceptScheme, CkanPackage actualPackage, String packageName, String urn) {

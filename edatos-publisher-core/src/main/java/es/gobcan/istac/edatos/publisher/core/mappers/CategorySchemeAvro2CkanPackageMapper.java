@@ -1,7 +1,9 @@
 package es.gobcan.istac.edatos.publisher.core.mappers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.CategorySchemeAvro;
@@ -10,7 +12,6 @@ import org.springframework.context.MessageSource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
-import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanTag;
 import es.gobcan.istac.edatos.publisher.core.domain.CkanUrlResource;
 import es.gobcan.istac.edatos.publisher.core.domain.constants.Constants;
 import es.gobcan.istac.edatos.publisher.core.domain.enumeration.DatasetStateEnum;
@@ -19,7 +20,7 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.core.util.CkanResourcesFormatOperation;
 import es.gobcan.istac.edatos.publisher.core.util.CkanUtil;
-import es.gobcan.istac.edatos.publisher.core.util.InternationalStringUtil;
+import es.gobcan.istac.edatos.publisher.core.util.InternationalStringSrmUtil;
 
 public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
@@ -39,35 +40,55 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     public CkanPackage toNewCkanPackage(ExternalCategoryService externalCategoryService) {
         CkanPackage newPackage = new CkanPackage();
 
-        String[] params = UrnUtils.splitUrnItem(getUrn());
-        String version = params[2];
-
         newPackage.setName(getCkanPackageName());
-        newPackage.setTitle(getCategorySchemeTitle(params[0], params[1]));
+        toCkanPackage(externalCategoryService, newPackage);
+
         newPackage.setPrivates(false);
-        String maintainer = getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
+        String maintainer = InternationalStringSrmUtil.getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getMaintainer().getTitle().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
         newPackage.setAuthor(maintainer);
         newPackage.setMaintainer(maintainer);
-        newPackage.setLicense_id(metadataConfigurationService.retrieveCkanLicenceId());
-        newPackage.setNotes(getResourceDescription());
-
-        newPackage.setVersion(version);
+        newPackage.setLicenceId(metadataConfigurationService.retrieveCkanLicenceId());
 
         newPackage.setState(DatasetStateEnum.ACTIVE.getName());
         newPackage.setOwner_org(getDefaultOrganisation(metadataConfigurationService));
         newPackage.setResources(createResources(newPackage.getName()));
-        newPackage.setTags(getTags());
 
         // empty metadata
         newPackage.setRelationships_as_object(new ArrayList<>());
         newPackage.setRelationships_as_subject(new ArrayList<>());
 
-        // extra fields
-        newPackage.setExtras(getCategorySchemeExtraFields(externalCategoryService, newPackage.getName()));
-
-        newPackage.setGroups(getCkanGroups());
-
         return newPackage;
+    }
+
+    public void toCkanPackage(ExternalCategoryService externalCategoryService, CkanPackage ckanPackage) {
+        String[] params = UrnUtils.splitUrnItem(getUrn());
+        String version = params[2];
+
+        String name = getCkanPackageName();
+
+        ckanPackage.setTitle(getCategorySchemeTitle(params[0], params[1]));
+        ckanPackage.setDescription(getResourceDescription());
+        ckanPackage.setVersion(version);
+
+        ckanPackage.setTags(getTags());
+        // extra fields
+        ckanPackage.setExtras(getCategorySchemeExtraFields(externalCategoryService, name));
+
+        ckanPackage.setTheme(getTheme(externalCategoryService));
+
+        setCommonMetadata(URL_BASE_IDENTIFIER, ckanPackage, metadataConfigurationService, name);
+
+        ckanPackage.setGroups(getCkanGroups());
+    }
+
+    public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
+        CkanPackage existingPackage = new CkanPackage();
+
+        existingPackage.setId(id);
+
+        toCkanPackage(externalCategoryService, existingPackage);
+
+        return existingPackage;
     }
 
     public List<CkanResource> createResources(String packageId) {
@@ -81,35 +102,9 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return super.getCkanPackageName(urn);
     }
 
-    public CkanPackage toExistingCkanPackage(ExternalCategoryService externalCategoryService, String id) {
-        CkanPackage existingPackage = new CkanPackage();
-
-        String[] params = UrnUtils.splitUrnItem(getUrn());
-        String version = params[2];
-
-        existingPackage.setId(id);
-        existingPackage.setTitle(getCategorySchemeTitle(params[0], params[1]));
-        existingPackage.setNotes(getResourceDescription());
-
-        existingPackage.setVersion(version);
-
-        existingPackage.setTags(getTags());
-
-        // extra fields
-        existingPackage.setExtras(getCategorySchemeExtraFields(externalCategoryService, getCkanPackageName()));
-
-        existingPackage.setGroups(getCkanGroups());
-
-        return existingPackage;
-    }
-
-    private List<CkanTag> getTags() {
-        List<CkanTag> tags = new ArrayList<>();
-
-        tags.add(new CkanTag(InternationalStringUtil.generateTextI18n(messageSource, Constants.CATEGORY_TAG, null)));
-
-        return tags;
-
+    private Map<String, List<String>> getTags() {
+        return InternationalStringSrmUtil.generateCkanInternationalStringMessage(messageSource, Arrays.asList(Constants.CATEGORY_TAG), null,
+                metadataConfigurationService.retrieveInternationalizationLanguages());
     }
 
     @Override
@@ -118,24 +113,26 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
     }
 
     private List<CkanExtra> getCategorySchemeExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
-        List<CkanExtra> extraFields = getExtraFields(URL_BASE_IDENTIFIER, metadataConfigurationService, packageName);
+        return getExtraFields(URL_BASE_IDENTIFIER, metadataConfigurationService, packageName);
 
-        extraFields.add(new CkanExtra("theme", getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase())));
+    }
 
-        return extraFields;
+    private List<String> getTheme(ExternalCategoryService externalCategoryService) {
+        return getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
     }
 
     @Override
-    protected String getResourceDescription() {
+    protected Map<String, String> getResourceDescription() {
         if (categoryScheme.getDescription() != null) {
-            return getDescriptionFromLocalisedStringAvro(categoryScheme.getDescription().getLocalisedStrings(), Constants.CKAN_LANGUAGE);
+            return InternationalStringSrmUtil.getSrmInternationalStringToCkanInternationalStringMarkDown(categoryScheme.getDescription(), null);
         }
         return null;
     }
 
     @Override
-    protected String getNameResourceBase(String agency, String code) {
-        return InternationalStringUtil.generateTextI18n(messageSource, Constants.BASE_CATEGORY_RESOURCE, null) + agency + ":" + code;
+    protected Map<String, String> getNameResourceBase(String agency, String code) {
+        return InternationalStringSrmUtil.generateCkanInternationalStringMessage(messageSource, Constants.BASE_CATEGORY_RESOURCE, null,
+                metadataConfigurationService.retrieveInternationalizationLanguages(), agency + ":" + code);
     }
 
     @Override
@@ -152,7 +149,8 @@ public class CategorySchemeAvro2CkanPackageMapper extends CkanPackageMapper {
         return CkanUtil.getStructuralResourceUrlBase(metadataConfigurationService) + "/" + URL_BASE_CATEGORY_SCHEME;
     }
 
-    private String getCategorySchemeTitle(String agency, String resourceId) {
-        return getCkanTitle(getDefaultLocalisedStringFromLocalisedStringAvro(categoryScheme.getName().getLocalisedStrings(), Constants.CKAN_LANGUAGE), agency, resourceId);
+    private Map<String, String> getCategorySchemeTitle(String agency, String resourceId) {
+        return InternationalStringSrmUtil.getSrmInternationalStringToCkanInternationalString(categoryScheme.getName(), getCkanEndTitle(agency, resourceId));
+
     }
 }

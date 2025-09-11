@@ -1,5 +1,5 @@
 package es.gobcan.istac.edatos.publisher.core.domain.enumeration;
 
 public enum CkanState {
-    SENT, FAILED
+    SENT, SENT_UNPUBLISHING, FAILED, FAILED_UNPUBLISHING
 }

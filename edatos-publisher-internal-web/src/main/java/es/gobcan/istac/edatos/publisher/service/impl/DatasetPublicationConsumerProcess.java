@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.dataset.service.DatasetPublisherService;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
 
@@ -22,7 +23,7 @@ public class DatasetPublicationConsumerProcess extends PublicationConsumerProces
     DatasetPublisherService datasetService;
 
     @Override
-    public boolean processPublicationEvent(DatasetVersionAvro datasetVersion) {
+    public PublicationConsumerProcessResult processPublicationEvent(DatasetVersionAvro datasetVersion) {
 
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource()
                 .getIdentifiableStatisticalResource().getUrn();
@@ -39,18 +40,20 @@ public class DatasetPublicationConsumerProcess extends PublicationConsumerProces
         }
 
         if (ckanPackage != null) {
+            String ckanId = existingPackageInCkan.getId();
             CkanPackage packageResult = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, existingPackageInCkan.getId());
             if (packageResult != null) {
                 if (existingPackageInCkan.getId() != null) {
                     createOrUpdateCkanResources(datasetVersion, existingPackageInCkan, existingPackageInCkan.getId(), urn);
                 } else {
-                    createPackageRelationshipEntity(urnWithoutVersion, packageResult.getId());
+                    ckanId = packageResult.getId();
+                    createPackageRelationshipEntity(urnWithoutVersion, ckanId);
                 }
-                return true;
+                return new PublicationConsumerProcessResult(true, ckanId, CkanState.SENT);
             }
 
         }
-        return false;
+        return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
     }
 
     private void createOrUpdateCkanResources(DatasetVersionAvro datasetVersion, CkanPackage actualPackage, String packageName, String urn) {

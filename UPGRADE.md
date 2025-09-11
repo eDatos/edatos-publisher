@@ -8,7 +8,28 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
+## 1.4.0 a 1.4.1-SNAPSHOT
+**A tener en cuenta**: Esta versión del publisher debe ir acompañada de la nueva versión de ckan preparada para la internacionalización. NO se debe desplegar el publisher sin antes haber desplegado la nueva versión del ckan (catálogo de datos abiertos)
 
+* Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.4.0/db](etc/changes-from-release/1.4.0/db) 
+
+* A realizar por equipo de consultoría antes del despliegue en PRO. Se deben asociar el valor ENI asociado a cada uno de los temas del esquema de temas que se use por defecto. Habrá un valor por defecto a configurar en propiedad "edatos.publisher.ckan.default.urn.category" y luego el resto de valores se deberán configurar para que los datasets y conceptos del tipo operación lleven los valores correctos.
+
+* Se ha añadido un consumidor del topic JAXI_PUBLICATIONS al proyecto asociado a envíos desde jaxi ibestat. Tener en cuenta lo siguiente:
+* Se debe desplegar primero el publicador en el entorno de IBESTAT.Para ello seguir los pasos del fichero README.md
+*Se debe realizar la migración de todos los recursos de eDatos del IBESTAT con la ejecución de los dos jobs disponibles y configurables con propiedades:
+    * Para los recursos del srm: propiedad metamac.srm.resend_resources_kafka_message.cron_expression 
+    * Para statistical-resources: propiedad metamac.statistical_resources.resend_dataset_kafka_message.cron_expression
+    * En el momento del despliegue, de IBESTAT hay que coordinar con el IBESTAT para que reenvien masivamente todos los datasets de JAXI mediante una nueva funcionalidad que han realizado. ATENCIÓN!! Antes de realizar este paso se deben desactivar las notificaciones a usuarios de external users. Para ello ejecutar el script que se encuentra en la siguiente ruta del proyecto external-users:
+            * etc\changes-from-release\3.10.0\db\helper-reenvío-datasets-ckan\postgresql\20240715_disabled_notifications_by_operations_for_datasets.sql
+			OJO!! Este script al final no se ha llegado a ejecutar en el entorno de PRE sino que lo ha hecho el equipo de auditoría desde la aplicación de external-users desactivando las notificaciones manualmente. Así puede avisar al IBESTAT y hacerlo en la franja que indiquen.
+			Seguramente será más conveniente seguir haciéndolo así por lo que no será necesario el lanzamiento de este script.
+ATENCIÓN!! Hay un consumidor del topic "JAXI_PUBLICATIONS" en statistical resources y otro en indicadores asociado a la caché de eTerritorios y a la actualización de indicadores de jsonstat. La ejecución del proceso masivo afectará a este consumidor que irá tratando cada mensaje (se calcula que serán unos 23000 datasets) Este proceso es muy lento ( 1 día aprox) y no tiene porqué ejecutarse porque ya la caché debe estar bien. Es por ello, que se ha creado una propiedad en common-metadata para cada módulo que, al ponerla a true, deshabilita el proceso que hace el consumidor y no hace nada. Es conveniente deshabilitarlo. Para ello
+* Ver la propiedad en los scripts de statistical-resources y crearla poniendo por defecto false (metamac.statistical_resources.kafka.jaxi_publication_consumer_disabled)
+* Ver la propiedad en los scripts de indicadores y crearla poniendo por defecto false (metamac.indicators.kafka.jaxi_publication_consumer_disabled)
+* Antes de que, desde IBESTAT, lancen el proceso masivo ponerlas a true y reiniciar el servidor.
+* Cuando acabe el proceso masivo (unas 6 horas para 23876 datasets en pre ibestat) ponerlas a false y reiniciar el servidor. 
+     
 ## 1.2.1 a 1.3.0
 * Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.2.1/db](etc/changes-from-release/1.2.1/db) 
 

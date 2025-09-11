@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackage;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
+import es.gobcan.istac.edatos.publisher.core.domain.enumeration.CkanState;
 import es.gobcan.istac.edatos.publisher.core.organisation.service.OrganisationSchemePublisherService;
 import es.gobcan.istac.edatos.publisher.core.util.CkanFormatUtil;
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
@@ -19,7 +20,7 @@ public class OrganisationSchemePublicationConsumerProcess extends PublicationCon
     OrganisationSchemePublisherService organisationSchemeService;
 
     @Override
-    public boolean processPublicationEvent(OrganisationSchemeAvro organisationScheme) {
+    public PublicationConsumerProcessResult processPublicationEvent(OrganisationSchemeAvro organisationScheme) {
 
         String urn = organisationScheme.getUrn();
         CkanPackage ckanPackage = null;
@@ -33,17 +34,19 @@ public class OrganisationSchemePublicationConsumerProcess extends PublicationCon
         }
 
         if (ckanPackage != null) {
+            String ckanId = existingPackageInCkan.getId();
             CkanPackage packageResult = ckanSenderService.createOrUpdateCkanPackage(ckanPackage, urn, existingPackageInCkan.getId());
             if (packageResult != null) {
                 if (existingPackageInCkan.getId() != null) {
                     createOrUpdateCkanResources(organisationScheme, existingPackageInCkan, existingPackageInCkan.getId(), urn);
                 } else {
-                    createPackageRelationshipEntity(urnWithoutVersion, packageResult.getId());
+                    ckanId = packageResult.getId();
+                    createPackageRelationshipEntity(urnWithoutVersion, ckanId);
                 }
-                return true;
+                return new PublicationConsumerProcessResult(true, ckanId, CkanState.SENT);
             }
         }
-        return false;
+        return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
     }
 
     private void createOrUpdateCkanResources(OrganisationSchemeAvro organisationScheme, CkanPackage actualPackage, String packageName, String urn) {
