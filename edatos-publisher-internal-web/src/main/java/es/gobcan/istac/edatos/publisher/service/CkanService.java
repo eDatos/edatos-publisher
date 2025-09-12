@@ -12,6 +12,7 @@ public interface CkanService {
     CkanSearchResponse getDatasetById(String id);
     CkanSearchResponse getDatasetByName(String name);
     CkanPackageResponse createPackage(CkanPackage ckanPackage);
+    CkanPackageResponse deletePackage(CkanPackage ckanPackage);
     CkanResourceResponse createResource(CkanResource ckanResource);
     CkanPackageResponse updatePackage(CkanPackage ckanPackage);
     CkanResourceResponse updateResource(CkanResource resource);

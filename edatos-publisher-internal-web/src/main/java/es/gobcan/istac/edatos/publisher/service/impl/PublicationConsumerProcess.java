@@ -43,6 +43,13 @@ public class PublicationConsumerProcess {
         return ckanPackageRelationshipService.updateOrCreate(newCkanPackageRelationshipEntity);
     }
 
+    public void deletePackageRelationshipEntity(String urn) {
+        CkanPackageRelationshipEntity ckanPackageRelationshipEntity = ckanPackageRelationshipService.getByUrn(urn);
+        if (ckanPackageRelationshipEntity != null) {
+            ckanPackageRelationshipService.delete(ckanPackageRelationshipEntity);
+        }
+    }
+
     /*
      * Compatibility with published datasets that are in ckan but the relationship with the ckan id has not been store in publisher. Because of this, it must be searched by name
      */

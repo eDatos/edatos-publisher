@@ -7,8 +7,11 @@ import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.OrganisationSchemeAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 
+import es.ibestat.jaxi.stream.messages.DatasetAvro;
+
 public interface KafkaConsumerService {
 
+    void processJaxiDatasetPublicationEvent(ConsumerRecord<String, DatasetAvro> consumerRecord);
     void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord);
     void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord);
     void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord);
