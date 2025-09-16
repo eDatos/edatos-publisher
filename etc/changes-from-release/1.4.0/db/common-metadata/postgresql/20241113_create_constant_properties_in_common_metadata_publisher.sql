@@ -49,10 +49,11 @@ UPDATE TB_SEQUENCES SET SEQUENCE_NEXT_VALUE = SEQUENCE_NEXT_VALUE + 1 WHERE SEQU
 ---------------
 ---------------
 
+-- Modificación solo para el ISTAC -> sólo para cuando se haga el despliegue
 --------2) edatos.publisher.ckan.spatial.uri   Poner en mayúscula la primera letra de la palabra "canarias" si no falla con la nueva versión de ckan.
-update tb_data_configurations
-set conf_value = 'http://datos.gob.es/recurso/sector-publico/territorio/Autonomia/Canarias'
-where conf_key = 'edatos.publisher.ckan.spatial.uri';
+-- update tb_data_configurations
+-- set conf_value = 'http://datos.gob.es/recurso/sector-publico/territorio/Autonomia/Canarias'
+-- where conf_key = 'edatos.publisher.ckan.spatial.uri';
 
 ---------------
 ---------------

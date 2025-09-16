@@ -8,7 +8,7 @@
 
 *Se deberá realizar primero la actualización de la versión 1.0.0 a la 2.0.0 y luego desde la 2.0.0 a la 3.0.0*
 
-## 1.4.0 a 1.4.1-SNAPSHOT
+## 1.4.0 a 2.0.0
 **A tener en cuenta**: Esta versión del publisher debe ir acompañada de la nueva versión de ckan preparada para la internacionalización. NO se debe desplegar el publisher sin antes haber desplegado la nueva versión del ckan (catálogo de datos abiertos)
 
 * Se han realizado cambios en la base de datos PostgreSQL, por ello se proveen una serie de scripts SQL para adaptarse a la nueva versión. Ejecutar los scripts de la siguiente ruta en el esquema correspondiente por orden de fecha: [etc/changes-from-release/1.4.0/db](etc/changes-from-release/1.4.0/db) 
