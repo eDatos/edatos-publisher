@@ -1,6 +1,7 @@
 package es.gobcan.istac.edatos.publisher.ckan.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanPackageResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResource;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanResourceResponse;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanSearchResponse;
+import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 import es.gobcan.istac.edatos.publisher.core.service.NotificationService;
 import es.gobcan.istac.edatos.publisher.exception.constant.WebMessageExceptionsConstants;
 import es.gobcan.istac.edatos.publisher.service.CkanService;
@@ -20,14 +22,16 @@ import es.gobcan.istac.edatos.publisher.service.CkanService;
 @Service
 public class CkanSenderServiceImpl implements CkanSenderService {
 
-    private final CkanService         ckanService;
-    private final NotificationService notificationService;
-    private final NotificationError   notificationError;
+    private final CkanService            ckanService;
+    private final NotificationService    notificationService;
+    private final NotificationError      notificationError;
+    private MetadataConfigurationService metadataConfigurationService;
 
-    public CkanSenderServiceImpl(CkanService ckanService, NotificationService notificationService, NotificationError notificationError) {
+    public CkanSenderServiceImpl(CkanService ckanService, NotificationService notificationService, NotificationError notificationError, MetadataConfigurationService metadataConfigurationService) {
         this.ckanService = ckanService;
         this.notificationService = notificationService;
         this.notificationError = notificationError;
+        this.metadataConfigurationService = metadataConfigurationService;
     }
 
     @Override
@@ -81,7 +85,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             CkanResourceResponse resourceResponse;
 
             for (CkanResource resource : resources) {
-                nameResource = resource.getName();
+                nameResource = getDefaultPackageName(resource.getName());
                 resourceResponse = ckanService.updateResource(resource);
 
                 if (!resourceResponse.isSuccess()) {
@@ -106,7 +110,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             CkanResourceResponse resourceResponse;
 
             for (CkanResource resource : resources) {
-                nameResource = resource.getName();
+                nameResource = getDefaultPackageName(resource.getName());
                 resourceResponse = ckanService.createResource(resource);
 
                 if (!resourceResponse.isSuccess()) {
@@ -119,6 +123,31 @@ public class CkanSenderServiceImpl implements CkanSenderService {
         } catch (HttpStatusCodeException e) {
             notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_CREATE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_CREATE_RESOURCE, e,
                     nameResource != null ? nameResource : "-", urn);
+        }
+        return false;
+    }
+
+    private String getDefaultPackageName(Map<String, String> packageName) {
+        String languageDefault = metadataConfigurationService.retrieveLanguageDefault();
+
+        return packageName.entrySet().stream().filter(r -> r.getKey().equals(languageDefault)).map(Map.Entry::getKey).findFirst().orElse("-");
+
+    }
+
+    @Override
+    public Boolean deleteCkanPackage(CkanPackage ckanPackage, String urn) {
+        try {
+
+            CkanPackageResponse packageResponse = ckanService.deletePackage(ckanPackage);
+
+            if (!packageResponse.isSuccess()) {
+                notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
+                        packageResponse.getError(), null, urn);
+                return false;
+            }
+            return true;
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, e, urn);
         }
         return false;
     }

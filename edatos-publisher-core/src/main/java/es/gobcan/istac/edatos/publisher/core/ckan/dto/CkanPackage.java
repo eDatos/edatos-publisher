@@ -2,6 +2,7 @@ package es.gobcan.istac.edatos.publisher.core.ckan.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,30 +13,47 @@ public class CkanPackage implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 1L;
-    private String name;
-    private String title;
+    private static final long         serialVersionUID = 1L;
+    private String                    name;
 
     @JsonProperty("private")
-    private boolean privates; // private
-    private String author;
-    private String author_email;
-    private String maintainer;
-    private String maintainer_email;
-    private String license_id;
-    private String notes;
-    private String url;
-    private String version;
-    private String state;
-    private String type;
-    private List<CkanResource> resources;
-    private List<CkanTag> tags;
-    private List<CkanExtra> extras;
-    private List<CkanRelationship> relationships_as_object;
-    private List<CkanRelationship> relationships_as_subject;
-    private List<CkanGroup> groups;
-    private String owner_org;
-    private String id;
+    private boolean                   privates;                // private
+    private String                    author_email;
+    private String                    maintainer_email;
+
+    @JsonProperty("license_id")
+    private String                    licenceId;
+    private String                    url;
+    private String                    version;
+    private String                    state;
+    private String                    type;
+
+    @JsonProperty("contact_email")
+    private String                    contactEmail;
+    private String                    identifier;
+    private String                    spatial;
+    private List<String>              language;
+    private List<String>              theme;
+
+    private String                    author;
+    private String                    maintainer;
+    @JsonProperty("description_translated")
+    private Map<String, String>       description;
+
+    @JsonProperty("title_translated")
+    private Map<String, String>       title;
+
+    @JsonProperty("multilingual_tags")
+    private Map<String, List<String>> tags;
+    private String                    publisher;
+
+    private List<CkanResource>        resources;
+    private List<CkanExtra>           extras;
+    private List<CkanRelationship>    relationships_as_object;
+    private List<CkanRelationship>    relationships_as_subject;
+    private List<CkanGroup>           groups;
+    private String                    owner_org;
+    private String                    id;
 
     public String getName() {
         return name;
@@ -43,14 +61,6 @@ public class CkanPackage implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public boolean isPrivates() {
@@ -61,14 +71,6 @@ public class CkanPackage implements Serializable {
         this.privates = privates;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getAuthor_email() {
         return author_email;
     }
@@ -77,36 +79,12 @@ public class CkanPackage implements Serializable {
         this.author_email = author_email;
     }
 
-    public String getMaintainer() {
-        return maintainer;
-    }
-
-    public void setMaintainer(String maintainer) {
-        this.maintainer = maintainer;
-    }
-
     public String getMaintainer_email() {
         return maintainer_email;
     }
 
     public void setMaintainer_email(String maintainer_email) {
         this.maintainer_email = maintainer_email;
-    }
-
-    public String getLicense_id() {
-        return license_id;
-    }
-
-    public void setLicense_id(String license_id) {
-        this.license_id = license_id;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public String getUrl() {
@@ -147,14 +125,6 @@ public class CkanPackage implements Serializable {
 
     public void setResources(List<CkanResource> resources) {
         this.resources = resources;
-    }
-
-    public List<CkanTag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<CkanTag> tags) {
-        this.tags = tags;
     }
 
     public List<CkanExtra> getExtras() {
@@ -203,5 +173,101 @@ public class CkanPackage implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<String> getTheme() {
+        return theme;
+    }
+
+    public void setTheme(List<String> theme) {
+        this.theme = theme;
+    }
+
+    public Map<String, List<String>> getTags() {
+        return tags;
+    }
+
+    public void setTags(Map<String, List<String>> tags) {
+        this.tags = tags;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public List<String> getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(List<String> language) {
+        this.language = language;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getMaintainer() {
+        return maintainer;
+    }
+
+    public void setMaintainer(String maintainer) {
+        this.maintainer = maintainer;
+    }
+
+    public Map<String, String> getDescription() {
+        return description;
+    }
+
+    public void setDescription(Map<String, String> description) {
+        this.description = description;
+    }
+
+    public Map<String, String> getTitle() {
+        return title;
+    }
+
+    public void setTitle(Map<String, String> title) {
+        this.title = title;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getLicenceId() {
+        return licenceId;
+    }
+
+    public void setLicenceId(String licenceId) {
+        this.licenceId = licenceId;
+    }
+
+    public String getSpatial() {
+        return spatial;
+    }
+
+    public void setSpatial(String spatial) {
+        this.spatial = spatial;
     }
 }

@@ -1,5 +1,6 @@
 package es.gobcan.istac.edatos.publisher.core.dataset.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
@@ -21,17 +22,19 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
     private final Logger                 log = LoggerFactory.getLogger(DatasetPublisherServiceImpl.class);
 
-    @Autowired
     private MetadataConfigurationService metadataConfigurationService;
-
-    @Autowired
     private ExternalCategoryService      externalCategoryService;
-
-    @Autowired
-    ExternalOperationService             externalOperationService;
-
-    @Autowired
+    private ExternalOperationService     externalOperationService;
     private MessageSource                messageSource;
+
+    @Autowired
+    public DatasetPublisherServiceImpl(MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService,
+            MessageSource messageSource) {
+        this.metadataConfigurationService = metadataConfigurationService;
+        this.externalCategoryService = externalCategoryService;
+        this.externalOperationService = externalOperationService;
+        this.messageSource = messageSource;
+    }
 
     @Override
     public CkanPackage retrieveNewCkanPackage(DatasetVersionAvro datasetVersion) {
@@ -40,7 +43,7 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
             return datasetAvro2CkanPackageMapper.toNewCkanPackage(externalCategoryService, externalOperationService);
         } catch (Exception e) {
-            log.debug("Error in new dataset  version publication into ckan: {}", e);
+            log.debug("Error in new dataset  version publication into ckan: ", e);
         }
         return null;
     }
@@ -53,7 +56,7 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
             return datasetAvro2CkanPackageMapper.toExistingCkanPackage(externalCategoryService, externalOperationService, id);
         } catch (Exception e) {
-            log.debug("Error in existing dataset  version publication into ckan: {}", e);
+            log.debug("Error in existing dataset  version publication into ckan: ", e);
         }
         return null;
     }
@@ -66,7 +69,7 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
             return datasetAvro2CkanPackageMapper.getCkanPackageName();
         } catch (Exception e) {
-            log.debug("Error in retrieve dataset name: {}", e);
+            log.debug("Error in retrieve dataset name: ", e);
         }
         return null;
     }
@@ -78,9 +81,9 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
             return datasetAvro2CkanPackageMapper.updateResources(packageId, existingPackage.getResources());
         } catch (Exception e) {
-            log.debug("Error in retrieve updated resources: {}", e);
+            log.debug("Error in retrieve updated resources: ", e);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -91,9 +94,9 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
             return datasetAvro2CkanPackageMapper.createResources(existingPackage);
         } catch (Exception e) {
-            log.debug("Error in retrieve new resources: {}", e);
+            log.debug("Error in retrieve new resources: ", e);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -104,7 +107,7 @@ public class DatasetPublisherServiceImpl implements DatasetPublisherService {
 
             return datasetAvro2CkanPackageMapper.deleteResources(existingPackage);
         } catch (Exception e) {
-            log.debug("Error in retrieve  resources that must be deleted: {}", e);
+            log.debug("Error in retrieve  resources that must be deleted: ", e);
         }
         return null;
     }

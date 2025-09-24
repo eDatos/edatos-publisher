@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.gobcan.istac.edatos.publisher.config.properties.KafkaProperties;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +17,7 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
+import es.gobcan.istac.edatos.publisher.config.properties.KafkaProperties;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -44,6 +44,10 @@ public class KafkaConsumerConfig {
         properties.put(ConsumerConfig.RECONNECT_BACKOFF_MAX_MS_CONFIG, Duration.ofHours(6).toMillis());
         properties.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, kafkaProperties.getSchemaRegistryUrl());
         properties.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
+        properties.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, 900000);
+        properties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, 10000); // 10 s
+        properties.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1); // The maximum number of records returned in a single call to poll()
+
         return new DefaultKafkaConsumerFactory<>(properties);
     }
 

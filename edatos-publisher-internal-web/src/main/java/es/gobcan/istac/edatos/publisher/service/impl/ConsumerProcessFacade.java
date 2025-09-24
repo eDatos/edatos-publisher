@@ -9,38 +9,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gobcan.istac.edatos.publisher.service.ConsumerProcess;
+import es.ibestat.jaxi.stream.messages.DatasetAvro;
 
 @Component
 public class ConsumerProcessFacade {
 
     @Autowired
-    ConsumerProcess<DatasetVersionAvro> datasetConsumerProcess;
+    ConsumerProcess<DatasetVersionAvro>     datasetConsumerProcess;
     @Autowired
-    ConsumerProcess<CodelistAvro> codelistConsumerProcess;
+    ConsumerProcess<DatasetAvro>            jaxiDatasetConsumerProcess;
+    @Autowired
+    ConsumerProcess<CodelistAvro>           codelistConsumerProcess;
     @Autowired
     ConsumerProcess<OrganisationSchemeAvro> organisationSchemeConsumerProcess;
     @Autowired
-    ConsumerProcess<ConceptSchemeAvro> conceptSchemeConsumerProcess;
+    ConsumerProcess<ConceptSchemeAvro>      conceptSchemeConsumerProcess;
     @Autowired
-    ConsumerProcess<CategorySchemeAvro> categorySchemeConsumerProcess;
+    ConsumerProcess<CategorySchemeAvro>     categorySchemeConsumerProcess;
 
-    public boolean processDatasetPublicationMessage(DatasetVersionAvro datasetVersion) {
+    public PublicationConsumerProcessResult processDatasetPublicationMessage(DatasetVersionAvro datasetVersion) {
         return datasetConsumerProcess.processPublicationEvent(datasetVersion);
     }
 
-    public boolean processCodelistPublicationMessage(CodelistAvro codelist) {
+    public PublicationConsumerProcessResult processJaxiDatasetPublicationMessage(DatasetAvro jaxiDataset) {
+        return jaxiDatasetConsumerProcess.processPublicationEvent(jaxiDataset);
+    }
+
+    public PublicationConsumerProcessResult processCodelistPublicationMessage(CodelistAvro codelist) {
         return codelistConsumerProcess.processPublicationEvent(codelist);
     }
 
-    public boolean processConceptSchemePublicationMessage(ConceptSchemeAvro conceptScheme) {
+    public PublicationConsumerProcessResult processConceptSchemePublicationMessage(ConceptSchemeAvro conceptScheme) {
         return conceptSchemeConsumerProcess.processPublicationEvent(conceptScheme);
     }
 
-    public boolean processOrganisationSchemePublicationMessage(OrganisationSchemeAvro organisationScheme) {
+    public PublicationConsumerProcessResult processOrganisationSchemePublicationMessage(OrganisationSchemeAvro organisationScheme) {
         return organisationSchemeConsumerProcess.processPublicationEvent(organisationScheme);
     }
 
-    public boolean processCategorySchemePublicationMessage(CategorySchemeAvro categoryScheme) {
+    public PublicationConsumerProcessResult processCategorySchemePublicationMessage(CategorySchemeAvro categoryScheme) {
         return categorySchemeConsumerProcess.processPublicationEvent(categoryScheme);
     }
 

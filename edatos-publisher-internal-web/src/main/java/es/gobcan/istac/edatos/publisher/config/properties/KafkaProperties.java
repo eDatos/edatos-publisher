@@ -7,9 +7,9 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 @Configuration
 public class KafkaProperties {
 
-    private static final String GROUP_ID = "edatos-publisher";
+    private static final String                GROUP_ID  = "edatos-publisher";
 
-    private static final String CLIENT_ID = "edatos-publisher-client";
+    private static final String                CLIENT_ID = "edatos-publisher-client";
 
     private final MetadataConfigurationService metadataConfigurationService;
 
@@ -23,6 +23,10 @@ public class KafkaProperties {
 
     public String getDatasetPublicationTopic() {
         return metadataConfigurationService.retrieveKafkaTopicDatasetsPublication();
+    }
+
+    public String getJaxiDatasetPublicationTopic() {
+        return metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication();
     }
 
     public String getCodelistsPublicationTopic() {

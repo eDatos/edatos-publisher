@@ -3,6 +3,8 @@ package es.gobcan.istac.edatos.publisher.core.mappers;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,8 +16,12 @@ import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Opera
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.CategorySchemes;
-import org.siemac.metamac.srm.core.stream.message.LocalisedStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanExtra;
 import es.gobcan.istac.edatos.publisher.core.ckan.dto.CkanGroup;
@@ -32,68 +38,39 @@ import es.gobcan.istac.edatos.publisher.core.util.markdown.MarkdownCkan;
 
 public abstract class CkanPackageMapper {
 
+    private final Logger log = LoggerFactory.getLogger(CkanPackageMapper.class);
+
     protected CkanPackageMapper() {
     }
 
-    private Set<String>                          eniThemes                    = new HashSet<String>();
+    private Set<String>                          eniThemes                    = new HashSet<>();
     protected final CkanResourcesFormatOperation ckanResourcesFormatOperation = new CkanResourcesFormatOperation();
 
-    protected abstract String getResourceDescription();
+    protected abstract Map<String, String> getResourceDescription();
     protected abstract CkanUrlResource getCkanUrlResource();
-    protected abstract String getNameResourceBase(String agency, String code);
+    protected abstract Map<String, String> getNameResourceBase(String agency, String code);
     protected abstract String getUrn();
     protected abstract String getCkanPackageName();
     protected abstract List<String> getAvailableFormats();
 
     protected List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
-        List<CkanExtra> extraFields = new ArrayList<>();
-
-        extraFields.add(new CkanExtra("identifier", getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName)));
-
-        extraFields.add(new CkanExtra("language", Constants.CKAN_LANGUAGE));
-
-        extraFields.add(new CkanExtra("publisher_uri", metadataConfigurationService.retrieveCkanPublisherUri()));
-
-        extraFields.add(new CkanExtra("spatial_uri", metadataConfigurationService.retrieveCkanSpatialUri()));
-
-        extraFields.add(new CkanExtra("contact_email", metadataConfigurationService.retrieveCkanDefaultContactEmail()));
-
-        return extraFields;
+        // no extra fields.
+        return new ArrayList<>();
     }
 
-    protected String getDefaultContactEmail(MetadataConfigurationService metadataConfigurationService) {
-        return metadataConfigurationService.retrieveCkanDefaultContactEmail();
+    protected void setCommonMetadata(String urlBaseIdentifier, CkanPackage ckanPackage, MetadataConfigurationService metadataConfigurationService, String packageName) {
+        ckanPackage.setSpatial(metadataConfigurationService.retrieveCkanSpatialUri());
+        ckanPackage.setLanguage(metadataConfigurationService.retrieveInternationalizationLanguages());
+        ckanPackage.setIdentifier(getIdentifierCkan(urlBaseIdentifier, metadataConfigurationService, packageName));
+        ckanPackage.setContactEmail(metadataConfigurationService.retrieveCkanDefaultContactEmail());
+        ckanPackage.setPublisher(metadataConfigurationService.retrieveCkanPublisherUri());
+
     }
 
     protected String getDescriptionFromInternationalStringItemAvro(List<InternationalStringItemAvro> description, String defaultLanguage) {
         if (description != null) {
             String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(InternationalStringItemAvro::getLabel).orElse("");
             return MarkdownCkan.stringHtmlToMarkdown(localeDescription);
-        }
-        return null;
-    }
-
-    protected String getDescriptionFromLocalisedStringAvro(List<LocalisedStringAvro> description, String defaultLanguage) {
-        if (description != null) {
-            String localeDescription = description.stream().filter(locString -> defaultLanguage.equals(locString.getLocale())).findFirst().map(LocalisedStringAvro::getLabel).orElse("");
-            return MarkdownCkan.stringHtmlToMarkdown(localeDescription);
-
-        }
-        return null;
-    }
-
-    protected String getDefaultLocalisedStringFromInternationalStringItemAvro(List<InternationalStringItemAvro> localisedString, String defaultLanguage) {
-
-        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(defaultLanguage))) {
-            return localisedString.stream().filter(x -> x.getLocale().equals(defaultLanguage)).findFirst().get().getLabel();
-        }
-        return null;
-    }
-
-    protected String getDefaultLocalisedStringFromLocalisedStringAvro(List<LocalisedStringAvro> localisedString, String defaultLanguage) {
-
-        if (localisedString.stream().anyMatch(x -> x.getLocale().equals(defaultLanguage))) {
-            return localisedString.stream().filter(x -> x.getLocale().equals(defaultLanguage)).findFirst().get().getLabel();
         }
         return null;
     }
@@ -128,7 +105,7 @@ public abstract class CkanPackageMapper {
         return eniSchemasUrl;
     }
 
-    public String getDefaultTheme(ExternalCategoryService externalCategoryService, MetadataConfigurationService metadataConfigurationService, String eniUrlBase) {
+    public List<String> getDefaultTheme(ExternalCategoryService externalCategoryService, MetadataConfigurationService metadataConfigurationService, String eniUrlBase) {
         String[] urnCategoryWithoutVersion = UrnUtils.splitUrnItem(metadataConfigurationService.retrieveCkanDefaultUrnCategory());
 
         String urnLastVersionDefaultCategoryScheme = getLastVersionDefaultUrnCategory(externalCategoryService, urnCategoryWithoutVersion[0], urnCategoryWithoutVersion[1]);
@@ -136,15 +113,22 @@ public abstract class CkanPackageMapper {
             String[] params = UrnUtils.splitUrnItem(urnLastVersionDefaultCategoryScheme);
             Set<String> defaultSchemas = addThemes(externalCategoryService, eniUrlBase, params[0], params[1], params[2], urnCategoryWithoutVersion[3]);
             if (!defaultSchemas.isEmpty()) {
-                return String.join(",", defaultSchemas);
+                return new ArrayList<>(defaultSchemas);
             }
         }
 
         return null;
     }
 
-    protected String getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
+    protected List<String> getThemeFromStatisticalOperation(String stadisticalOperationCode, MetadataConfigurationService metadataConfigurationService, ExternalCategoryService externalCategoryService,
             ExternalOperationService externalOperationService) {
+
+        if (stadisticalOperationCode == null) {
+            log.info("Publisher. la operación estadística es nula por lo que no se tratará el dataset.");
+            throw new NullPointerException("Ope estadística a nula no se puede enviar a eCatalogo {} " + getUrn());
+        }
+
+        log.info("Publisher. Obteniendo el esquema ENI a partir de la operación estadística {}", stadisticalOperationCode);
 
         Set<String> eniThemesOfStatisticalOperation = new HashSet<>();
         String eniUrlBase = metadataConfigurationService.retrieveCkanEniUrlBase();
@@ -168,7 +152,7 @@ public abstract class CkanPackageMapper {
         }
 
         if (!eniThemesOfStatisticalOperation.isEmpty()) {
-            return String.join(",", eniThemesOfStatisticalOperation);
+            return new ArrayList<>(eniThemesOfStatisticalOperation);
         } else {
             // SubjectArea is mandatory in statistical operation but it could be possible that the eni scheme is no assigned for this category and the dataset could be send without theme.
             return getDefaultTheme(externalCategoryService, metadataConfigurationService, metadataConfigurationService.retrieveCkanEniUrlBase());
@@ -188,7 +172,7 @@ public abstract class CkanPackageMapper {
         return urlBase + "/" + eniId;
     }
 
-    protected List<CkanResource> createResources(String description, CkanUrlResource ckanUrlResource, String code, String packageId, List<String> formatValues) {
+    protected List<CkanResource> createResources(Map<String, String> description, CkanUrlResource ckanUrlResource, Map<String, String> code, String packageId, List<String> formatValues) {
         List<CkanResource> resources = new ArrayList<>();
 
         for (String resourceFormat : formatValues) {
@@ -197,7 +181,7 @@ public abstract class CkanPackageMapper {
         return resources;
     }
 
-    private CkanResource createResource(String packageId, String description, String resourceFormat, String nameResourceBase, CkanUrlResource ckanUrlResource) {
+    private CkanResource createResource(String packageId, Map<String, String> description, String resourceFormat, Map<String, String> nameResourceBase, CkanUrlResource ckanUrlResource) {
         CkanResource resource = new CkanResource();
 
         resource.setPackage_id(packageId);
@@ -211,10 +195,13 @@ public abstract class CkanPackageMapper {
     }
 
     public List<CkanResource> createResources(String packageId, List<String> formats) {
+        String[] params;
 
-        String[] params = UrnUtils.splitUrnItem(getUrn());
+        CkanUrlResource ckanUrlResource = getCkanUrlResource();
+        boolean requiredVersion = !Boolean.TRUE.equals(ckanUrlResource.getIsJaxiDataset());
+        params = UrnUtils.splitUrnItem(getUrn(), requiredVersion);
 
-        return createResources(getResourceDescription(), getCkanUrlResource(), getNameResourceBase(params[0], params[1]), packageId, formats);
+        return createResources(getResourceDescription(), ckanUrlResource, getNameResourceBase(params[0], params[1]), packageId, formats);
     }
 
     public List<CkanResource> createResources(CkanPackage existingPackage) {
@@ -222,7 +209,7 @@ public abstract class CkanPackageMapper {
 
         Set<String> existingFormats = new HashSet<>();
         for (CkanResource existingResource : existingPackage.getResources()) {
-            if (isJsonStatFormat(existingResource.getFormat(), existingResource.getName())) {
+            if (isJsonStatFormat(existingResource.getFormat(), getFirstInternationalName(existingResource.getName()))) {
                 existingFormats.add(ResourcesFormat.JSONSTAT.name());
             } else {
 
@@ -240,7 +227,7 @@ public abstract class CkanPackageMapper {
 
     public List<CkanResource> updateResources(String packageId, List<CkanResource> existingResources) {
         List<CkanResource> resources = new ArrayList<>();
-        String description = getResourceDescription();
+        Map<String, String> description = getResourceDescription();
 
         for (CkanResource existingResource : existingResources) {
             if (ckanResourcesFormatOperation.getMimeType(existingResource.getFormat(), true) != null) {
@@ -260,10 +247,10 @@ public abstract class CkanPackageMapper {
         return metadataConfigurationService.retrieveCkanDefaultOrganisation().toLowerCase();
     }
 
-    private CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, String name, String description) {
+    private CkanResource updateResource(String resourceId, String packageId, CkanUrlResource ckanUrlResource, String format, Map<String, String> name, Map<String, String> description) {
         CkanResource resource = new CkanResource();
 
-        if (isJsonStatFormat(format, name)) {
+        if (isJsonStatFormat(format, getFirstInternationalName(name))) {
             format = ResourcesFormat.JSONSTAT.name();
         }
 
@@ -285,6 +272,11 @@ public abstract class CkanPackageMapper {
     }
 
     private String getUrlResource(CkanUrlResource ckanUrlResource, String format) {
+
+        if (Boolean.TRUE.equals(ckanUrlResource.getIsJaxiDataset())) {
+            return ckanUrlResource.getJaxiUrlByFormat().get(format);
+        }
+
         String urlResource = ckanUrlResource.getUrlBaseResource();
 
         if (!StringUtils.isEmpty(ckanUrlResource.getUrlSuffixResource())) {
@@ -300,8 +292,8 @@ public abstract class CkanPackageMapper {
         return urlResource;
     }
 
-    private String getNameResource(String nameResourceBase, String format) {
-        return nameResourceBase + " (" + format + ")";
+    private Map<String, String> getNameResource(Map<String, String> nameResourceBase, String format) {
+        return nameResourceBase.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() + " (" + format + ")"));
     }
     public Set<String> getEniThemes() {
         return eniThemes;
@@ -326,7 +318,25 @@ public abstract class CkanPackageMapper {
         return urn;
     }
 
-    protected String getCkanTitle(String name, String agency, String resourceId) {
-        return name + " (" + agency + ": " + resourceId + ")";
+    protected String getCkanEndTitle(String agency, String resourceId) {
+        return " (" + agency + ": " + resourceId + ")";
+    }
+
+    protected void debugPackage(Logger log, CkanPackage ckanPackage) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String json = objectMapper.writeValueAsString(ckanPackage);
+            log.debug(json);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFirstInternationalName(Map<String, String> map) {
+        Optional<String> firstKey = map.keySet().stream().findFirst();
+        if (firstKey.isPresent()) {
+            return map.get(firstKey.get());
+        }
+        return "";
     }
 }
