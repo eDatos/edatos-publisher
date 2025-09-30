@@ -49,7 +49,7 @@ public class InternationalStringStatisticalResourcesUtil extends InternationalSt
 
             String label = item.getLabel();
             if (!StringUtils.isEmpty(labelStringToAdd)) {
-                label += " - " + labelStringToAdd;
+                label += " " + labelStringToAdd;
             }
 
             data.put(item.getLocale(), markDownRequired ? MarkdownCkan.stringHtmlToMarkdown(label) : label);
