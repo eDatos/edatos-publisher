@@ -82,6 +82,10 @@ public class CkanSenderServiceImpl implements CkanSenderService {
 
         try {
 
+            if (resources == null) {
+                return true;
+            }
+
             CkanResourceResponse resourceResponse;
 
             for (CkanResource resource : resources) {

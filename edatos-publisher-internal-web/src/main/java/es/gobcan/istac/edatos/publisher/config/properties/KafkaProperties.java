@@ -1,11 +1,15 @@
 package es.gobcan.istac.edatos.publisher.config.properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Configuration
 public class KafkaProperties {
+
+    private static final Logger                LOGGER    = LoggerFactory.getLogger(KafkaProperties.class);
 
     private static final String                GROUP_ID  = "edatos-publisher";
 
@@ -26,7 +30,13 @@ public class KafkaProperties {
     }
 
     public String getJaxiDatasetPublicationTopic() {
-        return metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication();
+        try {
+            // The topic can not be enabled in some environments.
+            return metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication();
+        } catch (Exception e) {
+            LOGGER.info("getJaxiDatasetPublicationTopic not found. Check if must exists in common metadata");
+        }
+        return null;
     }
 
     public String getCodelistsPublicationTopic() {

@@ -72,8 +72,13 @@ public class KafkaInitializeTopics {
 
     private List<NewTopic> getTopics() {
         List<NewTopic> topics = new ArrayList<>();
-        topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicDatasetsPublication()));
-        topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication()));
+
+        try {
+            topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicDatasetsPublication()));
+            topics.add(createTopic(metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication()));
+        } catch (Exception e) {
+            LOGGER.info("retrieveKafkaTopicExternalDatasetPublication not found. Check if must exists in common metadata");
+        }
         return topics;
     }
 
