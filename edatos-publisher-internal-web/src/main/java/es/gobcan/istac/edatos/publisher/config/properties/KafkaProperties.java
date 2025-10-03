@@ -9,11 +9,13 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 @Configuration
 public class KafkaProperties {
 
-    private static final Logger                LOGGER    = LoggerFactory.getLogger(KafkaProperties.class);
+    private static final Logger                LOGGER            = LoggerFactory.getLogger(KafkaProperties.class);
 
-    private static final String                GROUP_ID  = "edatos-publisher";
+    private static final String                GROUP_ID          = "edatos-publisher";
 
-    private static final String                CLIENT_ID = "edatos-publisher-client";
+    private static final String                CLIENT_ID         = "edatos-publisher-client";
+
+    private static final String                TOPIC_NAME_UNUSED = "external-dataset-topic-unused";
 
     private final MetadataConfigurationService metadataConfigurationService;
 
@@ -29,14 +31,13 @@ public class KafkaProperties {
         return metadataConfigurationService.retrieveKafkaTopicDatasetsPublication();
     }
 
-    public String getJaxiDatasetPublicationTopic() {
+    public String getDatasetExternalPublicationTopic() {
         try {
-            // The topic can not be enabled in some environments.
             return metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication();
         } catch (Exception e) {
-            LOGGER.info("getJaxiDatasetPublicationTopic not found. Check if must exists in common metadata");
+            LOGGER.info("*** External publication topic name not found ***");
         }
-        return null;
+        return TOPIC_NAME_UNUSED;
     }
 
     public String getCodelistsPublicationTopic() {

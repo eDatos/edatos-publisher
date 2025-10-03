@@ -35,7 +35,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         this.externalCkanItemMapper = externalCkanItemMapper;
     }
 
-    @KafkaListener(topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
+    @KafkaListener(id = "datasetPublicationTopicId", topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
 
@@ -48,7 +48,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     }
 
-    @KafkaListener(topics = "#{kafkaProperties.getJaxiDatasetPublicationTopic()}")
+    @KafkaListener(id = "externalPublicationTopicId", topics = "#{kafkaProperties.getDatasetExternalPublicationTopic()}")
     public void processJaxiDatasetPublicationEvent(ConsumerRecord<String, DatasetAvro> consumerRecord) {
         logJaxi(consumerRecord);
         DatasetAvro jaxiDataset = consumerRecord.value();
@@ -78,7 +78,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     }
 
-    @KafkaListener(topics = "#{kafkaProperties.getCodelistsPublicationTopic()}")
+    @KafkaListener(id = "codelistsPublicationTopicId", topics = "#{kafkaProperties.getCodelistsPublicationTopic()}")
     public void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord) {
         CodelistAvro codelist = consumerRecord.value();
         if (checkCanBePublished(codelist.getProcStatus(), codelist.getLatestVersionNumberPublic())) {
@@ -91,7 +91,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    @KafkaListener(topics = "#{kafkaProperties.getConceptSchemesPublicationTopic()}")
+    @KafkaListener(id = "conceptSchemesPublicationTopicId", topics = "#{kafkaProperties.getConceptSchemesPublicationTopic()}")
     public void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord) {
         ConceptSchemeAvro conceptScheme = consumerRecord.value();
         if (checkCanBePublished(conceptScheme.getProcStatus(), conceptScheme.getLatestVersionNumberPublic())) {
@@ -104,7 +104,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    @KafkaListener(topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
+    @KafkaListener(id = "categorySchemesPublicationTopicId", topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
     public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
         CategorySchemeAvro categoryScheme = consumerRecord.value();
         if (checkCanBePublished(categoryScheme.getProcStatus(), categoryScheme.getLatestVersionNumberPublic())) {
@@ -117,7 +117,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    @KafkaListener(topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
+    @KafkaListener(id = "organisationSchemesPublicationTopicId", topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
         OrganisationSchemeAvro organisationScheme = consumerRecord.value();
         if (checkCanBePublished(organisationScheme.getProcStatus(), organisationScheme.getLatestVersionNumberPublic())) {
