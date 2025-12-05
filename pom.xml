@@ -11,7 +11,7 @@
 
     <groupId>es.gobcan.istac.edatos-publisher</groupId>
     <artifactId>edatos-publisher</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.2</version>
     <packaging>pom</packaging>
 
     <name>eDatos Publisher</name>
@@ -19,7 +19,7 @@
     <scm>
         <connection>scm:git:https://git.arte-consultores.com/istac/edatos-publisher/</connection>
         <developerConnection>scm:git:https://git.arte-consultores.com/istac/edatos-publisher/</developerConnection>
-        <tag>HEAD</tag>
+        <tag>20251205112802-v2.0.2</tag>
         <url>https://git.arte-consultores.com/istac/edatos-publisher</url>
     </scm>
     <issueManagement>
