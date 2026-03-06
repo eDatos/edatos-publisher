@@ -28,8 +28,20 @@ public class JaxiDatasetPublicationConsumerProcess extends PublicationConsumerPr
         this.jaxiDatasetService = jaxiDatasetService;
     }
 
+    private boolean hasValidStatisticalOperation(DatasetAvro jaxiDatasetVersion) {
+        if (jaxiDatasetVersion.getStatisticalOperation() == null || jaxiDatasetVersion.getStatisticalOperation().getCode() == null) {
+            log.error("[edatos-publisher] Jaxi dataset with null statistical operation received from Kafka. Dataset URN: {}", jaxiDatasetVersion.getUrn());
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public PublicationConsumerProcessResult processPublicationEvent(DatasetAvro jaxiDatasetVersion) {
+
+        if (!hasValidStatisticalOperation(jaxiDatasetVersion)) {
+            return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+        }
 
         String urn = jaxiDatasetVersion.getUrn();
         CkanPackage ckanPackage = null;
