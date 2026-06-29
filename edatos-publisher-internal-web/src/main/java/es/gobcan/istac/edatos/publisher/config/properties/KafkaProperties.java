@@ -1,5 +1,7 @@
 package es.gobcan.istac.edatos.publisher.config.properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
@@ -7,9 +9,13 @@ import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationServic
 @Configuration
 public class KafkaProperties {
 
-    private static final String                GROUP_ID  = "edatos-publisher";
+    private static final Logger                LOGGER            = LoggerFactory.getLogger(KafkaProperties.class);
 
-    private static final String                CLIENT_ID = "edatos-publisher-client";
+    private static final String                GROUP_ID          = "edatos-publisher";
+
+    private static final String                CLIENT_ID         = "edatos-publisher-client";
+
+    private static final String                TOPIC_NAME_UNUSED = "external-dataset-topic-unused";
 
     private final MetadataConfigurationService metadataConfigurationService;
 
@@ -25,8 +31,13 @@ public class KafkaProperties {
         return metadataConfigurationService.retrieveKafkaTopicDatasetsPublication();
     }
 
-    public String getJaxiDatasetPublicationTopic() {
-        return metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication();
+    public String getDatasetExternalPublicationTopic() {
+        try {
+            return metadataConfigurationService.retrieveKafkaTopicExternalDatasetPublication();
+        } catch (Exception e) {
+            LOGGER.info("*** External publication topic name not found ***");
+        }
+        return TOPIC_NAME_UNUSED;
     }
 
     public String getCodelistsPublicationTopic() {
