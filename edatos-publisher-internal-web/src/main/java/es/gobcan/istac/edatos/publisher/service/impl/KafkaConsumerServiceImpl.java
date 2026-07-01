@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import es.gobcan.istac.edatos.publisher.config.properties.KafkaProperties;
 import es.gobcan.istac.edatos.publisher.core.service.ExternalCkanItemService;
 import es.gobcan.istac.edatos.publisher.rest.common.mapper.ExternalCkanItemMapper;
 import es.gobcan.istac.edatos.publisher.service.KafkaConsumerService;
@@ -35,7 +36,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         this.externalCkanItemMapper = externalCkanItemMapper;
     }
 
-    @KafkaListener(id = "datasetPublicationTopicId", topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
+    @KafkaListener(id = KafkaProperties.GROUP_ID + "-datasetPublicationTopicId", groupId = KafkaProperties.GROUP_ID, topics = "#{kafkaProperties.getDatasetPublicationTopic()}")
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
 
@@ -48,7 +49,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     }
 
-    @KafkaListener(id = "externalPublicationTopicId", topics = "#{kafkaProperties.getDatasetExternalPublicationTopic()}")
+    @KafkaListener(id = KafkaProperties.GROUP_ID + "-externalPublicationTopicId", groupId = KafkaProperties.GROUP_ID, topics = "#{kafkaProperties.getDatasetExternalPublicationTopic()}")
     public void processJaxiDatasetPublicationEvent(ConsumerRecord<String, DatasetAvro> consumerRecord) {
         logJaxi(consumerRecord);
         DatasetAvro jaxiDataset = consumerRecord.value();
@@ -78,7 +79,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
 
     }
 
-    @KafkaListener(id = "codelistsPublicationTopicId", topics = "#{kafkaProperties.getCodelistsPublicationTopic()}")
+    @KafkaListener(id = KafkaProperties.GROUP_ID + "-codelistsPublicationTopicId", groupId = KafkaProperties.GROUP_ID, topics = "#{kafkaProperties.getCodelistsPublicationTopic()}")
     public void processCodelistPublicationEvent(ConsumerRecord<String, CodelistAvro> consumerRecord) {
         CodelistAvro codelist = consumerRecord.value();
         if (checkCanBePublished(codelist.getProcStatus(), codelist.getLatestVersionNumberPublic())) {
@@ -91,7 +92,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    @KafkaListener(id = "conceptSchemesPublicationTopicId", topics = "#{kafkaProperties.getConceptSchemesPublicationTopic()}")
+    @KafkaListener(id = KafkaProperties.GROUP_ID + "-conceptSchemesPublicationTopicId", groupId = KafkaProperties.GROUP_ID, topics = "#{kafkaProperties.getConceptSchemesPublicationTopic()}")
     public void processConceptSchemePublicationEvent(ConsumerRecord<String, ConceptSchemeAvro> consumerRecord) {
         ConceptSchemeAvro conceptScheme = consumerRecord.value();
         if (checkCanBePublished(conceptScheme.getProcStatus(), conceptScheme.getLatestVersionNumberPublic())) {
@@ -104,7 +105,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    @KafkaListener(id = "categorySchemesPublicationTopicId", topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
+    @KafkaListener(id = KafkaProperties.GROUP_ID + "-categorySchemesPublicationTopicId", groupId = KafkaProperties.GROUP_ID, topics = "#{kafkaProperties.getCategorySchemesPublicationTopic()}")
     public void processCategorySchemePublicationEvent(ConsumerRecord<String, CategorySchemeAvro> consumerRecord) {
         CategorySchemeAvro categoryScheme = consumerRecord.value();
         if (checkCanBePublished(categoryScheme.getProcStatus(), categoryScheme.getLatestVersionNumberPublic())) {
@@ -117,7 +118,7 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
         }
     }
 
-    @KafkaListener(id = "organisationSchemesPublicationTopicId", topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
+    @KafkaListener(id = KafkaProperties.GROUP_ID + "-organisationSchemesPublicationTopicId", groupId = KafkaProperties.GROUP_ID, topics = "#{kafkaProperties.getOrganisationSchemesPublicationTopic()}")
     public void processOrganisationSchemePublicationEvent(ConsumerRecord<String, OrganisationSchemeAvro> consumerRecord) {
         OrganisationSchemeAvro organisationScheme = consumerRecord.value();
         if (checkCanBePublished(organisationScheme.getProcStatus(), organisationScheme.getLatestVersionNumberPublic())) {

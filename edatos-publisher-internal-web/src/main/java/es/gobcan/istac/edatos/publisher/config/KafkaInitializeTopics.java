@@ -15,6 +15,7 @@ import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.stereotype.Component;
 
+import es.gobcan.istac.edatos.publisher.config.properties.KafkaProperties;
 import es.gobcan.istac.edatos.publisher.core.service.MetadataConfigurationService;
 
 @Component
@@ -54,17 +55,17 @@ public class KafkaInitializeTopics {
 
     private void startAvailableConsumers() {
         // statistical resources consumers
-        runConsumer("datasetPublicationTopicId");
+        runConsumer(KafkaProperties.GROUP_ID + "-datasetPublicationTopicId");
         NewTopic externalPublicationTopic = getExternalDatasetsPublicationTopic();
         if (externalPublicationTopic != null) {
-            runConsumer("externalPublicationTopicId");
+            runConsumer(KafkaProperties.GROUP_ID + "-externalPublicationTopicId");
         }
 
         // srm consumers
-        runConsumer("codelistsPublicationTopicId");
-        runConsumer("conceptSchemesPublicationTopicId");
-        runConsumer("categorySchemesPublicationTopicId");
-        runConsumer("organisationSchemesPublicationTopicId");
+        runConsumer(KafkaProperties.GROUP_ID + "-codelistsPublicationTopicId");
+        runConsumer(KafkaProperties.GROUP_ID + "-conceptSchemesPublicationTopicId");
+        runConsumer(KafkaProperties.GROUP_ID + "-categorySchemesPublicationTopicId");
+        runConsumer(KafkaProperties.GROUP_ID + "-organisationSchemesPublicationTopicId");
 
     }
 
