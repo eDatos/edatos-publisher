@@ -11,7 +11,7 @@ public class KafkaProperties {
 
     private static final Logger                LOGGER            = LoggerFactory.getLogger(KafkaProperties.class);
 
-    private static final String                GROUP_ID          = "edatos-publisher";
+    public static final String                 GROUP_ID          = "edatos-publisher";
 
     private static final String                CLIENT_ID         = "edatos-publisher-client";
 
