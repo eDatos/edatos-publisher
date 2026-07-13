@@ -17,7 +17,7 @@ import es.gobcan.istac.edatos.publisher.core.service.NotificationArgsService;
 @Service
 public final class NotificationArgsServiceImpl implements NotificationArgsService {
 
-    private static final String UNKNOWN_ERROR_KEY = "";
+    private static final String UNKNOWN_ERROR_KEY = "notice.unknown.error.label";
 
     @Autowired
     private MessageSource messageSource;

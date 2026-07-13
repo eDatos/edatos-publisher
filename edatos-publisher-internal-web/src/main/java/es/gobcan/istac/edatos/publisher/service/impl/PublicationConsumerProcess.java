@@ -23,7 +23,7 @@ public class PublicationConsumerProcess {
         CkanPackage actualPackage = null;
         if (ckanPackageRelationshipEntity != null && !StringUtils.isEmpty(ckanPackageRelationshipEntity.getCkanId())) {
             actualPackage = ckanSenderService.getCkanPackageById(ckanPackageRelationshipEntity.getCkanId());
-            if (actualPackage == null || actualPackage.getId() == null) {
+            if (actualPackage != null && actualPackage.getId() == null) {
                 ckanPackageRelationshipService.delete(ckanPackageRelationshipEntity);
             }
         } else {

@@ -27,14 +27,10 @@ public class NotificationErrorImpl implements NotificationError {
         try {
             response = new ObjectMapper().readValue(e.getResponseBodyAsString(), CkanGenericResponse.class);
         } catch (JsonProcessingException ex) {
-            log.error(e.getMessage());
+            log.error("Failed to parse CKAN error response body as JSON: {}", e.getResponseBodyAsString(), ex);
             response = new CkanGenericResponse();
         }
 
         notificationService.createFailedNotification(codeSubject, messageCode, response.getError(), e, params);
-
-        if (e.getStatusCode().is5xxServerError() || response.getHelp() == null) {
-            throw e;
-        }
     }
 }
