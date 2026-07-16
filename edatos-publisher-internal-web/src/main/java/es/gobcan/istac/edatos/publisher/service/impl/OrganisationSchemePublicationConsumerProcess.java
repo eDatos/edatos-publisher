@@ -27,6 +27,10 @@ public class OrganisationSchemePublicationConsumerProcess extends PublicationCon
         String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
         CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
+        if (existingPackageInCkan == null) {
+            return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+        }
+
         if (existingPackageInCkan.getId() != null) {
             ckanPackage = organisationSchemeService.retrieveUpdateCkanPackage(organisationScheme, existingPackageInCkan.getId());
         } else {

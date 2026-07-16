@@ -28,7 +28,7 @@ public final class NotificationArgsServiceImpl implements NotificationArgsServic
         if (ckanErrors == null || ckanErrors.isEmpty()) {
             if (exception != null) {
                 String errorKey = messageSource.getMessage(UNKNOWN_ERROR_KEY, null, LocaleContextHolder.getLocale());
-                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getResponseBodyAsString()).append("</li>");
+                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getRawStatusCode()).append(" ").append(exception.getStatusText()).append("</li>");
             }
         } else {
             for (String errorKey : ckanErrors.keySet()) {
@@ -53,7 +53,7 @@ public final class NotificationArgsServiceImpl implements NotificationArgsServic
         if (ckanErrors == null || ckanErrors.isEmpty()) {
             if (exception != null) {
                 String errorKey = messageSource.getMessage(UNKNOWN_ERROR_KEY, null, LocaleContextHolder.getLocale());
-                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getResponseBodyAsString()).append("</li>");
+                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getRawStatusCode()).append(" ").append(exception.getStatusText()).append("</li>");
             }
         } else {
             for (String errorKey : ckanErrors.keySet()) {

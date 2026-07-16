@@ -31,6 +31,10 @@ public class DatasetPublicationConsumerProcess extends PublicationConsumerProces
         String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
         CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
+        if (existingPackageInCkan == null) {
+            return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+        }
+
         if (existingPackageInCkan.getId() != null) {
             ckanPackage = datasetService.retrieveUpdateCkanPackage(datasetVersion, existingPackageInCkan.getId());
 

@@ -27,7 +27,8 @@ public class NotificationErrorImpl implements NotificationError {
         try {
             response = new ObjectMapper().readValue(e.getResponseBodyAsString(), CkanGenericResponse.class);
         } catch (JsonProcessingException ex) {
-            log.error("Failed to parse CKAN error response body as JSON: {}", e.getResponseBodyAsString(), ex);
+            String urn = (params != null && params.length > 0) ? params[params.length - 1] : "unknown";
+            log.error("Failed to parse CKAN error response body as JSON for URN {}: {}", urn, e.getResponseBodyAsString(), ex);
             response = new CkanGenericResponse();
         }
 

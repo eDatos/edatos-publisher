@@ -30,10 +30,6 @@ public class PublicationConsumerProcess {
             actualPackage = getCkanPackageByName(urnWithoutVersion);
         }
 
-        if (actualPackage == null) {
-            actualPackage = new CkanPackage();
-        }
-
         return actualPackage;
     }
 
@@ -54,12 +50,12 @@ public class PublicationConsumerProcess {
      * Compatibility with published datasets that are in ckan but the relationship with the ckan id has not been store in publisher. Because of this, it must be searched by name
      */
     private CkanPackage getCkanPackageByName(String urnWithoutVersion) {
-        CkanPackage actualPackage = null;
-        if (urnWithoutVersion.length() <= Constants.MAX_SIZE_PACKAGE_CKAN_NAME) {
-            actualPackage = ckanSenderService.getCkanPackageByName(urnWithoutVersion, urnWithoutVersion);
-            if (actualPackage != null && actualPackage.getId() != null) {
-                createPackageRelationshipEntity(urnWithoutVersion, actualPackage.getId());
-            }
+        if (urnWithoutVersion.length() > Constants.MAX_SIZE_PACKAGE_CKAN_NAME) {
+            return new CkanPackage();
+        }
+        CkanPackage actualPackage = ckanSenderService.getCkanPackageByName(urnWithoutVersion, urnWithoutVersion);
+        if (actualPackage != null && actualPackage.getId() != null) {
+            createPackageRelationshipEntity(urnWithoutVersion, actualPackage.getId());
         }
         return actualPackage;
     }
