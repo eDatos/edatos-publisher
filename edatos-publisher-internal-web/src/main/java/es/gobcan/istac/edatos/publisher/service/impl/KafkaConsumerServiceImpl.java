@@ -40,6 +40,15 @@ public class KafkaConsumerServiceImpl implements KafkaConsumerService {
     public void processDatasetPublicationEvent(ConsumerRecord<String, DatasetVersionAvro> consumerRecord) {
         DatasetVersionAvro datasetVersion = consumerRecord.value();
 
+        // Reload messages are intended only for the search indexer; ignore them here.
+        if (datasetVersion.getSiemacMetadataStatisticalResource()
+                          .getLifecycleStatisticalResource()
+                          .getVersionableStatisticalResource()
+                          .getReload()) {
+            log.info("Publisher. Ignoring dataset {} because reload flag is true", consumerRecord.key());
+            return;
+        }
+
         PublicationConsumerProcessResult result = consumerProcessFacade.processDatasetPublicationMessage(datasetVersion);
         try {
             externalCkanItemService.save(externalCkanItemMapper.toExternalCkanItemEntity(datasetVersion, result.getStatus(), result.getCkanId()));
