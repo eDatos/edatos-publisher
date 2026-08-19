@@ -36,16 +36,20 @@ public class CkanSenderServiceImpl implements CkanSenderService {
 
     @Override
     public CkanPackage getCkanPackageByName(String urn, String packageName) {
-        CkanSearchResponse existingPackaget = ckanService.getDatasetByName(packageName);
-        if (existingPackaget != null && existingPackaget.isSuccess()) {
-            if (existingPackaget.getResult().getCount() > 0) {
-                return existingPackaget.getResult().getResults().get(0);
+        try {
+            CkanSearchResponse existingPackaget = ckanService.getDatasetByName(packageName);
+            if (existingPackaget != null && existingPackaget.isSuccess()) {
+                if (existingPackaget.getResult().getCount() > 0) {
+                    return existingPackaget.getResult().getResults().get(0);
+                } else {
+                    return new CkanPackage();
+                }
             } else {
-                return new CkanPackage();
+                notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
+                        existingPackaget != null ? existingPackaget.getError() : null, null, urn);
             }
-        } else {
-            notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
-                    existingPackaget.getError(), null, urn);
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE, e, urn);
         }
         return null;
     }
@@ -151,7 +155,7 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             }
             return true;
         } catch (HttpStatusCodeException e) {
-            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, e, urn);
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_PACKAGE, e, urn);
         }
         return false;
     }
@@ -176,23 +180,27 @@ public class CkanSenderServiceImpl implements CkanSenderService {
             return true;
         } catch (HttpStatusCodeException e) {
             notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_DELETE_RESOURCE, WebMessageExceptionsConstants.MESSAGE_FAILED_DELETE_RESOURCE, e,
-                    nameResource != null ? nameResource : "-", urn);
+                    nameResource, urn);
         }
         return false;
     }
 
     @Override
     public CkanPackage getCkanPackageById(String ckanId) {
-        CkanSearchResponse existingPackaget = ckanService.getDatasetById(ckanId);
-        if (existingPackaget != null && existingPackaget.isSuccess()) {
-            if (existingPackaget.getResult().getCount() > 0) {
-                return existingPackaget.getResult().getResults().get(0);
+        try {
+            CkanSearchResponse existingPackaget = ckanService.getDatasetById(ckanId);
+            if (existingPackaget != null && existingPackaget.isSuccess()) {
+                if (existingPackaget.getResult().getCount() > 0) {
+                    return existingPackaget.getResult().getResults().get(0);
+                } else {
+                    return new CkanPackage();
+                }
             } else {
-                return new CkanPackage();
+                notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
+                        existingPackaget != null ? existingPackaget.getError() : null, null, ckanId);
             }
-        } else {
-            notificationService.createFailedNotification(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE,
-                    existingPackaget.getError(), null, ckanId);
+        } catch (HttpStatusCodeException e) {
+            notificationError.manageCkanPublicationError(WebMessageExceptionsConstants.SUBJECT_FAILED_PUBLICATION_PACKAGE, WebMessageExceptionsConstants.MESSAGE_FAILED_PUBLICATION_PACKAGE, e, ckanId);
         }
         return null;
     }

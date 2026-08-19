@@ -27,6 +27,10 @@ public class CodelistPublicationConsumerProcess extends PublicationConsumerProce
         String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
         CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
+        if (existingPackageInCkan == null) {
+            return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+        }
+
         if (existingPackageInCkan.getId() != null) {
             ckanPackage = codelistService.retrieveUpdateCkanPackage(codelist, existingPackageInCkan.getId());
         } else {

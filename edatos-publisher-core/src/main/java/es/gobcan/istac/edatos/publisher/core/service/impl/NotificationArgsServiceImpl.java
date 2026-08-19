@@ -17,7 +17,7 @@ import es.gobcan.istac.edatos.publisher.core.service.NotificationArgsService;
 @Service
 public final class NotificationArgsServiceImpl implements NotificationArgsService {
 
-    private static final String UNKNOWN_ERROR_KEY = "";
+    private static final String UNKNOWN_ERROR_KEY = "notice.unknown.error.label";
 
     @Autowired
     private MessageSource messageSource;
@@ -28,7 +28,7 @@ public final class NotificationArgsServiceImpl implements NotificationArgsServic
         if (ckanErrors == null || ckanErrors.isEmpty()) {
             if (exception != null) {
                 String errorKey = messageSource.getMessage(UNKNOWN_ERROR_KEY, null, LocaleContextHolder.getLocale());
-                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getResponseBodyAsString()).append("</li>");
+                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getRawStatusCode()).append(" ").append(exception.getStatusText()).append("</li>");
             }
         } else {
             for (String errorKey : ckanErrors.keySet()) {
@@ -53,7 +53,7 @@ public final class NotificationArgsServiceImpl implements NotificationArgsServic
         if (ckanErrors == null || ckanErrors.isEmpty()) {
             if (exception != null) {
                 String errorKey = messageSource.getMessage(UNKNOWN_ERROR_KEY, null, LocaleContextHolder.getLocale());
-                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getResponseBodyAsString()).append("</li>");
+                errors.append("<li><strong>").append(errorKey).append("</strong>:").append(exception.getRawStatusCode()).append(" ").append(exception.getStatusText()).append("</li>");
             }
         } else {
             for (String errorKey : ckanErrors.keySet()) {
