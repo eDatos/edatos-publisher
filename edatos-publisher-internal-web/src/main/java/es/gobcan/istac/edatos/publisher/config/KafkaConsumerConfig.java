@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -26,6 +28,8 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 @EnableRetry
 @Configuration
 public class KafkaConsumerConfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumerConfig.class);
 
     private final KafkaProperties kafkaProperties;
 
@@ -56,6 +60,10 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setRetryTemplate(retryTemplate());
+        factory.setRecoveryCallback(context -> {
+            LOG.error("Retries exhausted for Kafka record. Skipping message to avoid infinite loop.", context.getLastThrowable());
+            return null;
+        });
         factory.setAutoStartup(false);
         return factory;
     }
@@ -63,7 +71,7 @@ public class KafkaConsumerConfig {
     private RetryTemplate retryTemplate() {
         RetryTemplate retryTemplate = new RetryTemplate();
 
-        // Retry every 10 seconds
+        // Retry every 5 seconds
         FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
         backOffPolicy.setBackOffPeriod(Duration.ofSeconds(5).toMillis());
         retryTemplate.setBackOffPolicy(backOffPolicy);

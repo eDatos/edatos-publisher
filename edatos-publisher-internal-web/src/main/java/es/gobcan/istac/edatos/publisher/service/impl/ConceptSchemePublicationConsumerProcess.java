@@ -27,6 +27,10 @@ public class ConceptSchemePublicationConsumerProcess extends PublicationConsumer
         String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
         CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
+        if (existingPackageInCkan == null) {
+            return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+        }
+
         if (existingPackageInCkan.getId() != null) {
             ckanPackage = conceptSchemeService.retrieveUpdateCkanPackage(conceptScheme, existingPackageInCkan.getId());
         } else {

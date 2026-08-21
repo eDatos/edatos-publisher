@@ -48,6 +48,10 @@ public class JaxiDatasetPublicationConsumerProcess extends PublicationConsumerPr
         String urnWithoutVersion = CkanFormatUtil.formatCkanNameFromDatasetUrn(urn);
         CkanPackage existingPackageInCkan = getCkanPackage(urnWithoutVersion);
 
+        if (existingPackageInCkan == null) {
+            return new PublicationConsumerProcessResult(false, null, CkanState.FAILED);
+        }
+
         PublicationConsumerProcessResult result = processArchivedDatasets(jaxiDatasetVersion, existingPackageInCkan, urn, urnWithoutVersion);
 
         if (result != null) {
