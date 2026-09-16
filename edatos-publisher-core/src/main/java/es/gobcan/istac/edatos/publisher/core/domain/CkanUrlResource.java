@@ -12,6 +12,7 @@ public class CkanUrlResource {
     private Map<String, String> jaxiUrlByFormat;
 
     private boolean             isExcelFormatVisible = true;
+    private String              htmlUrl;
 
     public CkanUrlResource(String urlBaseResource, String urlSuffixResource, String urlParametersFields) {
         this.urlBaseResource = urlBaseResource;
@@ -70,5 +71,13 @@ public class CkanUrlResource {
 
     public void setJaxiUrlByFormat(Map<String, String> jaxiUrlByFormat) {
         this.jaxiUrlByFormat = jaxiUrlByFormat;
+    }
+
+    public String getHtmlUrl() {
+        return htmlUrl;
+    }
+
+    public void setHtmlUrl(String htmlUrl) {
+        this.htmlUrl = htmlUrl;
     }
 }

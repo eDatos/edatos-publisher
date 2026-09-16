@@ -132,10 +132,13 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        List<String> formats = CkanResourcesFormatOperation.getDatasetResourcesFormat();
+        List<String> formats = new ArrayList<>(CkanResourcesFormatOperation.getDatasetResourcesFormat());
 
         if (isInvalidXlsx()) {
             formats.remove(ResourcesFormat.XLSX.name());
+        }
+        if (datasetVersion.getVisualizerHtmlLink() == null) {
+            formats.remove(ResourcesFormat.HTML.name());
         }
         return formats;
     }
@@ -159,7 +162,9 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), null, null);
+        CkanUrlResource ckanUrlResource = new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), null, null);
+        ckanUrlResource.setHtmlUrl(datasetVersion.getVisualizerHtmlLink());
+        return ckanUrlResource;
     }
 
     private List<CkanExtra> getDatasetExtraFields(ExternalCategoryService externalCategoryService, ExternalOperationService externalOperationService, String packageName) {

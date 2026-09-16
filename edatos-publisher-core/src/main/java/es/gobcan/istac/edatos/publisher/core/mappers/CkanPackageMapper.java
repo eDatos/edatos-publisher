@@ -277,6 +277,10 @@ public abstract class CkanPackageMapper {
             return ckanUrlResource.getJaxiUrlByFormat().get(format);
         }
 
+        if (ResourcesFormat.HTML.name().equals(format)) {
+            return ckanUrlResource.getHtmlUrl();
+        }
+
         String urlResource = ckanUrlResource.getUrlBaseResource();
 
         if (!StringUtils.isEmpty(ckanUrlResource.getUrlSuffixResource())) {

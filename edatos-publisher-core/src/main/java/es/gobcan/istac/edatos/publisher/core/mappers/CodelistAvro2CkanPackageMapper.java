@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.CodelistAvro;
 import org.springframework.context.MessageSource;
@@ -85,6 +86,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         ckanPackage.setTitle(getCodelistTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
+        ckanPackage.setUrl(codelist.getVisualizerHtmlLink());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags());
@@ -110,7 +112,9 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CODELIST_CODES, "fields=+description");
+        CkanUrlResource ckanUrlResource = new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CODELIST_CODES, "fields=+description");
+        ckanUrlResource.setHtmlUrl(codelist.getVisualizerHtmlLink());
+        return ckanUrlResource;
     }
 
     private List<CkanExtra> getCodelistExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
@@ -143,7 +147,11 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        return CkanResourcesFormatOperation.getSrmResourcesFormat();
+        List<String> formats = new ArrayList<>(CkanResourcesFormatOperation.getSrmResourcesFormat());
+        if (codelist.getVisualizerHtmlLink() == null) {
+            formats.remove(ResourcesFormat.HTML.name());
+        }
+        return formats;
     }
 
     private String getResourceUrlBase() {
