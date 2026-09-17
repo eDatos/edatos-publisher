@@ -53,6 +53,14 @@ public abstract class CkanPackageMapper {
     protected abstract String getCkanPackageName();
     protected abstract List<String> getAvailableFormats();
 
+    protected List<String> filterHtmlFormat(List<String> baseFormats, String visualizerHtmlLink) {
+        List<String> formats = new ArrayList<>(baseFormats);
+        if (visualizerHtmlLink == null) {
+            formats.remove(ResourcesFormat.HTML.name());
+        }
+        return formats;
+    }
+
     protected List<CkanExtra> getExtraFields(String urlBaseIdentifier, MetadataConfigurationService metadataConfigurationService, String packageName) {
         // no extra fields.
         return new ArrayList<>();

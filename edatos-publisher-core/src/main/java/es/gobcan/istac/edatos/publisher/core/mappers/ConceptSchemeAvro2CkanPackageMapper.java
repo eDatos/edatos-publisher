@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.edatos.core.common.enume.utils.ResourcesFormat;
 import org.siemac.edatos.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeAvro;
 import org.siemac.metamac.srm.core.stream.message.ConceptSchemeTypeEnumAvro;
@@ -168,11 +167,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        List<String> formats = new ArrayList<>(CkanResourcesFormatOperation.getSrmResourcesFormat());
-        if (conceptScheme.getVisualizerHtmlLink() == null) {
-            formats.remove(ResourcesFormat.HTML.name());
-        }
-        return formats;
+        return filterHtmlFormat(CkanResourcesFormatOperation.getSrmResourcesFormat(), conceptScheme.getVisualizerHtmlLink());
     }
 
     private String getResourceUrlBase() {

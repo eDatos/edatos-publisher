@@ -132,13 +132,10 @@ public class DatasetAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        List<String> formats = new ArrayList<>(CkanResourcesFormatOperation.getDatasetResourcesFormat());
+        List<String> formats = filterHtmlFormat(CkanResourcesFormatOperation.getDatasetResourcesFormat(), datasetVersion.getVisualizerHtmlLink());
 
         if (isInvalidXlsx()) {
             formats.remove(ResourcesFormat.XLSX.name());
-        }
-        if (datasetVersion.getVisualizerHtmlLink() == null) {
-            formats.remove(ResourcesFormat.HTML.name());
         }
         return formats;
     }
