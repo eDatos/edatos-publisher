@@ -85,6 +85,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
         ckanPackage.setTitle(getCodelistTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
+        ckanPackage.setUrl(codelist.getVisualizerHtmlLink());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags());
@@ -110,7 +111,9 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CODELIST_CODES, "fields=+description");
+        CkanUrlResource ckanUrlResource = new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CODELIST_CODES, "fields=+description");
+        ckanUrlResource.setHtmlUrl(codelist.getVisualizerHtmlLink());
+        return ckanUrlResource;
     }
 
     private List<CkanExtra> getCodelistExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
@@ -143,7 +146,7 @@ public class CodelistAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        return CkanResourcesFormatOperation.getSrmResourcesFormat();
+        return filterHtmlFormat(CkanResourcesFormatOperation.getSrmResourcesFormat(), codelist.getVisualizerHtmlLink());
     }
 
     private String getResourceUrlBase() {

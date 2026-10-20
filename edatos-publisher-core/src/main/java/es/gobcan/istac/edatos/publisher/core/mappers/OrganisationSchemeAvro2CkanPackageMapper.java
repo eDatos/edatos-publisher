@@ -69,6 +69,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
         ckanPackage.setTitle(getOrganisationSchemeTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
+        ckanPackage.setUrl(organisationScheme.getVisualizerHtmlLink());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags(organisationScheme.getOrganisationSchemeType()));
@@ -140,7 +141,9 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_ORGANISATIONS, null);
+        CkanUrlResource ckanUrlResource = new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_ORGANISATIONS, null);
+        ckanUrlResource.setHtmlUrl(organisationScheme.getVisualizerHtmlLink());
+        return ckanUrlResource;
     }
 
     private List<CkanExtra> getOrganisationSchemeExtraFields(ExternalCategoryService externalCategoryService, String packageName) {
@@ -168,7 +171,7 @@ public class OrganisationSchemeAvro2CkanPackageMapper extends CkanPackageMapper 
 
     @Override
     protected List<String> getAvailableFormats() {
-        return CkanResourcesFormatOperation.getSrmResourcesFormat();
+        return filterHtmlFormat(CkanResourcesFormatOperation.getSrmResourcesFormat(), organisationScheme.getVisualizerHtmlLink());
     }
 
     private String getResourceUrlBase() {
