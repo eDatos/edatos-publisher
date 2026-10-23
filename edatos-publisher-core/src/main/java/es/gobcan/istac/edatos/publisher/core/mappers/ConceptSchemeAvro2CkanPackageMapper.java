@@ -84,6 +84,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
         ckanPackage.setTitle(getConceptSchemeTitle(params[0], params[1]));
         ckanPackage.setDescription(getResourceDescription());
+        ckanPackage.setUrl(conceptScheme.getVisualizerHtmlLink());
         ckanPackage.setVersion(version);
 
         ckanPackage.setTags(getTags());
@@ -111,7 +112,9 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected CkanUrlResource getCkanUrlResource() {
-        return new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, "fields=+description");
+        CkanUrlResource ckanUrlResource = new CkanUrlResource(getResourceUrlBase(getUrn(), getResourceUrlBase()), Constants.URL_RESOURCES_CONCEPTS, "fields=+description");
+        ckanUrlResource.setHtmlUrl(conceptScheme.getVisualizerHtmlLink());
+        return ckanUrlResource;
     }
 
     private List<CkanExtra> getConceptSchemeExtraFields(ExternalOperationService externalOperationService, String packageName) {
@@ -164,7 +167,7 @@ public class ConceptSchemeAvro2CkanPackageMapper extends CkanPackageMapper {
 
     @Override
     protected List<String> getAvailableFormats() {
-        return CkanResourcesFormatOperation.getSrmResourcesFormat();
+        return filterHtmlFormat(CkanResourcesFormatOperation.getSrmResourcesFormat(), conceptScheme.getVisualizerHtmlLink());
     }
 
     private String getResourceUrlBase() {

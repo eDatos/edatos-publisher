@@ -14,12 +14,12 @@ public class CkanResourcesFormatOperation extends ResourcesFormatOperation {
 
     // this formats defined in edatos-core-utils are a subset of srm formats. Srm at least must provide an implementation for this formats for the resources that are linked in ckan.
     private static final String[] srmResourcesFormat         = {ResourcesFormat.JSON.name(), ResourcesFormat.XML.name(), ResourcesFormat.TSV.name(), ResourcesFormat.CSV.name(),
-            ResourcesFormat.XLSX.name()};
+            ResourcesFormat.XLSX.name(), ResourcesFormat.HTML.name()};
 
     // this formats defined in edatos-core-utils are a subset of statistical-resources formats. At least, statistical-resources must provide an implementation for this formats for the resources that
     // are linked in ckan.
     private static final String[] datasetResourcesFormat     = {ResourcesFormat.JSON.name(), ResourcesFormat.XML.name(), ResourcesFormat.JSONSTAT.name(), ResourcesFormat.TSV.name(),
-            ResourcesFormat.CSV.name(), ResourcesFormat.XLSX.name()};
+            ResourcesFormat.CSV.name(), ResourcesFormat.XLSX.name(), ResourcesFormat.HTML.name()};
 
     private static final String[] jaxiDatasetResourcesFormat = {ResourcesFormat.PCAXIS.name(), ResourcesFormat.JSON.name(), ResourcesFormat.JSONSTAT.name()};
 

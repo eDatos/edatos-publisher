@@ -30,12 +30,12 @@
         <repository>
             <id>arte-repository</id>
             <name>Arte Repository - RELEASE</name>
-            <url>http://repository.arte-consultores.com/content/repositories/releases</url>
+            <url>https://repository.arte-consultores.com/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <id>arte-repository</id>
             <name>Arte Repository - SNAPSHOT</name>
-            <url>http://repository.arte-consultores.com/content/repositories/snapshots</url>
+            <url>https://repository.arte-consultores.com/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -151,8 +151,8 @@
         <metamac-common-metadata-rest-external-api.version>3.3.0</metamac-common-metadata-rest-external-api.version>
         <metamac-srm-rest-internal-api.version>3.0.0</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>3.0.0</metamac-srm-rest-external-api.version>
-        <metamac-srm-kafka.version>6.0.0</metamac-srm-kafka.version>
-        <edatos-core-common.version>1.9.1</edatos-core-common.version>
+        <metamac-srm-kafka.version>8.19.1-SNAPSHOT</metamac-srm-kafka.version>
+        <edatos-core-common.version>1.9.2-SNAPSHOT</edatos-core-common.version>
         <edatos-rest-common.version>1.0.1</edatos-rest-common.version>
 
         <hibernate-types.version>2.10.4</hibernate-types.version>
